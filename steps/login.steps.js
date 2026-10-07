@@ -7,8 +7,8 @@ Given(
   async ({ loginPage }) => {
     await loginPage.open();
 
-    await expect(loginPage.usernameInput.first()).toBeVisible();
-    await expect(loginPage.passwordInput.first()).toBeVisible();
+    await expect(loginPage.usernameInput).toBeVisible();
+    await expect(loginPage.passwordInput).toBeVisible();
   }
 );
 

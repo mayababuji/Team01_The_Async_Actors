@@ -29,15 +29,15 @@ export class LoginPage {
   //   const snapshot = await this.page.locator('body').ariaSnapshot();
 
   // console.log(snapshot);
-    await this.usernameInput.first().fill(username);
+    await this.usernameInput.fill(username);
   }
 
   async enterPassword(password) {
-    await this.passwordInput.first().fill(password);
+    await this.passwordInput.fill(password);
   }
 
   async clickLogin() {
-    await this.loginButton.first().click();
+    await this.loginButton.click();
   }
 
   async login(username, password) {
