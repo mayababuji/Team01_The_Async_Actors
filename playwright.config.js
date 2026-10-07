@@ -49,6 +49,10 @@ const testDir = defineBddConfig({
 export default defineConfig({
   testDir,
   outputDir: 'test-results',
+  timeout: 60_000, // global test timeout
+  expect: {
+    timeout: 20_000 // default timeout for expect assertions like toBeVisible()
+  },
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,

@@ -116,20 +116,28 @@ pipeline {
     post {
         always {
             script {
-                // Create environment.properties for Allure
-                sh '''
+                // Resolve values in Groovy
+                def nodeVersion = sh(script: 'node --version', returnStdout: true).trim()
+                def osName = sh(script: 'uname -s', returnStdout: true).trim()
+                def headlessValue = env.HEADLESS ?: 'true'
+                def ciValue = env.CI ?: 'true'
+                def testEnvValue = env.TEST_ENV ?: params.TEST_ENV ?: 'unknown'
+                def baseUrlValue = env.BASE_URL ?: 'unknown'
+
+                // Write environment.properties for Allure
+                sh """
                     mkdir -p allure-results
 
-                    cat > allure-results/environment.properties << EOF
-Test Environment=${TEST_ENV}
-Base URL=${BASE_URL}
+                    cat > allure-results/environment.properties << 'EOF'
+Test Environment=${testEnvValue}
+Base URL=${baseUrlValue}
 Browser Projects=chromium, firefox, webkit
-Node Version=${sh(script: 'node --version', returnStdout: true).trim()}
-Operating System=${sh(script: 'uname -s', returnStdout: true).trim()}
-Headless Mode=${HEADLESS:-true}
-CI=${CI}
+Node Version=${nodeVersion}
+Operating System=${osName}
+Headless Mode=${headlessValue}
+CI=${ciValue}
 EOF
-                '''
+                """
 
                 if (fileExists('allure-results')) {
                     allure([
