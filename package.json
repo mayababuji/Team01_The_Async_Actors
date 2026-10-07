@@ -16,6 +16,7 @@
     "test:prod:login": "cross-env TEST_ENV=prod npm run test:login",
     "test:local:headed": "cross-env TEST_ENV=local HEADLESS=false npm run test:login",
     "test:debug": "cross-env TEST_ENV=local npm run clean:reports && npm run bddgen && playwright test --debug",
+    "allure:environment": "node scripts/create-allure-environment.js",
     "allure:generate": "allure generate allure-results --clean -o allure-report",
     "allure:open": "allure open allure-report",
     "allure:serve": "allure serve allure-results"

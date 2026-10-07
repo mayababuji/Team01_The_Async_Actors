@@ -70,9 +70,9 @@ pipeline {
         stage('Install Playwright browsers') {
             steps {
                 sh '''
-                    npx playwright install --with-deps \
-                        chromium \
-                        firefox \
+                    npx playwright install --with-deps \\
+                        chromium \\
+                        firefox \\
                         webkit
                 '''
             }
@@ -116,6 +116,21 @@ pipeline {
     post {
         always {
             script {
+                // Create environment.properties for Allure
+                sh '''
+                    mkdir -p allure-results
+
+                    cat > allure-results/environment.properties << EOF
+Test Environment=${TEST_ENV}
+Base URL=${BASE_URL}
+Browser Projects=chromium, firefox, webkit
+Node Version=${sh(script: 'node --version', returnStdout: true).trim()}
+Operating System=${sh(script: 'uname -s', returnStdout: true).trim()}
+Headless Mode=${HEADLESS:-true}
+CI=${CI}
+EOF
+                '''
+
                 if (fileExists('allure-results')) {
                     allure([
                         results: [

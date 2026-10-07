@@ -91,6 +91,10 @@ jobs:
         run: npx playwright test
         continue-on-error: true
 
+      - name: Add environment details to Allure report
+        if: always()
+        run: npm run allure:environment
+
       - name: Generate Allure HTML report
         if: always()
         run: npm run allure:generate
