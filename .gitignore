@@ -1,0 +1,44 @@
+# Node.js dependencies
+node_modules/
+
+# Generated Playwright BDD test files
+tests/generated/
+
+# Playwright test output and reports
+playwright-report/
+test-results/
+
+# Allure raw results and generated HTML report
+allure-results/
+allure-report/
+
+# Environment files containing credentials
+.env
+.env.local
+.env.qa
+.env.prod
+
+# Keep only the safe environment-variable template
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+
+# Visual Studio Code local workspace files
+.vscode/*
+!.vscode/settings.json
+
+# Playwright browser downloads if configured within the project
+.playwright-browsers/
+
+# Temporary files
+*.tmp
+*.temp
