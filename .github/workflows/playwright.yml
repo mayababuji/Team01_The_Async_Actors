@@ -92,7 +92,7 @@ jobs:
 
       - name: Generate Allure HTML report
         if: always()
-        run: npx allure-commandline generate allure-results --clean -o allure-report
+        run: npm run allure:generate
 
       - name: Upload Playwright report artifact
         if: always()
