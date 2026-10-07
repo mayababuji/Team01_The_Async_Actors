@@ -8,6 +8,8 @@ export class LoginPage {
       'textbox', { name: /username/i }
     );
 
+    // this.usernameInput = page.locator('input[name="username"]');
+
     
       this.passwordInput = page.getByRole(
       'textbox', { name: /password/i }
@@ -17,6 +19,7 @@ export class LoginPage {
      this.loginButton = page.getByRole(
       'button', { name: /log in/i }
     );
+    this.loginErrorMessage = page.getByText('Login credentials incorrect, please try again.');
   }
 
 
