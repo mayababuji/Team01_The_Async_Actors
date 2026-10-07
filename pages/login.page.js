@@ -2,18 +2,23 @@ export class LoginPage {
   constructor(page) {
     this.page = page;
 
-    this.usernameInput = page.locator(
-      'input[name="username"], input[id="username"], input[placeholder*="Username" i], input[type="text"]'
+   
+
+      this.usernameInput = page.getByRole(
+      'textbox', { name: /username/i }
     );
 
-    this.passwordInput = page.locator(
-      'input[name="password"], input[id="password"], input[placeholder*="Password" i], input[type="password"]'
+    
+      this.passwordInput = page.getByRole(
+      'textbox', { name: /password/i }
     );
 
-    this.loginButton = page.locator(
-      'button[type="submit"], input[type="submit"], button:has-text("Login"), button:has-text("Sign In"), button:has-text("Log In")'
+  
+     this.loginButton = page.getByRole(
+      'button', { name: /log in/i }
     );
   }
+
 
   async open() {
     await this.page.goto('/');
@@ -21,6 +26,9 @@ export class LoginPage {
   }
 
   async enterUsername(username) {
+  //   const snapshot = await this.page.locator('body').ariaSnapshot();
+
+  // console.log(snapshot);
     await this.usernameInput.first().fill(username);
   }
 

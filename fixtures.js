@@ -1,12 +1,10 @@
-function requiredEnv(name) {
-  const value = process.env[name];
-  if (!value) {
-    throw new Error(`Missing required environment variable: ${name}`);
-  }
-  return value;
-}
+import { test as base, createBdd } from 'playwright-bdd';
+import { LoginPage } from './pages/login.page.js';
 
-export const env = {
-  username: requiredEnv('LOGIN_USERNAME'),
-  password: requiredEnv('LOGIN_PASSWORD')
-};
+export const test = base.extend({
+  loginPage: async ({ page }, use) => {
+    await use(new LoginPage(page));
+  }
+});
+
+export const { Given, When, Then } = createBdd(test);

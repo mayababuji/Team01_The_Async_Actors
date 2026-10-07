@@ -42,7 +42,8 @@ for (const [name, value] of Object.entries({
 const testDir = defineBddConfig({
   features: 'features/**/*.feature',
   steps: 'steps/**/*.steps.js',
-  outputDir: 'tests/generated'
+  outputDir: 'tests/generated',
+  importTestFrom: 'fixtures.js'
 });
 
 export default defineConfig({
