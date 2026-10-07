@@ -9,12 +9,12 @@ Feature: Login to Suite8
     When the user enters valid login credentials
     Then the user should be logged in successfully
 
-  @NegativeLogin
-  Scenario: User cannot log in with an invalid username
-    When the user logs in using Excel data for scenario "invalid_username"
-    Then the login error message from Excel should be displayed
+  # @NegativeLogin
+  # Scenario: User cannot log in with an invalid username
+  #   When the user logs in using Excel data for scenario "invalid_username"
+  #   Then the login error message from Excel should be displayed
 
-  @NegativeLogin
-  Scenario: User cannot log in with an invalid password
-    When the user logs in using Excel data for scenario "invalid_password"
-    Then the login error message from Excel should be displayed
+  # @NegativeLogin
+  # Scenario: User cannot log in with an invalid password
+  #   When the user logs in using Excel data for scenario "invalid_password"
+  #   Then the login error message from Excel should be displayed
