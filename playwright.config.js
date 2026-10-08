@@ -26,10 +26,14 @@ const dotenvResult = dotenv.config({
   override: false
 });
 
-if (dotenvResult.error) {
+if (dotenvResult.error && dotenvResult.error.code !== 'ENOENT') {
   throw new Error(
     `Could not load ${envFile}: ${dotenvResult.error.message}`
   );
+}
+
+if (dotenvResult.error?.code === 'ENOENT' && !process.env.CI) {
+  throw new Error(`Local environment file not found: ${envPath}`);
 }
 
 const {
