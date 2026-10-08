@@ -2,8 +2,6 @@ export class LoginPage {
   constructor(page) {
     this.page = page;
 
-   
-
       this.usernameInput = page.getByRole(
       'textbox', { name: /username/i }
     );
