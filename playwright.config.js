@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 import { defineBddConfig } from 'playwright-bdd';
 import dotenv from 'dotenv';
+import path from 'node:path';
 
 const environment = process.env.TEST_ENV || 'local';
 
@@ -18,10 +19,18 @@ if (!envFile) {
   );
 }
 
-dotenv.config({
-  path: envFile,
+const envPath = path.resolve(process.cwd(), envFile);
+
+const dotenvResult = dotenv.config({
+  path: envPath,
   override: false
 });
+
+if (dotenvResult.error) {
+  throw new Error(
+    `Could not load ${envFile}: ${dotenvResult.error.message}`
+  );
+}
 
 const {
   BASE_URL,
@@ -41,18 +50,23 @@ for (const [name, value] of Object.entries({
 
 const testDir = defineBddConfig({
   features: 'features/**/*.feature',
-  steps: 'steps/**/*.steps.js',
-  outputDir: 'tests/generated',
-  importTestFrom: 'fixtures.js'
+  steps: [
+    'steps/**/*.steps.js',
+    'fixtures.js'
+  ],
+  outputDir: 'tests/generated'
 });
 
 export default defineConfig({
   testDir,
   outputDir: 'test-results',
-  timeout: 60_000, // global test timeout
+
+  timeout: 60_000,
+
   expect: {
-    timeout: 20_000 // default timeout for expect assertions like toBeVisible()
+    timeout: 20_000
   },
+
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
