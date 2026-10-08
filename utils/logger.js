@@ -6,18 +6,16 @@ const { combine, timestamp, printf, colorize, errors } = winston.format;
 
 const logDirectory = path.resolve(process.cwd(), 'logs');
 
-mkdirSync(logDirectory, {
-  recursive: true
-});
+mkdirSync(logDirectory, { recursive: true });
 
 const consoleFormat = combine(
-  colorize(),
   timestamp({
     format: 'YYYY-MM-DD HH:mm:ss'
   }),
   errors({
     stack: true
   }),
+  colorize(),
   printf(({ timestamp, level, message, ...metadata }) => {
     const details = Object.keys(metadata).length
       ? ` ${JSON.stringify(metadata)}`
@@ -46,22 +44,27 @@ export function createLogger(testInfo) {
     '_'
   );
 
-  const logFileName = `${safeProjectName}-${safeTitle}-retry-${testInfo.retry}.log`;
+  const logFileName =
+    `${safeProjectName}-${safeTitle}-retry-${testInfo.retry}.log`;
 
   const logPath = path.join(logDirectory, logFileName);
 
   const logger = winston.createLogger({
     level: process.env.LOG_LEVEL || 'info',
+
     defaultMeta: {
       environment: process.env.TEST_ENV || 'local',
       browser: testInfo.project.name,
       retry: testInfo.retry,
       testTitle: testInfo.title
     },
+
     transports: [
       new winston.transports.Console({
-        format: consoleFormat
+        format: consoleFormat,
+        level: 'info'
       }),
+
       new winston.transports.File({
         filename: logPath,
         format: fileFormat
