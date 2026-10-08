@@ -1,19 +1,20 @@
+
+
 import { test as base, createBdd } from 'playwright-bdd';
+
 import { LoginPage } from './pages/login.page.js';
+import { AccountsPage } from './pages/accounts.page.js';
 import { readLoginData } from './utils/excel-util.js';
 import { createLogger } from './utils/logger.js';
-import { AccountsPage } from './pages/AccountsPage.js';
-
 
 export const test = base.extend({
   loginPage: async ({ page }, use) => {
-    const loginPage = new LoginPage(page);
-
-    await use(loginPage);
+    await use(new LoginPage(page));
   },
+
   accountsPage: async ({ page }, use) => {
-  await use(new AccountsPage(page));
-},
+    await use(new AccountsPage(page));
+  },
 
   loginData: [
     async ({}, use) => {
@@ -42,30 +43,45 @@ export const test = base.extend({
     });
   },
 
-  logger: async ({}, use, testInfo) => {
-    const { logger, logPath } = createLogger(testInfo);
+  logger: [
+    async ({}, use, testInfo) => {
+      const { logger, logPath } = createLogger(testInfo);
 
-    logger.info('Test started');
-
-    try {
-      await use(logger);
-    } finally {
-      logger.info('Test finished', {
-        status: testInfo.status,
-        expectedStatus: testInfo.expectedStatus
+      logger.info('Test started', {
+        environment: process.env.TEST_ENV || 'local',
+        browser: testInfo.project.name,
+        retry: testInfo.retry,
+        testTitle: testInfo.title
       });
 
-      await new Promise(resolve => {
-        logger.on('finish', resolve);
-        logger.end();
-      });
+      try {
+        await use(logger);
+      } finally {
+        logger.info('Test finished', {
+          environment: process.env.TEST_ENV || 'local',
+          browser: testInfo.project.name,
+          retry: testInfo.retry,
+          testTitle: testInfo.title,
+          status: testInfo.status,
+          expectedStatus: testInfo.expectedStatus
+        });
 
-      await testInfo.attach('Winston execution log', {
-        path: logPath,
-        contentType: 'application/json'
-      });
+        await new Promise((resolve, reject) => {
+          logger.once('finish', resolve);
+          logger.once('error', reject);
+          logger.end();
+        });
+
+        await testInfo.attach('Winston execution log', {
+          path: logPath,
+          contentType: 'application/json'
+        });
+      }
+    },
+    {
+      auto: true
     }
-  }
+  ]
 });
 
 export const { Given, When, Then } = createBdd(test);

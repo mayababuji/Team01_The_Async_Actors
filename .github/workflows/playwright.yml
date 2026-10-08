@@ -34,6 +34,7 @@ concurrency:
 
 jobs:
   test:
+    name: Playwright BDD Tests
     timeout-minutes: 160
     runs-on: ubuntu-latest
 
@@ -47,6 +48,17 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Clean previous test artifacts
+        shell: bash
+        run: |
+          rm -rf \
+            allure-results \
+            allure-report \
+            playwright-report \
+            test-results \
+            tests/generated \
+            github-pages-report
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -82,12 +94,13 @@ jobs:
             exit 1
           fi
 
-          echo "Required credentials are available"
+          echo "Required credentials are available."
 
       - name: Generate BDD tests
         run: npx bddgen
 
       - name: Run Playwright tests
+        id: playwright_tests
         run: npx playwright test
         continue-on-error: true
 
@@ -144,13 +157,19 @@ jobs:
           if [ -f allure-report/index.html ]; then
             cp -R allure-report/. github-pages-report/
           else
-            printf '%s\n' \
-              '<!doctype html>' \
-              '<html>' \
-              '<head><title>Allure Report</title></head>' \
-              '<body><h1>Allure report was not generated</h1></body>' \
-              '</html>' \
-              > github-pages-report/index.html
+            cat > github-pages-report/index.html << 'EOF'
+          <!doctype html>
+          <html lang="en">
+            <head>
+              <meta charset="utf-8">
+              <title>Allure Report</title>
+            </head>
+            <body>
+              <h1>Allure report was not generated</h1>
+              <p>Check the workflow logs and downloaded artifacts for details.</p>
+            </body>
+          </html>
+          EOF
           fi
 
       - name: Upload GitHub Pages artifact
@@ -159,9 +178,20 @@ jobs:
         with:
           path: github-pages-report
 
+      - name: Fail workflow if Playwright tests failed
+        if: steps.playwright_tests.outcome == 'failure'
+        shell: bash
+        run: |
+          echo "One or more Playwright tests failed."
+          exit 1
+
   deploy:
-    if: always()
+    name: Deploy Allure Report to GitHub Pages
     needs: test
+    if: >
+      always() &&
+      needs.test.result != 'cancelled' &&
+      github.event_name != 'pull_request'
     runs-on: ubuntu-latest
 
     environment:
