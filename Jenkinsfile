@@ -30,8 +30,8 @@ pipeline {
                 script {
                     def urls = [
                         local: 'https://suite8demo.suiteondemand.com',
-                        qa: 'https://suite8demo.suiteondemand.com',
-                        prod: 'https://suite8demo.suiteondemand.com'
+                        qa   : 'https://suite8demo.suiteondemand.com',
+                        prod : 'https://suite8demo.suiteondemand.com'
                     ]
 
                     if (!urls.containsKey(params.TEST_ENV)) {
@@ -52,12 +52,30 @@ pipeline {
             }
         }
 
+        stage('Clean previous test artifacts') {
+            steps {
+                sh '''
+                    rm -rf \
+                        allure-results \
+                        allure-report \
+                        playwright-report \
+                        test-results \
+                        tests/generated
+
+                    mkdir -p allure-results
+                '''
+            }
+        }
+
         stage('Environment') {
             steps {
-                sh 'node --version'
-                sh 'npm --version'
-                sh 'echo TEST_ENV=$TEST_ENV'
-                sh 'echo BASE_URL=$BASE_URL'
+                sh '''
+                    node --version
+                    npm --version
+                    echo "TEST_ENV=$TEST_ENV"
+                    echo "BASE_URL=$BASE_URL"
+                    echo "CI=$CI"
+                '''
             }
         }
 
@@ -70,9 +88,9 @@ pipeline {
         stage('Install Playwright browsers') {
             steps {
                 sh '''
-                    npx playwright install --with-deps \\
-                        chromium \\
-                        firefox \\
+                    npx playwright install --with-deps \
+                        chromium \
+                        firefox \
                         webkit
                 '''
             }
@@ -95,7 +113,7 @@ pipeline {
             }
         }
 
-        stage('Run all BDD tests on all browsers') {
+        stage('Run all BDD tests') {
             steps {
                 withCredentials([
                     usernamePassword(
@@ -116,15 +134,21 @@ pipeline {
     post {
         always {
             script {
-                // Resolve values in Groovy
-                def nodeVersion = sh(script: 'node --version', returnStdout: true).trim()
-                def osName = sh(script: 'uname -s', returnStdout: true).trim()
+                def nodeVersion = sh(
+                    script: 'node --version',
+                    returnStdout: true
+                ).trim()
+
+                def osName = sh(
+                    script: 'uname -s',
+                    returnStdout: true
+                ).trim()
+
                 def headlessValue = env.HEADLESS ?: 'true'
                 def ciValue = env.CI ?: 'true'
                 def testEnvValue = env.TEST_ENV ?: params.TEST_ENV ?: 'unknown'
                 def baseUrlValue = env.BASE_URL ?: 'unknown'
 
-                // Write environment.properties for Allure
                 sh """
                     mkdir -p allure-results
 
@@ -139,13 +163,30 @@ CI=${ciValue}
 EOF
                 """
 
-                if (fileExists('allure-results')) {
+                def allureResultsExist = fileExists('allure-results')
+
+                def allureTestResultsExist = allureResultsExist && (
+                    sh(
+                        script: '''
+                            find allure-results \
+                                -maxdepth 1 \
+                                -type f \
+                                -name "*-result.json" \
+                                | grep -q .
+                        ''',
+                        returnStatus: true
+                    ) == 0
+                )
+
+                if (allureTestResultsExist) {
                     allure([
                         results: [
                             [path: 'allure-results']
                         ],
                         reportBuildPolicy: 'ALWAYS'
                     ])
+                } else {
+                    echo 'No Allure test result JSON files were produced; skipping Allure publication.'
                 }
             }
 
@@ -175,7 +216,11 @@ EOF
         }
 
         cleanup {
-            cleanWs()
+            cleanWs(
+                deleteDirs: true,
+                disableDeferredWipeout: true,
+                notFailBuild: true
+            )
         }
     }
 }
