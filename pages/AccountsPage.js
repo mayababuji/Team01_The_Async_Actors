@@ -23,9 +23,9 @@ this.accountsModule = page
   }
 
   async hoverAccountsModule() {
-      const snapshot = await this.page.locator('body').ariaSnapshot();
+  //     const snapshot = await this.page.locator('body').ariaSnapshot();
 
-  console.log(snapshot);
+  // console.log(snapshot);
   //await this.accountsModule.waitFor({ state: 'visible' });
     await this.accountsModule.hover();
   }
