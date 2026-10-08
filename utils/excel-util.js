@@ -34,13 +34,18 @@ export function readLoginData() {
       expectedResult: String(row.ExpectedResult ?? '').trim()
     };
 
-    for (const [field, value] of Object.entries(loginRow)) {
-      if (!value) {
-        throw new Error(
-          `Excel row ${index + 2} is missing a value for "${field}".`
-        );
-      }
-    }
+   const requiredFields = [
+  'scenario',
+  'expectedResult'
+];
+
+for (const field of requiredFields) {
+  if (!loginRow[field]) {
+    throw new Error(
+      `Excel row ${index + 2} is missing a value for "${field}".`
+    );
+  }
+}
 
     return loginRow;
   });

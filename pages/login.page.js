@@ -20,6 +20,7 @@ export class LoginPage {
       'button', { name: /log in/i }
     );
     this.loginErrorMessage = page.getByText('Login credentials incorrect, please try again.');
+    this.emptyCredentialErrorMessage = page.getByText(' Missing required field ' );
   }
 
 
@@ -40,7 +41,12 @@ export class LoginPage {
   }
 
   async clickLogin() {
+     
     await this.loginButton.click();
+  //     const snapshot = await this.page.locator('body').ariaSnapshot();
+
+  // console.log(snapshot);
+
   }
 
   async login(username, password) {

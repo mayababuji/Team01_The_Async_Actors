@@ -64,32 +64,82 @@ When(
     logger.info('Negative login form submitted', {
       scenario: row.scenario
     });
+    
   }
 );
 
 Then(
   'the login error message from Excel should be displayed',
-  async ({ loginPage, selectedLoginData ,logger}) => {
+  async ({ loginPage, selectedLoginData, logger }) => {
     const row = selectedLoginData.get();
 
     if (!row) {
-      logger.error('No selected Excel row exists for error-message validation');
+      logger.error(
+        'No selected Excel row exists for error-message validation'
+      );
+
       throw new Error(
-        'No Excel login row was selected. Ensure the Excel login step runs before the validation step.'
+        'No Excel login row was selected before validating the error message.'
       );
     }
-    logger.info('Verifying expected negative-login message', {
+
+    const errorLocators = {
+      'Login credentials incorrect, please try again.': {
+        locator: loginPage.loginErrorMessage,
+        locatorName: 'loginErrorMessage'
+      },
+
+      'Missing required field': {
+        locator: loginPage.emptyCredentialErrorMessage,
+        locatorName: 'emptyCredentialErrorMessage'
+      }
+    };
+
+    const errorConfig = errorLocators[row.expectedResult];
+
+    if (!errorConfig) {
+      logger.error('No error locator is configured for Excel text', {
+        scenario: row.scenario,
+        expectedResult: row.expectedResult,
+        supportedMessages: Object.keys(errorLocators)
+      });
+
+      throw new Error(
+        `No error-message locator is configured for Excel ExpectedResult: "${row.expectedResult}"`
+      );
+    }
+
+    logger.info('Verifying expected login error message', {
       scenario: row.scenario,
-      expectedResult: row.expectedResult
+      expectedResult: row.expectedResult,
+      locatorUsed: errorConfig.locatorName
     });
 
-    await expect(loginPage.loginErrorMessage).toBeVisible();
+    await expect(errorConfig.locator).toBeVisible();
 
-    await expect(loginPage.loginErrorMessage).toContainText(
+    await expect(errorConfig.locator).toContainText(
       row.expectedResult
     );
-    logger.info('Negative-login message verified successfully', {
-      scenario: row.scenario
+
+    logger.info('Expected login error message was verified', {
+      scenario: row.scenario,
+      locatorUsed: errorConfig.locatorName
     });
+  }
+);
+When(
+  'the user enters a password',
+  async ({ loginPage }) => {
+    await loginPage.enterPassword(env.password);
+  }
+);
+Then(
+  'the user should see the password displayed as hidden characters',
+  async ({ loginPage }) => {
+    const passwordField = loginPage.passwordInput.first();
+
+    await expect(passwordField).toHaveAttribute('type', 'password');
+
+    await expect(passwordField).toHaveValue(env.password);
   }
 );
