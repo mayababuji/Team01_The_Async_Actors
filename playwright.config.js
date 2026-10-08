@@ -106,7 +106,8 @@ projects: [
   {
     name: 'setup',
     testDir: 'session',
-    testMatch: /auth\.setup\.js/
+    testMatch: /auth\.setup\.js/,
+     reporter: 'null'
   },
 
   {
