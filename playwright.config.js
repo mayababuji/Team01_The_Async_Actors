@@ -102,25 +102,35 @@ export default defineConfig({
     actionTimeout: 15_000,
     navigationTimeout: 30_000
   },
-
-  projects: [
-    {
-      name: 'chromium',
-      use: {
-        ...devices['Desktop Chrome']
-      }
-    },
-    {
-      name: 'firefox',
-      use: {
-        ...devices['Desktop Firefox']
-      }
-    },
-    {
-      name: 'webkit',
-      use: {
-        ...devices['Desktop Safari']
-      }
+projects: [
+  {
+    name: 'setup',
+    testDir: 'session',
+    testMatch: /auth\.setup\.js/
+  },
+  {
+    name: 'chromium',
+    dependencies: ['setup'],
+    use: {
+      ...devices['Desktop Chrome'],
+      storageState: 'playwright/.auth/user.json'
     }
-  ]
+  },
+  {
+    name: 'firefox',
+    dependencies: ['setup'],
+    use: {
+      ...devices['Desktop Firefox'],
+      storageState: 'playwright/.auth/user.json'
+    }
+  },
+  {
+    name: 'webkit',
+    dependencies: ['setup'],
+    use: {
+      ...devices['Desktop Safari'],
+      storageState: 'playwright/.auth/user.json'
+    }
+  }
+]
 });
