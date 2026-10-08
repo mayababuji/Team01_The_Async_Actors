@@ -108,8 +108,32 @@ projects: [
     testDir: 'session',
     testMatch: /auth\.setup\.js/
   },
+
+  {
+    name: 'login-chromium',
+    testMatch: /login\.feature\.spec\.js/,
+    use: {
+      ...devices['Desktop Chrome']
+    }
+  },
+  {
+    name: 'login-firefox',
+    testMatch: /login\.feature\.spec\.js/,
+    use: {
+      ...devices['Desktop Firefox']
+    }
+  },
+  {
+    name: 'login-webkit',
+    testMatch: /login\.feature\.spec\.js/,
+    use: {
+      ...devices['Desktop Safari']
+    }
+  },
+
   {
     name: 'chromium',
+    testIgnore: /login\.feature\.spec\.js/,
     dependencies: ['setup'],
     use: {
       ...devices['Desktop Chrome'],
@@ -118,6 +142,7 @@ projects: [
   },
   {
     name: 'firefox',
+    testIgnore: /login\.feature\.spec\.js/,
     dependencies: ['setup'],
     use: {
       ...devices['Desktop Firefox'],
@@ -126,6 +151,7 @@ projects: [
   },
   {
     name: 'webkit',
+    testIgnore: /login\.feature\.spec\.js/,
     dependencies: ['setup'],
     use: {
       ...devices['Desktop Safari'],
