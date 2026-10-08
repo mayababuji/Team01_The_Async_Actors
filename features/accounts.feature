@@ -1,8 +1,8 @@
 @accounts
 Feature: Accounts module navigation
 
-  Background:
-    Given the user is successfully logged in to the Suite8Demo application
+Background:
+  Given the authenticated user is on the Suite8Demo home page
 
   @AccountsNavigation
   Scenario: Verify Accounts module navigation

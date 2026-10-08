@@ -1,24 +1,14 @@
 import { expect } from '@playwright/test';
 import { Given, When, Then } from '../fixtures.js';
-import { env } from '../utils/env.js';
 
 Given(
-  'the user is successfully logged in to the Suite8Demo application',
-  async ({ page, loginPage, logger }) => {
-    logger.info('Opening Suite8Demo login page for Accounts scenario');
+  'the authenticated user is on the Suite8Demo home page',
+  async ({ page, logger }) => {
+    logger.info('Opening Suite8Demo home page with saved authentication');
 
-    await loginPage.open();
+    await page.goto(`${process.env.BASE_URL}/#/home`);
 
-    logger.info('Logging in before Accounts navigation test');
-
-    await loginPage.login(
-      env.username,
-      env.password
-    );
-
-    await expect(page).toHaveURL(/home/i);
-
-    logger.info('User logged in successfully and reached the home page');
+    await expect(page).toHaveURL(/#\/home/i);
   }
 );
 

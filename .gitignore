@@ -38,7 +38,7 @@ Thumbs.db
 
 # Playwright browser downloads if configured within the project
 .playwright-browsers/
-
+playwright/.auth/
 # Temporary files
 *.tmp
 *.temp
