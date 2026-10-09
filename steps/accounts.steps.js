@@ -1,5 +1,6 @@
 import { expect } from '@playwright/test';
 import { Given, When, Then } from '../fixtures.js';
+import {  readAccountData } from '../utils/excel-util.js';
 
 Given(
   'the authenticated user is on the Suite8Demo home page',
@@ -88,3 +89,65 @@ Then('the user should be navigated to the View Accounts module page', async ({ac
      await expect(accountsPage.viewAccountPageHeading).toBeVisible();
   
 });
+Given(
+  'the user is on the Create Account page',
+  async ({ accountsPage }) => {
+    await accountsPage.openCreateAccountPage();
+  }
+);
+
+When(
+  'the user clicks Save without entering the required Name field',
+  async ({ accountsPage }) => {
+    await accountsPage.clickSaveOnCreateAccountPage();
+  }
+);
+
+Then(
+  'the Name validation message {string} should be displayed',
+  async ({ accountsPage }, expectedMessage) => {
+    await expect(accountsPage.nameValidationMessage)
+      .toHaveText(expectedMessage);
+  }
+);
+
+
+
+When(
+  'the user enters valid account details and clicks Save',
+  async ({ accountsPage ,logger}) => {
+    const account = readAccountData().find(
+      row => row.scenario === 'create_account_valid_name'
+    );
+
+    if (!account) {
+      throw new Error(
+        'Scenario "create_account_valid_name" was not found in the Accounts worksheet'
+      );
+    }
+    
+logger.info('Account data read from Excel', { account });
+    await accountsPage.enterAccountName(account.name);
+     await accountsPage.clickSaveOnCreateAccountPage();
+  }
+);
+
+
+Then(
+  'the user should be navigated to the newly created account detail page',
+  async ({ accountsPage }) => {
+    const account = readAccountData().find(
+      row => row.scenario === 'create_account_valid_name'
+    );
+
+    if (!account) {
+      throw new Error(
+        'Scenario "create_account_valid_name" was not found in the Accounts worksheet'
+      );
+    }
+
+    await expect(
+      accountsPage.getAccountDetailName(account.expectedResult)
+    ).toBeVisible();
+  }
+);

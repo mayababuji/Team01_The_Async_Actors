@@ -1,19 +1,20 @@
+// utils/excelUtils.js
 import XLSX from 'xlsx';
 import path from 'node:path';
 
-export function readLoginData() {
-  const filePath = path.resolve(
-    process.cwd(),
-    'test-data',
-    'Team01_The_Async_Actors_Test_Data.xlsx'
-  );
+const filePath = path.resolve(
+  process.cwd(),
+  'test-data',
+  'Team01_The_Async_Actors_Test_Data.xlsx'
+);
 
+function readSheetData(sheetName) {
   const workbook = XLSX.readFile(filePath);
-  const worksheet = workbook.Sheets.login;
+  const worksheet = workbook.Sheets[sheetName];
 
   if (!worksheet) {
     throw new Error(
-      `Sheet "login" was not found in login-data.xlsx. Available sheets: ${workbook.SheetNames.join(', ')}`
+      `Sheet "${sheetName}" was not found. Available sheets: ${workbook.SheetNames.join(', ')}`
     );
   }
 
@@ -23,10 +24,14 @@ export function readLoginData() {
   });
 
   if (rows.length === 0) {
-    throw new Error('The "login" worksheet has no data rows.');
+    throw new Error(`The "${sheetName}" worksheet has no data rows.`);
   }
 
-  return rows.map((row, index) => {
+  return rows;
+}
+
+export function readLoginData() {
+  return readSheetData('login').map((row, index) => {
     const loginRow = {
       scenario: String(row.Scenario ?? '').trim(),
       username: String(row.Username ?? '').trim(),
@@ -34,19 +39,37 @@ export function readLoginData() {
       expectedResult: String(row.ExpectedResult ?? '').trim()
     };
 
-   const requiredFields = [
-  'scenario',
-  'expectedResult'
-];
-
-for (const field of requiredFields) {
-  if (!loginRow[field]) {
-    throw new Error(
-      `Excel row ${index + 2} is missing a value for "${field}".`
-    );
-  }
-}
+    for (const field of ['scenario', 'expectedResult']) {
+      if (!loginRow[field]) {
+        throw new Error(
+          `Excel login row ${index + 2} is missing "${field}".`
+        );
+      }
+    }
 
     return loginRow;
+  });
+}
+
+export function readAccountData() {
+  return readSheetData('Accounts').map((row, index) => {
+    const accountRow = {
+      scenario: String(row.Scenario ?? '').trim(),
+      name: String(row.Name ?? '').trim(),
+      phone: String(row.Phone ?? '').trim(),
+      website: String(row.Website ?? '').trim(),
+      expectedResult: String(row.ExpectedResult ?? '').trim()
+    };
+    console.log('RAW ACCOUNT EXCEL ROWS:', accountRow);
+
+    for (const field of ['scenario', 'name', 'expectedResult']) {
+      if (!accountRow[field]) {
+        throw new Error(
+          `Excel Accounts row ${index + 2} is missing "${field}".`
+        );
+      }
+    }
+
+    return accountRow;
   });
 }
