@@ -22,7 +22,19 @@ Scenario: Verify Import Accounts page navigation
   When the user clicks on the Import module from the top navigation
   Then the user should be navigated to the Import module page
 
-      @AccountsNavigation @maya
+      @AccountsNavigation
 Scenario: Verify View Accounts page navigation
   When the user clicks on the View Accounts module from the top navigation
   Then the user should be navigated to the View Accounts module page
+
+   @RequiredNameValidation  
+  Scenario: Verify required Name field validation on Create Account page
+    Given the user is on the Create Account page
+    When the user clicks Save without entering the required Name field
+    Then the Name validation message "Missing required field: Name" should be displayed
+
+     @CreateAccountPositive
+  Scenario Outline: Create an account with valid mandatory data
+   Given the user is on the Create Account page
+  When the user enters valid account details and clicks Save
+  Then the user should be navigated to the newly created account detail page

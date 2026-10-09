@@ -1,7 +1,7 @@
 export class AccountsPage {
   constructor(page) {
     this.page = page;
-
+//Locators
 this.accountsModule = page
   .getByText('Accounts', { exact: true })
   .filter({ visible: true });
@@ -30,6 +30,21 @@ this.accountsModule = page
     this.viewAccountPageHeading = page
   .getByText('ACCOUNTS',{exact:true});
    
+ 
+this.saveButton = this.page.getByRole('button', {
+  name: 'Save'},{ exact: true }
+);
+
+this.nameValidationMessage = this.page.getByText(
+  'Missing required field: Name',
+  { exact: true }
+);
+
+this.accountNameInput = page
+  .getByRole('tabpanel', { name: 'OVERVIEW' })
+  .getByRole('textbox')
+  .first();
+
   }
 
   async hoverAccountsModule() {
@@ -97,6 +112,27 @@ this.accountsModule = page
   
   }
 
+  async clickSaveOnCreateAccountPage() {
+  await this.saveButton.click();
+   //  await this.page.pause();
+  //    const snapshot = await this.page.locator('body').ariaSnapshot();
+
+  // console.log(snapshot);
+}
+
+async enterAccountName(name) {
+  console.log("the name is here is ===>",name);
+  // await this.page.pause();
+  //      const snapshot = await this.page.locator('body').ariaSnapshot();
+
+  // console.log(snapshot);
+  await this.accountNameInput.fill(name);
+}
+getAccountDetailName(expectedName) {
+  return this.page
+    .getByRole('tabpanel', { name: 'OVERVIEW' })
+    .getByText(expectedName, { exact: true });
+}
 
   
 }
