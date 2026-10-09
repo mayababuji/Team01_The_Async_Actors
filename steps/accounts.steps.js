@@ -43,3 +43,48 @@ Then(
     });
   }
 );
+
+When(
+  'the user clicks on the Accounts module from the top navigation',
+  async ({ accountsPage, logger }) => {
+    logger.info('Opening the Accounts navigation menu');
+
+    await accountsPage.openCreateAccountPage();
+  }
+);
+
+Then(
+  'the user should be navigated to the Create Account page',
+  async ({ accountsPage, logger }) => {
+    logger.info('Verifying the Create Account page is displayed');
+
+    await expect(accountsPage.createAccountPageHeading).toBeVisible();
+  
+  }
+);
+
+When('the user clicks on the Import module from the top navigation', async ({accountsPage,logger}) => {
+  logger.info('Verifying the Import module page is displayed');
+   await accountsPage.openImportAccountPage();
+});
+
+Then(
+  'the user should be navigated to the Import module page',
+  async ({ accountsPage, logger }) => {
+    logger.info('Verifying the Import module  is displayed');
+
+    await expect(accountsPage.importAccountPageHeading).toBeVisible();
+  
+  }
+);
+
+When('the user clicks on the View Accounts module from the top navigation', async ({accountsPage,logger}) => {
+  logger.info('Verifying the View Accounts page is displayed');
+   await accountsPage.openViewAccountPage();
+});
+
+Then('the user should be navigated to the View Accounts module page', async ({accountsPage, logger}) => {
+   logger.info('Verifying the View Account module  is displayed');
+     await expect(accountsPage.viewAccountPageHeading).toBeVisible();
+  
+});

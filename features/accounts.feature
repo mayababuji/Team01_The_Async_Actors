@@ -11,3 +11,18 @@ Background:
       | Create Account  |
       | Import Accounts |
       | View Accounts   |
+
+  @AccountsNavigation
+Scenario: Verify Create Account page navigation
+  When the user clicks on the Accounts module from the top navigation
+  Then the user should be navigated to the Create Account page
+
+    @AccountsNavigation 
+Scenario: Verify Import Accounts page navigation
+  When the user clicks on the Import module from the top navigation
+  Then the user should be navigated to the Import module page
+
+      @AccountsNavigation @maya
+Scenario: Verify View Accounts page navigation
+  When the user clicks on the View Accounts module from the top navigation
+  Then the user should be navigated to the View Accounts module page
