@@ -20,6 +20,16 @@ this.accountsModule = page
       'link',
       { name: /view accounts/i }
     );
+    
+     this.createAccountPageHeading = page.getByText('Create', { exact: true});
+     //this.importAccountPageHeading = page.getByRole('heading',{name:' Step 1: Upload Import File '})
+    this.importAccountPageHeading = page
+  .frameLocator('iframe[src*="module=Import"]')
+  .getByRole('heading', { name: 'Step 1: Upload Import File' });
+
+    this.viewAccountPageHeading = page
+  .getByText('ACCOUNTS',{exact:true});
+   
   }
 
   async hoverAccountsModule() {
@@ -53,4 +63,41 @@ this.accountsModule = page
 
     await option.click();
   }
+
+  async openCreateAccountPage() {
+    await this.accountsModule.hover();
+    await this.createAccountOption.click();
+   
+  
+  }
+
+  async openImportAccountPage() {
+    await this.accountsModule.hover();
+     
+    await this.importAccountsOption.click();
+   // await this.page.pause();
+//     const importFrame = this.page.frameLocator(
+//   'iframe[src*="module=Import"][src*="action=Step1"]'
+// );
+//         const snapshot = await importFrame.locator('body').ariaSnapshot();
+// console.log(snapshot);
+  
+  
+  }
+
+   async openViewAccountPage() {
+    await this.accountsModule.hover();
+     
+    await this.viewAccountsOption.click();
+  //  await this.page.pause();
+  //    const snapshot = await this.page.locator('body').ariaSnapshot();
+
+  // console.log(snapshot);
+  
+  
+  }
+
+
+  
 }
+

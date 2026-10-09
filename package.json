@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "Playwright BDD automation framework for Suite8",
   "type": "module",
+ 
+
   "scripts": {
     "clean:reports": "rimraf allure-results allure-report playwright-report test-results tests/generated",
 
@@ -13,7 +15,7 @@
     "test:all": "npm run clean:reports && npm run bddgen && npm run allure:environment && playwright test",
 
     "test:local": "cross-env TEST_ENV=local npm run test:all",
-    "test:qa": "cross-env TEST_ENV=qa npm run test:all",
+    "test:qa": "cross-env TEST_ENV=qa npm run test:all", 
     "test:prod": "cross-env TEST_ENV=prod npm run test:all",
 
     "allure:generate": "allure generate allure-results --clean -o allure-report",
