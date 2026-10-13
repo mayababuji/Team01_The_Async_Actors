@@ -49,8 +49,8 @@ this.accountNameInput = page
   name: 'OVERVIEW',
   exact: true
 });
-const overviewTextboxes =
-  this.overviewPanel.getByRole('textbox');
+// const overviewTextboxes =
+//   this.overviewPanel.getByRole('textbox');
 
 this.accountNameInput = page
   .locator('scrm-field.field-name-name')
