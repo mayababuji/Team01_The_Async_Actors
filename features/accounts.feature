@@ -38,3 +38,9 @@ Scenario: Verify View Accounts page navigation
    Given the user is on the Create Account page
   When the user enters valid account details and clicks Save
   Then the user should be navigated to the newly created account detail page
+
+  @CreateAccountCompleteOverview @maya
+Scenario: Create an account with complete overview information
+  Given the user is on the Create Account page
+  When the user enters complete overview information from Excel and saves the account
+  Then the account should be created with all entered overview information

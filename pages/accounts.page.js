@@ -45,6 +45,66 @@ this.accountNameInput = page
   .getByRole('textbox')
   .first();
 
+  this.overviewPanel = page.getByRole('tabpanel', {
+  name: 'OVERVIEW',
+  exact: true
+});
+const overviewTextboxes =
+  this.overviewPanel.getByRole('textbox');
+
+this.accountNameInput = page
+  .locator('scrm-field.field-name-name')
+  .getByRole('textbox');
+
+  this.websiteInput = page
+  .locator('scrm-field.field-name-website')
+  .getByRole('textbox');
+
+this.officePhoneInput =page
+.locator('scrm-dynamic-field.dynamic-field-name-phone_office')
+.getByRole('textbox');
+//this.officePhoneInput = overviewTextboxes.nth(2);
+this.emailInput = page
+.locator('scrm-dynamic-field.dynamic-field-type-email')
+.getByRole('textbox');
+
+this.billingStreetInput =  page
+.locator('scrm-dynamic-field.dynamic-field-name-billing_address_street')
+.getByRole('textbox');
+this.billingPostalCodeInput = page
+.locator('scrm-dynamic-field.dynamic-field-name-billing_address_postalcode')
+.getByRole('textbox');
+this.billingCityInput = page
+.locator('scrm-dynamic-field.dynamic-field-name-billing_address_city')
+.getByRole('textbox');
+this.billingStateInput = page
+.locator('scrm-dynamic-field.dynamic-field-name-billing_address_state')
+.getByRole('textbox');
+this.billingCountryInput = page
+.locator('scrm-dynamic-field.dynamic-field-name-billing_address_country')
+.getByRole('textbox');
+
+this.shippingStreetInput = page
+.locator('scrm-dynamic-field.dynamic-field-name-shipping_address_street')
+.getByRole('textbox');
+this.shippingPostalCodeInput = page
+.locator('scrm-dynamic-field.dynamic-field-name-shipping_address_postalcode')
+.getByRole('textbox');
+this.shippingCityInput = page
+.locator('scrm-dynamic-field.dynamic-field-name-shipping_address_city')
+.getByRole('textbox');
+this.shippingStateInput = page
+.locator('scrm-dynamic-field.dynamic-field-name-shipping_address_state')
+.getByRole('textbox');
+this.shippingCountryInput = page
+.locator('scrm-dynamic-field.dynamic-field-name-shipping_address_country')
+.getByRole('textbox');
+
+this.saveButton = page.getByRole('button', {
+  name: 'Save',
+  exact: true
+});
+
   }
 
   async hoverAccountsModule() {
@@ -128,10 +188,45 @@ async enterAccountName(name) {
   // console.log(snapshot);
   await this.accountNameInput.fill(name);
 }
+// getAccountDetailName(expectedName) {
+//   return this.page
+//     .getByRole('tabpanel', { name: 'OVERVIEW' })
+//     .getByText(expectedName, { exact: true });
+// }
+
 getAccountDetailName(expectedName) {
-  return this.page
-    .getByRole('tabpanel', { name: 'OVERVIEW' })
-    .getByText(expectedName, { exact: true });
+  return this.overviewPanel.getByText(expectedName, {
+    exact: true
+  });
+}
+
+async enterCompleteOverviewInformation(account) {
+  //    await this.page.pause();
+  //       const snapshot = await this.page.locator('body').ariaSnapshot();
+
+  // console.log(snapshot);
+  await this.accountNameInput.fill(account.name);
+  await this.websiteInput.fill(account.website);
+  await this.officePhoneInput.fill(account.phone);
+  await this.emailInput.fill(account.email);
+
+  await this.billingStreetInput.fill(account.billingStreet);
+  await this.billingPostalCodeInput.fill(
+    account.billingPostalCode
+  );
+  await this.billingCityInput.fill(account.billingCity);
+  await this.billingStateInput.fill(account.billingState);
+  await this.billingCountryInput.fill(account.billingCountry);
+
+  await this.shippingStreetInput.fill(account.shippingStreet);
+  await this.shippingPostalCodeInput.fill(
+    account.shippingPostalCode
+  );
+  await this.shippingCityInput.fill(account.shippingCity);
+  await this.shippingStateInput.fill(account.shippingState);
+  await this.shippingCountryInput.fill(
+    account.shippingCountry
+  );
 }
 
   

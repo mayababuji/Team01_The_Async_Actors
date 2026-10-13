@@ -50,7 +50,19 @@ export function readLoginData() {
     return loginRow;
   });
 }
+export function getAccountDataByScenario(scenarioName) {
+  const account = readAccountData().find(
+    row => row.scenario === scenarioName
+  );
 
+  if (!account) {
+    throw new Error(
+      `Account scenario "${scenarioName}" was not found in the Accounts worksheet.`
+    );
+  }
+
+  return account;
+}
 export function readAccountData() {
   return readSheetData('Accounts').map((row, index) => {
     const accountRow = {
@@ -58,14 +70,55 @@ export function readAccountData() {
       name: String(row.Name ?? '').trim(),
       phone: String(row.Phone ?? '').trim(),
       website: String(row.Website ?? '').trim(),
+      email: String(row.Email ?? '').trim(),
+
+      billingStreet: String(row.BillingStreet ?? '').trim(),
+      billingPostalCode: String(row.BillingPostalCode ?? '').trim(),
+      billingCity: String(row.BillingCity ?? '').trim(),
+      billingState: String(row.BillingState ?? '').trim(),
+      billingCountry: String(row.BillingCountry ?? '').trim(),
+
+      shippingStreet: String(row.ShippingStreet ?? '').trim(),
+      shippingPostalCode: String(row.ShippingPostalCode ?? '').trim(),
+      shippingCity: String(row.ShippingCity ?? '').trim(),
+      shippingState: String(row.ShippingState ?? '').trim(),
+      shippingCountry: String(row.ShippingCountry ?? '').trim(),
+
       expectedResult: String(row.ExpectedResult ?? '').trim()
     };
-    console.log('RAW ACCOUNT EXCEL ROWS:', accountRow);
 
-    for (const field of ['scenario', 'name', 'expectedResult']) {
+    // These remain required for your existing positive account rows.
+    const requiredFields = [
+      'scenario',
+      'name',
+      'expectedResult'
+    ];
+
+    // Require complete data only for this new scenario.
+    if (
+      accountRow.scenario === 'create_account_complete_overview'
+    ) {
+      requiredFields.push(
+        'phone',
+        'website',
+        'email',
+        'billingStreet',
+        'billingPostalCode',
+        'billingCity',
+        'billingState',
+        'billingCountry',
+        'shippingStreet',
+        'shippingPostalCode',
+        'shippingCity',
+        'shippingState',
+        'shippingCountry'
+      );
+    }
+
+    for (const field of requiredFields) {
       if (!accountRow[field]) {
         throw new Error(
-          `Excel Accounts row ${index + 2} is missing "${field}".`
+          `Accounts Excel data row ${index + 2} is missing "${field}".`
         );
       }
     }
