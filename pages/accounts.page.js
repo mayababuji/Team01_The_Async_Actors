@@ -105,15 +105,14 @@ this.saveButton = page.getByRole('button', {
   exact: true
 });
 
-// Inside your existing constructor(page)
 
-// EXAMPLE: confirm whether Primary is a checkbox or radio
-// and whether its accessible name is actually "Primary".
+
+
 this.primaryEmailControl = page
 .locator('scrm-dynamic-field.dynamic-field-name-primary_address')
  .locator('input[type="checkbox"]');
 
-// EXAMPLE: confirm the Edit button's role and accessible name.
+
 this.editAccountButton = page.getByRole('button', {
   name: ' Edit '
 });
