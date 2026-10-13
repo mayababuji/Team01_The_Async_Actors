@@ -105,6 +105,18 @@ this.saveButton = page.getByRole('button', {
   exact: true
 });
 
+
+
+
+this.primaryEmailControl = page
+.locator('scrm-dynamic-field.dynamic-field-name-primary_address')
+ .locator('input[type="checkbox"]');
+
+
+this.editAccountButton = page.getByRole('button', {
+  name: ' Edit '
+});
+
   }
 
   async hoverAccountsModule() {
@@ -227,6 +239,20 @@ async enterCompleteOverviewInformation(account) {
   await this.shippingCountryInput.fill(
     account.shippingCountry
   );
+}
+
+async enterAccountWithPrimaryEmail(account) {
+     await this.page.pause();
+  //       const snapshot = await this.page.locator('body').ariaSnapshot();
+
+  // console.log(snapshot);
+  await this.enterAccountName(account.name);
+  await this.emailInput.fill(account.email);
+  await this.primaryEmailControl.setChecked(true);
+}
+
+async openAccountForEditing() {
+  await this.editAccountButton.click();
 }
 
   
