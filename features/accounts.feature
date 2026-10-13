@@ -52,3 +52,35 @@ Scenario: Create an account with a primary email address
   Given the user is on the Create Account page
   When the user enters a valid account name, email address, selects primary email, and saves the account
   Then the account should be created with the email address marked as primary
+
+  @accounts @CreateAccountInvalidEmail
+Scenario: Validate an invalid email address during account creation
+  Given the user is on the Create Account page
+  When the user enters a valid account name, an invalid email address, and clicks the Save button
+  Then the user should see an email-address validation message
+
+  @accounts @CancelCreateAccountWithoutData 
+Scenario: Verify Cancel button on Create Account page without entered data
+  Given the user is on the Create Account page
+  When the user clicks the Cancel button without entering data
+  Then the user should be navigated back to the Accounts Dashboard page
+
+  @accounts @CancelCreateAccountWithData
+Scenario: Verify Cancel button on Create Account page with entered data
+  Given the user enters account data entered on the Create Account page
+  When the user clicks the Cancel button
+  Then the user should see a confirmation popup for unsaved changes
+
+
+  @accounts @DiscardUnsavedAccountData 
+Scenario: Discard unsaved account data from cancellation popup
+  Given the user enters account data entered on the Create Account page
+  When the user discards the unsaved account data from the cancellation popup
+  Then the user should be navigated back to the Accounts Dashboard page
+
+
+  @accounts @ContinueEditingAfterCancel 
+Scenario: Continue editing account after dismissing cancellation popup
+  Given the user enters account data entered on the Create Account page
+  When the user dismisses the cancellation popup
+  Then the user should remain on the Create Account page with entered data retained

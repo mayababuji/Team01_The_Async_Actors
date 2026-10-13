@@ -258,3 +258,242 @@ Then(
     });
   }
 );
+
+
+When(
+  'the user enters a valid account name, an invalid email address, and clicks the Save button',
+  async ({ accountsPage, logger }) => {
+    const account = getAccountDataByScenario(
+      'create_account_invalid_email'
+    );
+
+    logger.info('Entering account data with an invalid email', {
+      scenario: account.scenario,
+      accountName: account.name,
+      email: account.email
+    });
+
+    await accountsPage.enterAccountWithInvalidEmail(account);
+    await accountsPage.clickSaveOnCreateAccountPage();
+  }
+);
+
+
+Then(
+  'the user should see an email-address validation message',
+  async ({ accountsPage, logger }) => {
+    const account = getAccountDataByScenario(
+      'create_account_invalid_email'
+    );
+
+    const validationMessage =
+      accountsPage.getEmailValidationMessage(
+        account.expectedResult
+      );
+
+    await expect(validationMessage).toBeVisible();
+    await expect(validationMessage).toHaveText(
+      account.expectedResult
+    );
+
+    // Confirm the user remains on the Create Account form.
+    await expect(
+      accountsPage.createAccountPageHeading
+    ).toBeVisible();
+
+    logger.info('Invalid email validation verified', {
+      scenario: account.scenario,
+      expectedMessage: account.expectedResult
+    });
+  }
+);
+
+When(
+  'the user clicks the Cancel button without entering data',
+  async ({ accountsPage, logger }) => {
+    await expect(
+      accountsPage.accountNameInput
+    ).toHaveValue('');
+
+    await expect(
+      accountsPage.emailInput
+    ).toHaveValue('');
+
+    logger.info('Clicking Cancel on the empty Create Account form');
+
+    await accountsPage.clickCancelOnCreateAccountPage();
+  }
+);
+
+
+Then(
+  'the user should be navigated back to the Accounts Dashboard page',
+  async ({ page, accountsPage, logger }) => {
+    await expect(page).toHaveURL(/#\/accounts\/?(?:\?.*)?$/);
+
+    await expect(
+      accountsPage.viewAccountPageHeading
+    ).toBeVisible();
+
+    logger.info('Returned to the Accounts page after cancelling');
+  }
+);
+
+Given(
+  'the user enters account data entered on the Create Account page',
+  async ({ accountsPage, logger }) => {
+    const account = getAccountDataByScenario(
+      'cancel_create_account_with_data'
+    );
+
+    await accountsPage.openCreateAccountPage();
+
+    await expect(
+      accountsPage.createAccountPageHeading
+    ).toBeVisible();
+
+    await accountsPage.enterUnsavedAccountData(account);
+
+    await expect(
+      accountsPage.accountNameInput
+    ).toHaveValue(account.name);
+
+    await expect(
+      accountsPage.emailInput
+    ).toHaveValue(account.email);
+
+    logger.info('Entered account data without saving', {
+      scenario: account.scenario,
+      accountName: account.name,
+      email: account.email
+    });
+  }
+);
+
+
+When(
+  'the user clicks the Cancel button',
+  async ({ accountsPage, logger }) => {
+    logger.info('Cancelling account creation with unsaved data');
+
+    await accountsPage.clickCancelOnCreateAccountPage();
+  }
+);
+
+
+Then(
+  'the user should see a confirmation popup for unsaved changes',
+  async ({ accountsPage, logger }) => {
+    const account = getAccountDataByScenario(
+      'cancel_create_account_with_data'
+    );
+
+    const confirmationMessage =
+      accountsPage.getUnsavedChangesMessage(
+        account.expectedResult
+      );
+
+    await expect(confirmationMessage).toBeVisible();
+
+    await expect(confirmationMessage).toHaveText(
+      account.expectedResult
+    );
+
+    await expect(
+      accountsPage.confirmLeaveAccountButton
+    ).toBeVisible();
+
+    logger.info('Unsaved-changes confirmation popup verified', {
+      scenario: account.scenario,
+      expectedMessage: account.expectedResult
+    });
+  }
+);
+
+When(
+  'the user discards the unsaved account data from the cancellation popup',
+  async ({ accountsPage, logger }) => {
+    await accountsPage.clickCancelOnCreateAccountPage();
+
+    await expect(
+      accountsPage.confirmLeaveAccountButton
+    ).toBeVisible();
+
+    await accountsPage.confirmLeavingAccountCreation();
+
+    logger.info('Unsaved account data discarded from confirmation popup');
+  }
+);
+
+When(
+  'the user dismisses the cancellation popup',
+  async ({ accountsPage, logger }) => {
+    const account = getAccountDataByScenario(
+      'cancel_create_account_with_data'
+    );
+
+    // Click the page Cancel button to open the popup.
+    await accountsPage.clickCancelOnCreateAccountPage();
+
+    await expect(
+      accountsPage.getUnsavedChangesMessage(
+        account.expectedResult
+      )
+    ).toBeVisible();
+
+    await expect(
+      accountsPage.dismissCancellationButton
+    ).toBeVisible();
+
+    // Click Cancel inside the popup to continue editing.
+    await accountsPage.dismissCancellationPopup();
+
+    logger.info('Dismissed cancellation popup to continue editing');
+  }
+);
+
+
+Then(
+  'the user should remain on the Create Account page with entered data retained',
+  async ({ page, accountsPage, logger }) => {
+    const account = getAccountDataByScenario(
+      'cancel_create_account_with_data'
+    );
+
+    await expect(
+      accountsPage.getUnsavedChangesMessage(
+        account.expectedResult
+      )
+    ).toBeHidden();
+
+    await expect(page).toHaveURL(
+      /#\/accounts\/edit(?:\?|$)/
+    );
+
+    await expect(
+      accountsPage.createAccountPageHeading
+    ).toBeVisible();
+
+    await expect(
+      accountsPage.accountNameInput
+    ).toHaveValue(account.name);
+
+    await expect(
+      accountsPage.emailInput
+    ).toHaveValue(account.email);
+
+    await expect(
+      accountsPage.accountNameInput
+    ).toBeEditable();
+
+    await expect(
+      accountsPage.emailInput
+    ).toBeEditable();
+
+    logger.info('Create Account form retained entered data', {
+      scenario: account.scenario,
+      accountName: account.name,
+      email: account.email
+    });
+  }
+);
