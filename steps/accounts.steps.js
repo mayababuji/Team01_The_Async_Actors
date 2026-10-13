@@ -203,3 +203,58 @@ Then(
     });
   }
 );
+
+When(
+  'the user enters a valid account name, email address, selects primary email, and saves the account',
+  async ({ accountsPage, logger }) => {
+    const account = getAccountDataByScenario(
+      'create_account_primary_email'
+    );
+
+    logger.info('Creating account with primary email', {
+      scenario: account.scenario,
+      accountName: account.name,
+      email: account.email
+    });
+
+    await accountsPage.enterAccountWithPrimaryEmail(account);
+
+    await expect(
+      accountsPage.primaryEmailControl
+    ).toBeChecked();
+
+    await accountsPage.clickSaveOnCreateAccountPage();
+  }
+);
+
+
+Then(
+  'the account should be created with the email address marked as primary',
+  async ({ accountsPage, logger }) => {
+    const account = getAccountDataByScenario(
+      'create_account_primary_email'
+    );
+
+    // Confirm that the created account is displayed.
+    await expect(
+      accountsPage.getAccountDetailName(account.expectedResult)
+    ).toBeVisible();
+
+    // Reopen the saved record to verify persisted values.
+    await accountsPage.openAccountForEditing();
+
+    await expect(
+      accountsPage.emailInput
+    ).toHaveValue(account.email);
+
+    await expect(
+      accountsPage.primaryEmailControl
+    ).toBeChecked();
+
+    logger.info('Saved primary email verified', {
+      scenario: account.scenario,
+      accountName: account.name,
+      email: account.email
+    });
+  }
+);
