@@ -1,6 +1,6 @@
 import { expect } from '@playwright/test';
 import { Given, When, Then } from '../fixtures.js';
-import {  readAccountData } from '../utils/excel-util.js';
+import { getAccountDataByScenario } from '../utils/excel-util.js';
 
 Given(
   'the authenticated user is on the Suite8Demo home page',
@@ -115,20 +115,15 @@ Then(
 
 When(
   'the user enters valid account details and clicks Save',
-  async ({ accountsPage ,logger}) => {
-    const account = readAccountData().find(
-      row => row.scenario === 'create_account_valid_name'
+  async ({ accountsPage, logger }) => {
+    const account = getAccountDataByScenario(
+      'create_account_valid_name'
     );
 
-    if (!account) {
-      throw new Error(
-        'Scenario "create_account_valid_name" was not found in the Accounts worksheet'
-      );
-    }
-    
-logger.info('Account data read from Excel', { account });
+    logger.info('Account data read from Excel', { account });
+
     await accountsPage.enterAccountName(account.name);
-     await accountsPage.clickSaveOnCreateAccountPage();
+    await accountsPage.clickSaveOnCreateAccountPage();
   }
 );
 
@@ -136,18 +131,75 @@ logger.info('Account data read from Excel', { account });
 Then(
   'the user should be navigated to the newly created account detail page',
   async ({ accountsPage }) => {
-    const account = readAccountData().find(
-      row => row.scenario === 'create_account_valid_name'
+    const account = getAccountDataByScenario(
+      'create_account_valid_name'
     );
-
-    if (!account) {
-      throw new Error(
-        'Scenario "create_account_valid_name" was not found in the Accounts worksheet'
-      );
-    }
 
     await expect(
       accountsPage.getAccountDetailName(account.expectedResult)
     ).toBeVisible();
+  }
+);
+
+
+When(
+  'the user enters complete overview information from Excel and saves the account',
+  async ({ accountsPage, logger }) => {
+    const account = getAccountDataByScenario(
+      'create_account_complete_overview'
+    );
+
+    logger.info('Entering complete account overview data', {
+      scenario: account.scenario,
+      accountName: account.name
+    });
+
+    await accountsPage.enterCompleteOverviewInformation(account);
+    await accountsPage.clickSaveOnCreateAccountPage();
+  }
+);
+
+
+Then(
+  'the account should be created with all entered overview information',
+  async ({ accountsPage, logger }) => {
+    const account = getAccountDataByScenario(
+      'create_account_complete_overview'
+    );
+
+    await expect(
+      accountsPage.getAccountDetailName(account.expectedResult)
+    ).toBeVisible();
+
+    const expectedFields = {
+      name: account.name,
+      website: account.website,
+      phone: account.phone,
+      email: account.email,
+
+      billingStreet: account.billingStreet,
+      billingPostalCode: account.billingPostalCode,
+      billingCity: account.billingCity,
+      billingState: account.billingState,
+      billingCountry: account.billingCountry,
+
+      shippingStreet: account.shippingStreet,
+      shippingPostalCode: account.shippingPostalCode,
+      shippingCity: account.shippingCity,
+      shippingState: account.shippingState,
+      shippingCountry: account.shippingCountry
+    };
+
+    for (const [field, value] of Object.entries(expectedFields)) {
+      await expect(
+        accountsPage.overviewPanel,
+        `Expected saved "${field}" to contain "${value}"`
+      ).toContainText(value);
+    }
+
+    logger.info('Saved account overview values verified', {
+      scenario: account.scenario,
+      accountName: account.name
+    });
   }
 );
