@@ -49,8 +49,7 @@ this.accountNameInput = page
   name: 'OVERVIEW',
   exact: true
 });
-// const overviewTextboxes =
-//   this.overviewPanel.getByRole('textbox');
+
 
 this.accountNameInput = page
   .locator('scrm-field.field-name-name')
@@ -63,7 +62,6 @@ this.accountNameInput = page
 this.officePhoneInput =page
 .locator('scrm-dynamic-field.dynamic-field-name-phone_office')
 .getByRole('textbox');
-//this.officePhoneInput = overviewTextboxes.nth(2);
 this.emailInput = page
 .locator('scrm-dynamic-field.dynamic-field-type-email')
 .getByRole('textbox');
@@ -116,6 +114,28 @@ this.primaryEmailControl = page
 this.editAccountButton = page.getByRole('button', {
   name: ' Edit '
 });
+
+this.cancelCreateAccountButton = page.getByRole('button', {
+  name: 'Cancel',
+  exact: true
+});
+ this.confirmLeaveAccountButton = page.getByRole('button', {
+    name: 'Ok',
+    exact: true
+  });
+
+
+
+
+this.confirmLeaveAccountButton = page.getByRole('button', {
+  name: 'Ok',
+  exact: true
+});
+
+this.dismissCancellationButton = page
+  .getByRole('button', {
+    name: 'Cancel'
+  });
 
   }
 
@@ -254,7 +274,51 @@ async enterAccountWithPrimaryEmail(account) {
 async openAccountForEditing() {
   await this.editAccountButton.click();
 }
+async enterAccountWithInvalidEmail(account) {
+  await this.enterAccountName(account.name);
+  await this.emailInput.fill(account.email);
+}
 
+getEmailValidationMessage(expectedMessage) {
+  return this.page.getByText(expectedMessage, {
+    exact: true
+  });
+}
+
+async clickCancelOnCreateAccountPage() {
+  await this.cancelCreateAccountButton.click();
+}
+async enterUnsavedAccountData(account) {
+  await this.enterAccountName(account.name);
+  await this.emailInput.fill(account.email);
+}
+
+async clickCancelOnCreateAccountPage() {
+  await this.cancelCreateAccountButton.click();
+}
+
+getUnsavedChangesMessage(expectedMessage) {
+  return this.page.getByText(expectedMessage, {
+    exact: true
+  });
+}
+
+async enterUnsavedAccountData(account) {
+  await this.enterAccountName(account.name);
+  await this.emailInput.fill(account.email);
+}
+
+async clickCancelOnCreateAccountPage() {
+  await this.cancelCreateAccountButton.click();
+}
+
+async confirmLeavingAccountCreation() {
+  await this.confirmLeaveAccountButton.click();
+}
+
+async dismissCancellationPopup() {
+  await this.dismissCancellationButton.click();
+}
   
 }
 
