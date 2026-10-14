@@ -1,8 +1,8 @@
 @accounts
 Feature: Accounts module navigation
 
-Background:
-  Given the authenticated user is on the Suite8Demo home page
+  Background:
+    Given the authenticated user is on the Suite8Demo home page
 
   @AccountsNavigation
   Scenario: Verify Accounts module navigation
@@ -13,74 +13,107 @@ Background:
       | View Accounts   |
 
   @AccountsNavigation
-Scenario: Verify Create Account page navigation
-  When the user clicks on the Accounts module from the top navigation
-  Then the user should be navigated to the Create Account page
+  Scenario: Verify Create Account page navigation
+    When the user clicks on the Accounts module from the top navigation
+    Then the user should be navigated to the Create Account page
 
-    @AccountsNavigation 
-Scenario: Verify Import Accounts page navigation
-  When the user clicks on the Import module from the top navigation
-  Then the user should be navigated to the Import module page
+  @AccountsNavigation
+  Scenario: Verify Import Accounts page navigation
+    When the user clicks on the Import module from the top navigation
+    Then the user should be navigated to the Import module page
 
-      @AccountsNavigation
-Scenario: Verify View Accounts page navigation
-  When the user clicks on the View Accounts module from the top navigation
-  Then the user should be navigated to the View Accounts module page
+  @AccountsNavigation
+  Scenario: Verify View Accounts page navigation
+    When the user clicks on the View Accounts module from the top navigation
+    Then the user should be navigated to the View Accounts module page
 
-   @RequiredNameValidation  
+  @RequiredNameValidation
   Scenario: Verify required Name field validation on Create Account page
     Given the user is on the Create Account page
     When the user clicks Save without entering the required Name field
     Then the Name validation message "Missing required field: Name" should be displayed
 
-     @CreateAccountPositive
+  @CreateAccountPositive
   Scenario Outline: Create an account with valid mandatory data
-   Given the user is on the Create Account page
-  When the user enters valid account details and clicks Save
-  Then the user should be navigated to the newly created account detail page
+    Given the user is on the Create Account page
+    When the user enters valid account details and clicks Save
+    Then the user should be navigated to the newly created account detail page
 
-  @CreateAccountCompleteOverview 
-Scenario: Create an account with complete overview information
-  Given the user is on the Create Account page
-  When the user enters complete overview information from Excel and saves the account
-  Then the account should be created with all entered overview information
+  @CreateAccountCompleteOverview
+  Scenario: Create an account with complete overview information
+    Given the user is on the Create Account page
+    When the user enters complete overview information from Excel and saves the account
+    Then the account should be created with all entered overview information
 
 
 
-  @accounts @CreateAccountPrimaryEmail 
-Scenario: Create an account with a primary email address
-  Given the user is on the Create Account page
-  When the user enters a valid account name, email address, selects primary email, and saves the account
-  Then the account should be created with the email address marked as primary
+  @accounts @CreateAccountPrimaryEmail
+  Scenario: Create an account with a primary email address
+    Given the user is on the Create Account page
+    When the user enters a valid account name, email address, selects primary email, and saves the account
+    Then the account should be created with the email address marked as primary
 
   @accounts @CreateAccountInvalidEmail
-Scenario: Validate an invalid email address during account creation
-  Given the user is on the Create Account page
-  When the user enters a valid account name, an invalid email address, and clicks the Save button
-  Then the user should see an email-address validation message
+  Scenario: Validate an invalid email address during account creation
+    Given the user is on the Create Account page
+    When the user enters a valid account name, an invalid email address, and clicks the Save button
+    Then the user should see an email-address validation message
 
-  @accounts @CancelCreateAccountWithoutData 
-Scenario: Verify Cancel button on Create Account page without entered data
-  Given the user is on the Create Account page
-  When the user clicks the Cancel button without entering data
-  Then the user should be navigated back to the Accounts Dashboard page
+  @accounts @CancelCreateAccountWithoutData
+  Scenario: Verify Cancel button on Create Account page without entered data
+    Given the user is on the Create Account page
+    When the user clicks the Cancel button without entering data
+    Then the user should be navigated back to the Accounts Dashboard page
 
   @accounts @CancelCreateAccountWithData
-Scenario: Verify Cancel button on Create Account page with entered data
-  Given the user enters account data entered on the Create Account page
-  When the user clicks the Cancel button
-  Then the user should see a confirmation popup for unsaved changes
+  Scenario: Verify Cancel button on Create Account page with entered data
+    Given the user enters account data entered on the Create Account page
+    When the user clicks the Cancel button
+    Then the user should see a confirmation popup for unsaved changes
 
 
-  @accounts @DiscardUnsavedAccountData 
-Scenario: Discard unsaved account data from cancellation popup
-  Given the user enters account data entered on the Create Account page
-  When the user discards the unsaved account data from the cancellation popup
-  Then the user should be navigated back to the Accounts Dashboard page
+  @accounts @DiscardUnsavedAccountData
+  Scenario: Discard unsaved account data from cancellation popup
+    Given the user enters account data entered on the Create Account page
+    When the user discards the unsaved account data from the cancellation popup
+    Then the user should be navigated back to the Accounts Dashboard page
 
 
-  @accounts @ContinueEditingAfterCancel 
-Scenario: Continue editing account after dismissing cancellation popup
-  Given the user enters account data entered on the Create Account page
-  When the user dismisses the cancellation popup
-  Then the user should remain on the Create Account page with entered data retained
+  @accounts @ContinueEditingAfterCancel
+  Scenario: Continue editing account after dismissing cancellation popup
+    Given the user enters account data entered on the Create Account page
+    When the user dismisses the cancellation popup
+    Then the user should remain on the Create Account page with entered data retained
+
+
+  @accounts @SearchExistingAccountByName
+  Scenario: Search for an existing account by name
+    Given the user is on the View Accounts page
+    When the user searches for an existing account by name
+    Then the matching account should be displayed
+
+
+    @accounts @SearchAccountPartialName 
+Scenario: Search for an account using partial account name
+  Given the user is on the View Accounts page
+  When the user searches with a partial existing account name
+  Then the matching account should be displayed
+
+
+  @accounts @SearchNonExistingAccount
+Scenario: Search for a non-existing account
+  Given the user is on the View Accounts page
+  When the user searches for a non-existing account name
+  Then a no-results message should be displayed
+
+  @accounts @OpenAccountFromList
+Scenario: Open an account from the Accounts list
+  Given the user  with an existing account displayed is on the View Accounts page
+  When the user selects an account name from the list
+  Then the selected account detail page should be displayed
+
+  @accounts @AccountRecentlyViewed
+Scenario: Verify existing account appears in Recently Viewed
+  Given the user has opened an existing account detail page
+  When the user opens Recently Viewed from the Accounts module
+  Then the existing account should be displayed in Recently Viewed

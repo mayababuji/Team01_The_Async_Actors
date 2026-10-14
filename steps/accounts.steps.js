@@ -60,13 +60,13 @@ Then(
     logger.info('Verifying the Create Account page is displayed');
 
     await expect(accountsPage.createAccountPageHeading).toBeVisible();
-  
+
   }
 );
 
-When('the user clicks on the Import module from the top navigation', async ({accountsPage,logger}) => {
+When('the user clicks on the Import module from the top navigation', async ({ accountsPage, logger }) => {
   logger.info('Verifying the Import module page is displayed');
-   await accountsPage.openImportAccountPage();
+  await accountsPage.openImportAccountPage();
 });
 
 Then(
@@ -75,19 +75,19 @@ Then(
     logger.info('Verifying the Import module  is displayed');
 
     await expect(accountsPage.importAccountPageHeading).toBeVisible();
-  
+
   }
 );
 
-When('the user clicks on the View Accounts module from the top navigation', async ({accountsPage,logger}) => {
+When('the user clicks on the View Accounts module from the top navigation', async ({ accountsPage, logger }) => {
   logger.info('Verifying the View Accounts page is displayed');
-   await accountsPage.openViewAccountPage();
+  await accountsPage.openViewAccountPage();
 });
 
-Then('the user should be navigated to the View Accounts module page', async ({accountsPage, logger}) => {
-   logger.info('Verifying the View Account module  is displayed');
-     await expect(accountsPage.viewAccountPageHeading).toBeVisible();
-  
+Then('the user should be navigated to the View Accounts module page', async ({ accountsPage, logger }) => {
+  logger.info('Verifying the View Account module  is displayed');
+  await expect(accountsPage.viewAccountPageHeading).toBeVisible();
+
 });
 Given(
   'the user is on the Create Account page',
@@ -494,6 +494,251 @@ Then(
       scenario: account.scenario,
       accountName: account.name,
       email: account.email
+    });
+  }
+);
+
+Given(
+  'the user is on the View Accounts page',
+  async ({ accountsPage, logger }) => {
+    await accountsPage.openViewAccountPage();
+
+    await expect(
+      accountsPage.viewAccountPageHeading
+    ).toBeVisible();
+
+    logger.info('View Accounts page opened');
+  }
+);
+
+
+When(
+  'the user searches for an existing account by name',
+  async ({ accountsPage, logger }) => {
+    const account = getAccountDataByScenario(
+      'search_existing_account_by_name'
+    );
+
+    logger.info('Searching Accounts by name', {
+      scenario: account.scenario,
+      accountName: account.name
+    });
+
+    await accountsPage.searchAccountsByName(account.name);
+  }
+);
+
+
+Then(
+  'the matching account should be displayed',
+  async ({ accountsPage, logger }) => {
+    const account = getAccountDataByScenario(
+      'search_existing_account_by_name'
+    );
+
+    const matchingAccount = accountsPage.getAccountSearchResult(
+      account.expectedResult
+    );
+
+    await expect(matchingAccount).toBeVisible();
+
+    await expect(matchingAccount).toHaveText(
+      account.expectedResult
+    );
+
+    logger.info('Matching account displayed', {
+      scenario: account.scenario,
+      accountName: account.expectedResult
+    });
+  }
+);
+
+When(
+  'the user searches with a partial existing account name',
+  async ({ accountsPage, logger }) => {
+    const account = getAccountDataByScenario(
+      'search_account_partial_name'
+    );
+
+    logger.info('Searching Accounts with a partial name', {
+      scenario: account.scenario,
+      partialName: account.name
+    });
+
+    await accountsPage.searchAccountsByName(account.name);
+  }
+);
+
+When(
+  'the user searches for a non-existing account name',
+  async ({ accountsPage, logger }) => {
+    const account = getAccountDataByScenario(
+      'search_non_existing_account'
+    );
+
+    logger.info('Searching for a non-existing account', {
+      scenario: account.scenario,
+      accountName: account.name
+    });
+
+    await accountsPage.searchAccountsByName(account.name);
+  }
+);
+
+
+Then(
+  'a no-results message should be displayed',
+  async ({ accountsPage, logger }) => {
+    const account = getAccountDataByScenario(
+      'search_non_existing_account'
+    );
+
+    const noResultsMessage =
+      accountsPage.getAccountSearchNoResultsMessage(
+        account.expectedResult
+      );
+
+    await expect(noResultsMessage).toBeVisible();
+
+    await expect(noResultsMessage).toHaveText(
+      account.expectedResult
+    );
+
+    logger.info('No-results message verified', {
+      scenario: account.scenario,
+      accountName: account.name,
+      expectedMessage: account.expectedResult
+    });
+  }
+);
+
+Given(
+  'the user  with an existing account displayed is on the View Accounts page',
+  async ({ accountsPage, logger }) => {
+    const account = getAccountDataByScenario(
+      'open_account_from_list'
+    );
+
+    await accountsPage.openViewAccountPage();
+
+    await expect(
+      accountsPage.viewAccountPageHeading
+    ).toBeVisible();
+
+    await expect(
+      accountsPage.getAccountListLink(account.name)
+    ).toBeVisible();
+
+    logger.info('Existing account displayed on View Accounts page', {
+      scenario: account.scenario,
+      accountName: account.name
+    });
+  }
+);
+
+
+When(
+  'the user selects an account name from the list',
+  async ({ accountsPage, logger }) => {
+    const account = getAccountDataByScenario(
+      'open_account_from_list'
+    );
+
+    await accountsPage.openAccountFromList(account.name);
+
+    logger.info('Selected account from Accounts list', {
+      accountName: account.name
+    });
+  }
+);
+
+
+Then(
+  'the selected account detail page should be displayed',
+  async ({ page, accountsPage, logger }) => {
+    const account = getAccountDataByScenario(
+      'open_account_from_list'
+    );
+
+    await expect(page).toHaveURL(
+      /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/
+    );
+
+    await expect(
+      accountsPage.getAccountDetailName(account.expectedResult)
+    ).toBeVisible();
+
+    logger.info('Selected account detail page displayed', {
+      scenario: account.scenario,
+      accountName: account.expectedResult
+    });
+  }
+);
+
+Given(
+  'the user has opened an existing account detail page',
+  async ({ accountsPage, logger }) => {
+    const account = getAccountDataByScenario(
+      'account_recently_viewed'
+    );
+
+    await accountsPage.openViewAccountPage();
+
+    await expect(
+      accountsPage.viewAccountPageHeading
+    ).toBeVisible();
+
+    await expect(
+      accountsPage.getAccountListLink(account.name)
+    ).toBeVisible();
+
+    await accountsPage.openAccountFromList(account.name);
+
+ 
+
+    logger.info('Opened existing account detail page', {
+      scenario: account.scenario,
+      accountName: account.name
+    });
+  }
+);
+
+
+When(
+  'the user opens Recently Viewed from the Accounts module',
+  async ({ accountsPage, logger }) => {
+    await accountsPage.openAccountsRecentlyViewed();
+
+    await expect(
+      accountsPage.accountsRecentlyViewedPanel
+    ).toBeVisible();
+
+    logger.info('Opened Accounts > Recently Viewed');
+  }
+);
+
+
+Then(
+  'the existing account should be displayed in Recently Viewed',
+  async ({ accountsPage, logger }) => {
+    const account = getAccountDataByScenario(
+      'account_recently_viewed'
+    );
+
+    const recentlyViewedAccount =
+      accountsPage.getRecentlyViewedAccount(
+        account.expectedResult
+      );
+
+    await expect(recentlyViewedAccount).toBeVisible();
+
+    await expect(recentlyViewedAccount).toHaveText(
+      account.expectedResult
+    );
+
+    logger.info('Account verified in Recently Viewed', {
+      scenario: account.scenario,
+      accountName: account.expectedResult
     });
   }
 );
