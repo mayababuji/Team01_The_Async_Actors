@@ -1,5 +1,3 @@
-import { expect } from '@playwright/test';
-
 export class AccountsPage {
   constructor(page) {
     this.page = page;
@@ -73,11 +71,15 @@ export class AccountsPage {
       .getByRole('textbox');
 
     this.officePhoneInput = page
-      .locator('scrm-dynamic-field.dynamic-field-name-phone_office')
+      .locator(
+        'scrm-dynamic-field.dynamic-field-name-phone_office'
+      )
       .getByRole('textbox');
 
     this.emailInput = page
-      .locator('scrm-dynamic-field.dynamic-field-type-email')
+      .locator(
+        'scrm-dynamic-field.dynamic-field-type-email'
+      )
       .getByRole('textbox');
 
     // Address inputs
@@ -129,56 +131,86 @@ export class AccountsPage {
     );
 
     // Recently Viewed
-   // Find the module dropdown containing the Accounts navigation options.
-this.accountsDropdown = page
-  .locator('div.dropdown-menu.submenu')
-  .filter({
-    has: page.getByRole('link', {
-      name: 'Create Account',
-      exact: true
-    })
-  })
-  .filter({ visible: true });
+    this.accountsDropdown = page
+      .locator('div.dropdown-menu.submenu')
+      .filter({
+        has: page.getByRole('link', {
+          name: 'Create Account',
+          exact: true
+        })
+      })
+      .filter({ visible: true });
 
-this.accountsRecentlyViewedSection =
-  this.accountsDropdown.locator(
-    'scrm-sub-menu-recently-viewed'
-  );
+    this.accountsRecentlyViewedSection =
+      this.accountsDropdown.locator(
+        'scrm-sub-menu-recently-viewed'
+      );
 
-this.accountsRecentlyViewedTrigger =
-  this.accountsRecentlyViewedSection.locator(
-    'scrm-label[labelkey="LBL_LAST_VIEWED"]'
-  );
+    this.accountsRecentlyViewedTrigger =
+      this.accountsRecentlyViewedSection.locator(
+        'scrm-label[labelkey="LBL_LAST_VIEWED"]'
+      );
 
-this.accountsRecentlyViewedPanel =
-  this.accountsRecentlyViewedSection.locator(
-    'ul.dropdown-menu.submenu'
-  );
+    this.accountsRecentlyViewedPanel =
+      this.accountsRecentlyViewedSection.locator(
+        'ul.dropdown-menu.submenu'
+      );
 
-   
-    // this.recordActionsButton = page.getByRole('button', {
-    //   name: 'Actions',
-    //   exact: true
-    // });
-    this.recordActionsButton = page
-  .locator('scrm-base-record-header')
-  .getByRole('button', {
-    name: 'Actions',
-    exact: true
-  });
+    // Record deletion
+    this.recordHeader = page.locator(
+      'scrm-base-record-header'
+    );
 
-    this.deleteAccountAction = page.getByText('Delete', {
+    this.recordActionsButton =
+      this.recordHeader.getByRole('button', {
+        name: 'Actions',
+        exact: true
+      });
+
+    this.recordActionsMenu =
+      this.recordHeader.locator(
+        'scrm-dropdown-button [ngbdropdownmenu]'
+      );
+
+
+
+     this.deleteAccountAction = page.getByText('Delete', {
       exact: true
     });
 
-  this.confirmDeleteAccountButton = page.getByRole('button', {
-  name: 'Proceed',
-  exact: true
-});
-this.deleteAccountConfirmationMessage = page.getByText(
-  'Are you sure you want to delete this record?',
-  { exact: true }
-);
+    this.confirmDeleteAccountButton = page.getByRole(
+      'button',
+      {
+        name: 'Proceed',
+        exact: true
+      }
+    );
+
+    this.deleteAccountConfirmationMessage = page.getByText(
+      'Are you sure you want to delete this record?',
+      { exact: true }
+    );
+
+    // Accounts list and sorting
+    this.accountsListTable = page.getByRole('table');
+
+    this.accountNameColumnHeader =
+      this.accountsListTable.locator(
+        'th.cdk-column-name'
+      );
+
+    this.accountNameListLinks =
+      this.accountsListTable.locator(
+        'tbody a[href*="/accounts/record/"]'
+      );
+
+    this.accountNameSortButton =
+      this.accountNameColumnHeader.locator(
+        'scrm-sort-button a.sort-button'
+      );
+
+    this.accountNameSortIcon =
+      this.accountNameSortButton.locator('svg-icon');
   }
 
   // Navigation
@@ -219,10 +251,29 @@ this.deleteAccountConfirmationMessage = page.getByText(
     await this.importAccountsOption.click();
   }
 
-  async openViewAccountPage() {
-    await this.hoverAccountsModule();
-    await this.viewAccountsOption.click();
-  }
+async openViewAccountPage() {
+  await this.hoverAccountsModule();
+  await this.viewAccountsOption.click();
+
+  await this.viewAccountPageHeading.waitFor({
+    state: 'visible'
+  });
+
+  // Move to the lower-right area, outside the navigation dropdown.
+  const viewport = await this.page.evaluate(() => ({
+    width: window.innerWidth,
+    height: window.innerHeight
+  }));
+
+  await this.page.mouse.move(
+    viewport.width - 20,
+    viewport.height - 20
+  );
+
+  await this.accountsDropdown.waitFor({
+    state: 'hidden'
+  });
+}
 
   // Account creation and editing
 
@@ -336,9 +387,10 @@ this.deleteAccountConfirmationMessage = page.getByText(
   }
 
   getAccountSearchNoResultsMessage(expectedMessage) {
-    return this.searchResultsFrame.getByText(expectedMessage, {
-      exact: true
-    });
+    return this.searchResultsFrame.getByText(
+      expectedMessage,
+      { exact: true }
+    );
   }
 
   // Accounts list
@@ -361,13 +413,12 @@ this.deleteAccountConfirmationMessage = page.getByText(
     await this.accountsRecentlyViewedTrigger.click();
   }
 
- getRecentlyViewedAccount(accountName) {
-  return this.accountsRecentlyViewedPanel.getByText(
-    accountName,
-    { exact: true }
-  );
-}
-
+  getRecentlyViewedAccount(accountName) {
+    return this.accountsRecentlyViewedPanel.getByText(
+      accountName,
+      { exact: true }
+    );
+  }
 
   // Test-data setup
 
@@ -380,70 +431,121 @@ this.deleteAccountConfirmationMessage = page.getByText(
   // Test-data cleanup
 
   async deleteAccountByUrl(recordUrl) {
-  const target = new URL(recordUrl);
-  const current = new URL(this.page.url());
+    const target = new URL(recordUrl);
+    const current = new URL(this.page.url());
 
-  if (target.origin !== current.origin) {
-    throw new Error(
-      `Refusing cleanup on a different origin: ${target.origin}`
+    if (target.origin !== current.origin) {
+      throw new Error(
+        `Refusing cleanup on a different origin: ${target.origin}`
+      );
+    }
+
+    const recordPattern =
+      /^#\/accounts\/record\/([^/?#]+)(?:[/?#]|$)/;
+
+    const targetMatch = target.hash.match(recordPattern);
+
+    if (!targetMatch) {
+      throw new Error(
+        `Cleanup requires an account detail URL: ${recordUrl}`
+      );
+    }
+
+    const recordId = targetMatch[1];
+    const currentMatch = current.hash.match(recordPattern);
+
+    const isTargetRecord =
+      current.origin === target.origin &&
+      currentMatch?.[1] === recordId;
+
+    if (!isTargetRecord) {
+      await this.page.goto(recordUrl);
+    }
+
+    await this.page.waitForURL(url => {
+      const match = url.hash.match(recordPattern);
+
+      return (
+        url.origin === target.origin &&
+        match?.[1] === recordId
+      );
+    });
+
+    await this.overviewPanel.waitFor({
+      state: 'visible'
+    });
+
+    await this.recordActionsButton.waitFor({
+      state: 'visible'
+    });
+
+    try {
+      const expanded =
+        await this.recordActionsButton.getAttribute(
+          'aria-expanded'
+        );
+
+      if (expanded !== 'true') {
+        await this.recordActionsButton.click();
+      }
+
+      await this.recordActionsMenu.waitFor({
+        state: 'visible'
+      });
+
+      await this.deleteAccountAction.click();
+    } catch (error) {
+      try {
+        console.log(
+          'Actions state at cleanup failure:',
+          await this.recordActionsButton.getAttribute(
+            'aria-expanded'
+          )
+        );
+
+        console.log(
+          'Record header HTML at cleanup failure:',
+          await this.recordHeader.innerHTML()
+        );
+      } catch (diagnosticError) {
+        console.error(
+          'Could not capture cleanup diagnostics:',
+          diagnosticError
+        );
+      }
+
+      throw error;
+    }
+
+    await this.deleteAccountConfirmationMessage.waitFor({
+      state: 'visible'
+    });
+
+    await this.confirmDeleteAccountButton.click();
+
+    await this.deleteAccountConfirmationMessage.waitFor({
+      state: 'hidden'
+    });
+
+    await this.page.waitForURL(
+      /#\/accounts\/?(?:\?.*)?$/
     );
+
+    await this.viewAccountPageHeading.waitFor({
+      state: 'visible'
+    });
   }
 
-  const recordPattern =
-    /^#\/accounts\/record\/([^/?#]+)(?:[/?#]|$)/;
+  // Sorting
 
-  const targetMatch = target.hash.match(recordPattern);
-
-  if (!targetMatch) {
-    throw new Error(
-      `Cleanup requires an account detail URL: ${recordUrl}`
-    );
+  async clickAccountNameSortButton() {
+    await this.accountNameSortButton.click();
   }
 
-  const recordId = targetMatch[1];
+  async getDisplayedAccountNames() {
+    const names =
+      await this.accountNameListLinks.allTextContents();
 
-  await this.page.goto(recordUrl);
-
-  // Confirm the intended record route is open.
-  await expect(this.page).toHaveURL(url => {
-    const currentMatch = url.hash.match(recordPattern);
-
-    return (
-      url.origin === target.origin &&
-      currentMatch?.[1] === recordId
-    );
-  });
-
-  await expect(this.overviewPanel).toBeVisible();
-
-  // Open the record actions and select Delete.
-  await this.recordActionsButton.click();
-
-  await expect(this.deleteAccountAction).toBeVisible();
-  await this.deleteAccountAction.click();
-
-  // Verify the deletion popup before confirming.
-  await expect(
-    this.deleteAccountConfirmationMessage
-  ).toBeVisible();
-
-  await expect(
-    this.confirmDeleteAccountButton
-  ).toBeVisible();
-
-  await this.confirmDeleteAccountButton.click();
-
-  // Wait for the popup to close and the Accounts list to load.
-  await expect(
-    this.deleteAccountConfirmationMessage
-  ).toBeHidden();
-
-  await expect(this.page).toHaveURL(
-    /#\/accounts\/?(?:\?.*)?$/
-  );
-
-  await expect(
-    this.viewAccountPageHeading
-  ).toBeVisible();
-}
+    return names.map(name => name.trim());
+  }
 }

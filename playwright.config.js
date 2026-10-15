@@ -67,14 +67,18 @@ export default defineConfig({
 
   timeout: 90_000,
 
-  expect: {
-    timeout: 90_000
-  },
+ expect: {
+  timeout: 20_000,
 
-  fullyParallel: true,
+  toPass: {
+    timeout: 20_000
+  }
+},
+
+  fullyParallel: false,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers:1,
 
   reporter: [
     ['list'],
@@ -106,8 +110,7 @@ projects: [
   {
     name: 'setup',
     testDir: 'session',
-    testMatch: /auth\.setup\.js/,
-     reporter: 'null'
+    testMatch: /auth\.setup\.js/
   },
 
   {

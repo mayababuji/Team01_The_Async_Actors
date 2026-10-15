@@ -1,4 +1,4 @@
-// utils/excelUtils.js
+
 import XLSX from 'xlsx';
 import path from 'node:path';
 
@@ -68,6 +68,7 @@ export function readAccountData() {
     const accountRow = {
       scenario: String(row.Scenario ?? '').trim(),
       name: String(row.Name ?? '').trim(),
+        searchText: String(row.SearchText ?? '').trim(),
       phone: String(row.Phone ?? '').trim(),
       website: String(row.Website ?? '').trim(),
       email: String(row.Email ?? '').trim(),
