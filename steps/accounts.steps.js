@@ -2,6 +2,7 @@ import { expect } from '@playwright/test';
 import { Given, When, Then } from '../fixtures.js';
 import { getAccountDataByScenario } from '../utils/excel-util.js';
 
+
 Given(
   'the authenticated user is on the Suite8Demo home page',
   async ({ page, logger }) => {
@@ -144,7 +145,7 @@ Then(
 
 When(
   'the user enters complete overview information from Excel and saves the account',
-  async ({ accountsPage, logger }) => {
+  async ({ page, accountsPage, logger, accountCleanup }) => {
     const account = getAccountDataByScenario(
       'create_account_complete_overview'
     );
@@ -156,6 +157,20 @@ When(
 
     await accountsPage.enterCompleteOverviewInformation(account);
     await accountsPage.clickSaveOnCreateAccountPage();
+
+    await expect(page).toHaveURL(
+      /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/
+    );
+
+    const recordUrl = page.url();
+
+    accountCleanup.register(recordUrl, account.scenario);
+
+    logger.info('Account created and registered for cleanup', {
+      scenario: account.scenario,
+      accountName: account.name,
+      recordUrl
+    });
   }
 );
 
@@ -206,7 +221,7 @@ Then(
 
 When(
   'the user enters a valid account name, email address, selects primary email, and saves the account',
-  async ({ accountsPage, logger }) => {
+  async ({ page, accountsPage, logger, accountCleanup }) => {
     const account = getAccountDataByScenario(
       'create_account_primary_email'
     );
@@ -224,6 +239,22 @@ When(
     ).toBeChecked();
 
     await accountsPage.clickSaveOnCreateAccountPage();
+
+    // Wait for the newly created record's detail URL.
+    await expect(page).toHaveURL(
+      /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/
+    );
+
+    const recordUrl = page.url();
+
+    // Register before any further verification.
+    accountCleanup.register(recordUrl);
+
+    logger.info('Account registered for cleanup', {
+      scenario: account.scenario,
+      accountName: account.name,
+      recordUrl
+    });
   }
 );
 
@@ -510,13 +541,49 @@ Given(
     logger.info('View Accounts page opened');
   }
 );
+Given(
+  'an account exists for the account name search {string}',
+  async ({ page, accountsPage, logger, accountCleanup },scenarioKey) => {
+    const account = getAccountDataByScenario(
+      scenarioKey
+    );
 
+    // Create the prerequisite for this scenario.
+    await accountsPage.createAccountForListTest(account);
+
+    await expect(page).toHaveURL(
+      /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/
+    );
+
+    const recordUrl = page.url();
+
+    // Register before further assertions or navigation.
+    accountCleanup.register(recordUrl);
+
+    await expect(
+      accountsPage.getAccountDetailName(account.name)
+    ).toBeVisible();
+
+    logger.info('Created account for account name search', {
+      scenario: account.scenario,
+      accountName: account.name,
+      recordUrl
+    });
+
+    await accountsPage.openViewAccountPage();
+
+    await expect(
+      accountsPage.viewAccountPageHeading
+    ).toBeVisible();
+
+    logger.info('View Accounts page opened');
+  }
+);
 
 When(
-  'the user searches for an existing account by name',
-  async ({ accountsPage, logger }) => {
-    const account = getAccountDataByScenario(
-      'search_existing_account_by_name'
+  'the user searches for an existing account by name {string}',
+  async ({ accountsPage, logger },scenarioKey) => {
+    const account = getAccountDataByScenario(scenarioKey
     );
 
     logger.info('Searching Accounts by name', {
@@ -530,10 +597,10 @@ When(
 
 
 Then(
-  'the matching account should be displayed',
-  async ({ accountsPage, logger }) => {
+  'the matching account should be displayed for {string}',
+  async ({ accountsPage, logger },scenarioKey) => {
     const account = getAccountDataByScenario(
-      'search_existing_account_by_name'
+     scenarioKey
     );
 
     const matchingAccount = accountsPage.getAccountSearchResult(
@@ -554,10 +621,10 @@ Then(
 );
 
 When(
-  'the user searches with a partial existing account name',
-  async ({ accountsPage, logger }) => {
+  'the user searches with a partial existing account name {string}',
+  async ({ accountsPage, logger },scenarioKey) => {
     const account = getAccountDataByScenario(
-      'search_account_partial_name'
+      scenarioKey
     );
 
     logger.info('Searching Accounts with a partial name', {
@@ -612,12 +679,59 @@ Then(
   }
 );
 
+// Given(
+//   'the user  with an existing account displayed is on the View Accounts page',
+//   async ({ accountsPage, logger }) => {
+//     const account = getAccountDataByScenario(
+//       'open_account_from_list'
+//     );
+
+//     await accountsPage.openViewAccountPage();
+
+//     await expect(
+//       accountsPage.viewAccountPageHeading
+//     ).toBeVisible();
+
+//     await expect(
+//       accountsPage.getAccountListLink(account.name)
+//     ).toBeVisible();
+
+//     logger.info('Existing account displayed on View Accounts page', {
+//       scenario: account.scenario,
+//       accountName: account.name
+//     });
+//   }
+// );
 Given(
-  'the user  with an existing account displayed is on the View Accounts page',
-  async ({ accountsPage, logger }) => {
+  'an account is available on the View Accounts page',
+  async ({
+    page,
+    accountsPage,
+    logger,
+    accountListTestData,
+    accountCleanup
+  }) => {
     const account = getAccountDataByScenario(
       'open_account_from_list'
     );
+
+    // Share the Excel data with the When and Then.
+    accountListTestData.account = account;
+
+    await accountsPage.createAccountForListTest(account);
+
+    await expect(page).toHaveURL(
+      /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/
+    );
+
+    const recordUrl = page.url();
+
+    // Register the exact record created by this scenario.
+    accountCleanup.register(recordUrl);
+
+    await expect(
+      accountsPage.getAccountDetailName(account.expectedResult)
+    ).toBeVisible();
 
     await accountsPage.openViewAccountPage();
 
@@ -627,22 +741,28 @@ Given(
 
     await expect(
       accountsPage.getAccountListLink(account.name)
+    ).toHaveCount(1);
+
+    await expect(
+      accountsPage.getAccountListLink(account.name)
     ).toBeVisible();
 
-    logger.info('Existing account displayed on View Accounts page', {
-      scenario: account.scenario,
-      accountName: account.name
+    logger.info('Excel account created and registered for cleanup', {
+      accountName: account.name,
+      recordUrl
     });
   }
 );
-
-
 When(
   'the user selects an account name from the list',
-  async ({ accountsPage, logger }) => {
-    const account = getAccountDataByScenario(
-      'open_account_from_list'
-    );
+  async ({ accountsPage, logger, accountListTestData }) => {
+    const account = accountListTestData.account;
+
+    if (!account) {
+      throw new Error(
+        'Account test data was not initialized by the Given step.'
+      );
+    }
 
     await accountsPage.openAccountFromList(account.name);
 
@@ -655,10 +775,14 @@ When(
 
 Then(
   'the selected account detail page should be displayed',
-  async ({ page, accountsPage, logger }) => {
-    const account = getAccountDataByScenario(
-      'open_account_from_list'
-    );
+  async ({ page, accountsPage, logger, accountListTestData }) => {
+    const account = accountListTestData.account;
+
+    if (!account) {
+      throw new Error(
+        'Account test data was not initialized by the Given step.'
+      );
+    }
 
     await expect(page).toHaveURL(
       /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/
@@ -677,28 +801,32 @@ Then(
 
 Given(
   'the user has opened an existing account detail page',
-  async ({ accountsPage, logger }) => {
+  async ({ page, accountsPage, logger, accountCleanup }) => {
     const account = getAccountDataByScenario(
       'account_recently_viewed'
     );
 
-    await accountsPage.openViewAccountPage();
+    // Create this scenario's prerequisite using Excel data.
+    await accountsPage.createAccountForListTest(account);
+
+    await expect(page).toHaveURL(
+      /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/
+    );
+
+    const recordUrl = page.url();
+
+    // Register immediately so later assertion failures
+    // do not prevent cleanup.
+    accountCleanup.register(recordUrl);
 
     await expect(
-      accountsPage.viewAccountPageHeading
+      accountsPage.getAccountDetailName(account.name)
     ).toBeVisible();
 
-    await expect(
-      accountsPage.getAccountListLink(account.name)
-    ).toBeVisible();
-
-    await accountsPage.openAccountFromList(account.name);
-
- 
-
-    logger.info('Opened existing account detail page', {
+    logger.info('Created and opened account for Recently Viewed test', {
       scenario: account.scenario,
-      accountName: account.name
+      accountName: account.name,
+      recordUrl
     });
   }
 );
@@ -708,6 +836,15 @@ When(
   'the user opens Recently Viewed from the Accounts module',
   async ({ accountsPage, logger }) => {
     await accountsPage.openAccountsRecentlyViewed();
+console.log(
+      'Recently Viewed HTML:',
+      await accountsPage.accountsRecentlyViewedPanel.innerHTML()
+    );
+
+    console.log(
+      'Recently Viewed text:',
+      await accountsPage.accountsRecentlyViewedPanel.allTextContents()
+    );
 
     await expect(
       accountsPage.accountsRecentlyViewedPanel

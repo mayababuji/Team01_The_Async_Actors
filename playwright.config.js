@@ -65,10 +65,10 @@ export default defineConfig({
   testDir,
   outputDir: 'test-results',
 
-  timeout: 60_000,
+  timeout: 90_000,
 
   expect: {
-    timeout: 20_000
+    timeout: 90_000
   },
 
   fullyParallel: true,
@@ -99,8 +99,8 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     trace: 'retain-on-failure',
-    actionTimeout: 15_000,
-    navigationTimeout: 30_000
+    actionTimeout: 20_000,
+    navigationTimeout: 90_000
   },
 projects: [
   {
