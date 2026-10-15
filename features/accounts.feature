@@ -86,18 +86,19 @@ Feature: Accounts module navigation
     Then the user should remain on the Create Account page with entered data retained
 
 
-  @accounts @SearchExistingAccountByName
-  Scenario: Search for an existing account by name
-    Given the user is on the View Accounts page
-    When the user searches for an existing account by name
-    Then the matching account should be displayed
+  @accounts @SearchExistingAccountByName 
+Scenario: Search for an existing account by name
+  Given an account exists for the account name search 'search_existing_account_by_name'
+  When the user searches for an existing account by name 'search_existing_account_by_name'
+  Then the matching account should be displayed for 'search_existing_account_by_name'
 
 
     @accounts @SearchAccountPartialName 
 Scenario: Search for an account using partial account name
-  Given the user is on the View Accounts page
-  When the user searches with a partial existing account name
-  Then the matching account should be displayed
+   Given an account exists for the account name search 'search_account_partial_name'
+  When the user searches with a partial existing account name 'search_account_partial_name'
+  Then the matching account should be displayed for 'search_account_partial_name'
+
 
 
   @accounts @SearchNonExistingAccount
@@ -108,7 +109,7 @@ Scenario: Search for a non-existing account
 
   @accounts @OpenAccountFromList
 Scenario: Open an account from the Accounts list
-  Given the user  with an existing account displayed is on the View Accounts page
+  Given an account is available on the View Accounts page
   When the user selects an account name from the list
   Then the selected account detail page should be displayed
 
