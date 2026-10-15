@@ -17,7 +17,8 @@ export const test = base.extend({
   },
   accountListTestData: async ({}, use) => {
   await use({
-    account: null
+    account: null,
+     recordUrl: null
   });
 },
   accountCleanup: async ({ accountsPage, logger }, use) => {

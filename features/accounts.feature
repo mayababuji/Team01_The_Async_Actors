@@ -4,7 +4,7 @@ Feature: Accounts module navigation
   Background:
     Given the authenticated user is on the Suite8Demo home page
 
-  @AccountsNavigation
+  @AccountsNavigation @navi
   Scenario: Verify Accounts module navigation
     When the user hovers over the Accounts module in the top navigation
     Then the user should see the Accounts dropdown options
@@ -34,7 +34,7 @@ Feature: Accounts module navigation
     Then the Name validation message "Missing required field: Name" should be displayed
 
   @CreateAccountPositive
-  Scenario Outline: Create an account with valid mandatory data
+  Scenario: Create an account with valid mandatory data
     Given the user is on the Create Account page
     When the user enters valid account details and clicks Save
     Then the user should be navigated to the newly created account detail page
@@ -118,3 +118,10 @@ Scenario: Verify existing account appears in Recently Viewed
   Given the user has opened an existing account detail page
   When the user opens Recently Viewed from the Accounts module
   Then the existing account should be displayed in Recently Viewed
+
+
+  @accounts @SortAccountsByName
+Scenario: Sort accounts by name
+  Given the user can see multiple accounts displayed while on view page
+  When the user sorts the account list by name in ascending order
+  Then accounts should be displayed in ascending name order

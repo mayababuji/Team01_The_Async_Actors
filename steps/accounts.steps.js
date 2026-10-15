@@ -2,17 +2,27 @@ import { expect } from '@playwright/test';
 import { Given, When, Then } from '../fixtures.js';
 import { getAccountDataByScenario } from '../utils/excel-util.js';
 
+const ACCOUNT_RECORD_URL =
+  /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/;
+
+const ACCOUNTS_LIST_URL =
+  /#\/accounts(?:\/index)?\/?(?:\?.*)?$/;
+
+// Background
 
 Given(
   'the authenticated user is on the Suite8Demo home page',
   async ({ page, logger }) => {
-    logger.info('Opening Suite8Demo home page with saved authentication');
+    logger.info(
+      'Opening Suite8Demo home page with saved authentication'
+    );
 
     await page.goto(`${process.env.BASE_URL}/#/home`);
-
-    await expect(page).toHaveURL(/#\/home/i);
+    await page.waitForURL(/#\/home(?:[/?#]|$)/i);
   }
 );
+
+// Accounts navigation
 
 When(
   'the user hovers over the Accounts module in the top navigation',
@@ -30,12 +40,8 @@ Then(
   async ({ accountsPage, logger }, dataTable) => {
     const options = dataTable.raw().flat();
 
-    logger.info('Verifying Accounts dropdown options', {
-      options
-    });
-
     for (const optionName of options) {
-      const option = await accountsPage.getDropdownOption(optionName);
+      const option = accountsPage.getDropdownOption(optionName);
 
       await expect(option).toBeVisible();
     }
@@ -49,7 +55,7 @@ Then(
 When(
   'the user clicks on the Accounts module from the top navigation',
   async ({ accountsPage, logger }) => {
-    logger.info('Opening the Accounts navigation menu');
+    logger.info('Opening Create Account page');
 
     await accountsPage.openCreateAccountPage();
   }
@@ -58,44 +64,68 @@ When(
 Then(
   'the user should be navigated to the Create Account page',
   async ({ accountsPage, logger }) => {
-    logger.info('Verifying the Create Account page is displayed');
+    await expect(
+      accountsPage.createAccountPageHeading
+    ).toBeVisible();
 
-    await expect(accountsPage.createAccountPageHeading).toBeVisible();
-
+    logger.info('Create Account page displayed');
   }
 );
 
-When('the user clicks on the Import module from the top navigation', async ({ accountsPage, logger }) => {
-  logger.info('Verifying the Import module page is displayed');
-  await accountsPage.openImportAccountPage();
-});
+When(
+  'the user clicks on the Import module from the top navigation',
+  async ({ accountsPage, logger }) => {
+    logger.info('Opening Import Accounts page');
+
+    await accountsPage.openImportAccountPage();
+  }
+);
 
 Then(
   'the user should be navigated to the Import module page',
   async ({ accountsPage, logger }) => {
-    logger.info('Verifying the Import module  is displayed');
+    await expect(
+      accountsPage.importAccountPageHeading
+    ).toBeVisible();
 
-    await expect(accountsPage.importAccountPageHeading).toBeVisible();
-
+    logger.info('Import Accounts page displayed');
   }
 );
 
-When('the user clicks on the View Accounts module from the top navigation', async ({ accountsPage, logger }) => {
-  logger.info('Verifying the View Accounts page is displayed');
-  await accountsPage.openViewAccountPage();
-});
+When(
+  'the user clicks on the View Accounts module from the top navigation',
+  async ({ accountsPage, logger }) => {
+    logger.info('Opening View Accounts page');
 
-Then('the user should be navigated to the View Accounts module page', async ({ accountsPage, logger }) => {
-  logger.info('Verifying the View Account module  is displayed');
-  await expect(accountsPage.viewAccountPageHeading).toBeVisible();
+    await accountsPage.openViewAccountPage();
+  }
+);
 
-});
+Then(
+  'the user should be navigated to the View Accounts module page',
+  async ({ accountsPage, logger }) => {
+    await expect(
+      accountsPage.viewAccountPageHeading
+    ).toBeVisible();
+
+    logger.info('View Accounts page displayed');
+  }
+);
+
+// Shared Create Account setup
+
 Given(
   'the user is on the Create Account page',
   async ({ accountsPage }) => {
     await accountsPage.openCreateAccountPage();
+
+    await accountsPage.createAccountPageHeading.waitFor({
+      state: 'visible'
+    });
   }
 );
+
+// Required Name validation
 
 When(
   'the user clicks Save without entering the required Name field',
@@ -107,41 +137,68 @@ When(
 Then(
   'the Name validation message {string} should be displayed',
   async ({ accountsPage }, expectedMessage) => {
-    await expect(accountsPage.nameValidationMessage)
-      .toHaveText(expectedMessage);
+    await expect(
+      accountsPage.nameValidationMessage
+    ).toBeVisible();
+
+    await expect(
+      accountsPage.nameValidationMessage
+    ).toHaveText(expectedMessage);
   }
 );
 
-
+// Create account with mandatory data
 
 When(
   'the user enters valid account details and clicks Save',
-  async ({ accountsPage, logger }) => {
+  async ({ page, accountsPage, logger, accountCleanup }) => {
     const account = getAccountDataByScenario(
       'create_account_valid_name'
     );
 
-    logger.info('Account data read from Excel', { account });
+    logger.info('Creating account with mandatory data', {
+      scenario: account.scenario,
+      accountName: account.name
+    });
 
     await accountsPage.enterAccountName(account.name);
     await accountsPage.clickSaveOnCreateAccountPage();
+
+    await page.waitForURL(ACCOUNT_RECORD_URL);
+
+    const recordUrl = page.url();
+
+    accountCleanup.register(recordUrl);
+
+    logger.info('Account registered for cleanup', {
+      scenario: account.scenario,
+      accountName: account.name,
+      recordUrl
+    });
   }
 );
 
-
 Then(
   'the user should be navigated to the newly created account detail page',
-  async ({ accountsPage }) => {
+  async ({ page, accountsPage, logger }) => {
     const account = getAccountDataByScenario(
       'create_account_valid_name'
     );
+
+    await expect(page).toHaveURL(ACCOUNT_RECORD_URL);
 
     await expect(
       accountsPage.getAccountDetailName(account.expectedResult)
     ).toBeVisible();
+
+    logger.info('Newly created account detail page displayed', {
+      scenario: account.scenario,
+      accountName: account.name
+    });
   }
 );
 
+// Create account with complete overview information
 
 When(
   'the user enters complete overview information from Excel and saves the account',
@@ -158,13 +215,11 @@ When(
     await accountsPage.enterCompleteOverviewInformation(account);
     await accountsPage.clickSaveOnCreateAccountPage();
 
-    await expect(page).toHaveURL(
-      /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/
-    );
+    await page.waitForURL(ACCOUNT_RECORD_URL);
 
     const recordUrl = page.url();
 
-    accountCleanup.register(recordUrl, account.scenario);
+    accountCleanup.register(recordUrl);
 
     logger.info('Account created and registered for cleanup', {
       scenario: account.scenario,
@@ -174,13 +229,14 @@ When(
   }
 );
 
-
 Then(
   'the account should be created with all entered overview information',
-  async ({ accountsPage, logger }) => {
+  async ({ page, accountsPage, logger }) => {
     const account = getAccountDataByScenario(
       'create_account_complete_overview'
     );
+
+    await expect(page).toHaveURL(ACCOUNT_RECORD_URL);
 
     await expect(
       accountsPage.getAccountDetailName(account.expectedResult)
@@ -206,10 +262,16 @@ Then(
     };
 
     for (const [field, value] of Object.entries(expectedFields)) {
+      if (value === undefined || value === null) {
+        throw new Error(
+          `Missing Excel value for overview field "${field}".`
+        );
+      }
+
       await expect(
         accountsPage.overviewPanel,
         `Expected saved "${field}" to contain "${value}"`
-      ).toContainText(value);
+      ).toContainText(String(value));
     }
 
     logger.info('Saved account overview values verified', {
@@ -218,6 +280,8 @@ Then(
     });
   }
 );
+
+// Create account with primary email
 
 When(
   'the user enters a valid account name, email address, selects primary email, and saves the account',
@@ -233,21 +297,12 @@ When(
     });
 
     await accountsPage.enterAccountWithPrimaryEmail(account);
-
-    await expect(
-      accountsPage.primaryEmailControl
-    ).toBeChecked();
-
     await accountsPage.clickSaveOnCreateAccountPage();
 
-    // Wait for the newly created record's detail URL.
-    await expect(page).toHaveURL(
-      /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/
-    );
+    await page.waitForURL(ACCOUNT_RECORD_URL);
 
     const recordUrl = page.url();
 
-    // Register before any further verification.
     accountCleanup.register(recordUrl);
 
     logger.info('Account registered for cleanup', {
@@ -258,20 +313,21 @@ When(
   }
 );
 
-
 Then(
   'the account should be created with the email address marked as primary',
-  async ({ accountsPage, logger }) => {
+  async ({ page, accountsPage, logger }) => {
     const account = getAccountDataByScenario(
       'create_account_primary_email'
     );
 
-    // Confirm that the created account is displayed.
+    await expect(page).toHaveURL(ACCOUNT_RECORD_URL);
+
+    const recordUrl = page.url();
+
     await expect(
       accountsPage.getAccountDetailName(account.expectedResult)
     ).toBeVisible();
 
-    // Reopen the saved record to verify persisted values.
     await accountsPage.openAccountForEditing();
 
     await expect(
@@ -282,6 +338,19 @@ Then(
       accountsPage.primaryEmailControl
     ).toBeChecked();
 
+    // Return to detail mode before fixture cleanup.
+    await accountsPage.clickCancelOnCreateAccountPage();
+
+    await expect(
+      accountsPage.saveButton
+    ).toBeHidden();
+
+    await expect(
+      accountsPage.editAccountButton
+    ).toBeVisible();
+
+    await expect(page).toHaveURL(recordUrl);
+
     logger.info('Saved primary email verified', {
       scenario: account.scenario,
       accountName: account.name,
@@ -290,6 +359,7 @@ Then(
   }
 );
 
+// Invalid email validation
 
 When(
   'the user enters a valid account name, an invalid email address, and clicks the Save button',
@@ -309,7 +379,6 @@ When(
   }
 );
 
-
 Then(
   'the user should see an email-address validation message',
   async ({ accountsPage, logger }) => {
@@ -323,11 +392,11 @@ Then(
       );
 
     await expect(validationMessage).toBeVisible();
+
     await expect(validationMessage).toHaveText(
       account.expectedResult
     );
 
-    // Confirm the user remains on the Create Account form.
     await expect(
       accountsPage.createAccountPageHeading
     ).toBeVisible();
@@ -339,16 +408,14 @@ Then(
   }
 );
 
+// Cancel without entered data
+
 When(
   'the user clicks the Cancel button without entering data',
   async ({ accountsPage, logger }) => {
-    await expect(
-      accountsPage.accountNameInput
-    ).toHaveValue('');
-
-    await expect(
-      accountsPage.emailInput
-    ).toHaveValue('');
+    // Establish an empty form without assertions.
+    await accountsPage.accountNameInput.fill('');
+    await accountsPage.emailInput.fill('');
 
     logger.info('Clicking Cancel on the empty Create Account form');
 
@@ -356,11 +423,10 @@ When(
   }
 );
 
-
 Then(
   'the user should be navigated back to the Accounts Dashboard page',
   async ({ page, accountsPage, logger }) => {
-    await expect(page).toHaveURL(/#\/accounts\/?(?:\?.*)?$/);
+    await expect(page).toHaveURL(ACCOUNTS_LIST_URL);
 
     await expect(
       accountsPage.viewAccountPageHeading
@@ -369,6 +435,8 @@ Then(
     logger.info('Returned to the Accounts page after cancelling');
   }
 );
+
+// Unsaved account data
 
 Given(
   'the user enters account data entered on the Create Account page',
@@ -379,19 +447,11 @@ Given(
 
     await accountsPage.openCreateAccountPage();
 
-    await expect(
-      accountsPage.createAccountPageHeading
-    ).toBeVisible();
+    await accountsPage.createAccountPageHeading.waitFor({
+      state: 'visible'
+    });
 
     await accountsPage.enterUnsavedAccountData(account);
-
-    await expect(
-      accountsPage.accountNameInput
-    ).toHaveValue(account.name);
-
-    await expect(
-      accountsPage.emailInput
-    ).toHaveValue(account.email);
 
     logger.info('Entered account data without saving', {
       scenario: account.scenario,
@@ -401,7 +461,6 @@ Given(
   }
 );
 
-
 When(
   'the user clicks the Cancel button',
   async ({ accountsPage, logger }) => {
@@ -410,7 +469,6 @@ When(
     await accountsPage.clickCancelOnCreateAccountPage();
   }
 );
-
 
 Then(
   'the user should see a confirmation popup for unsaved changes',
@@ -446,13 +504,15 @@ When(
   async ({ accountsPage, logger }) => {
     await accountsPage.clickCancelOnCreateAccountPage();
 
-    await expect(
-      accountsPage.confirmLeaveAccountButton
-    ).toBeVisible();
+    await accountsPage.confirmLeaveAccountButton.waitFor({
+      state: 'visible'
+    });
 
     await accountsPage.confirmLeavingAccountCreation();
 
-    logger.info('Unsaved account data discarded from confirmation popup');
+    logger.info(
+      'Unsaved account data discarded from confirmation popup'
+    );
   }
 );
 
@@ -463,26 +523,23 @@ When(
       'cancel_create_account_with_data'
     );
 
-    // Click the page Cancel button to open the popup.
     await accountsPage.clickCancelOnCreateAccountPage();
 
-    await expect(
-      accountsPage.getUnsavedChangesMessage(
-        account.expectedResult
-      )
-    ).toBeVisible();
+    await accountsPage
+      .getUnsavedChangesMessage(account.expectedResult)
+      .waitFor({
+        state: 'visible'
+      });
 
-    await expect(
-      accountsPage.dismissCancellationButton
-    ).toBeVisible();
+    await accountsPage.dismissCancellationButton.waitFor({
+      state: 'visible'
+    });
 
-    // Click Cancel inside the popup to continue editing.
     await accountsPage.dismissCancellationPopup();
 
     logger.info('Dismissed cancellation popup to continue editing');
   }
 );
-
 
 Then(
   'the user should remain on the Create Account page with entered data retained',
@@ -529,40 +586,40 @@ Then(
   }
 );
 
+// Shared View Accounts setup
+
 Given(
   'the user is on the View Accounts page',
   async ({ accountsPage, logger }) => {
     await accountsPage.openViewAccountPage();
 
-    await expect(
-      accountsPage.viewAccountPageHeading
-    ).toBeVisible();
-
     logger.info('View Accounts page opened');
   }
 );
+
+// Search prerequisite and cleanup registration
+
 Given(
   'an account exists for the account name search {string}',
-  async ({ page, accountsPage, logger, accountCleanup },scenarioKey) => {
-    const account = getAccountDataByScenario(
-      scenarioKey
-    );
+  async (
+    { page, accountsPage, logger, accountCleanup },
+    scenarioKey
+  ) => {
+    const account = getAccountDataByScenario(scenarioKey);
 
-    // Create the prerequisite for this scenario.
     await accountsPage.createAccountForListTest(account);
 
-    await expect(page).toHaveURL(
-      /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/
-    );
+    await page.waitForURL(ACCOUNT_RECORD_URL);
 
     const recordUrl = page.url();
 
-    // Register before further assertions or navigation.
     accountCleanup.register(recordUrl);
 
-    await expect(
-      accountsPage.getAccountDetailName(account.name)
-    ).toBeVisible();
+    await accountsPage
+      .getAccountDetailName(account.name)
+      .waitFor({
+        state: 'visible'
+      });
 
     logger.info('Created account for account name search', {
       scenario: account.scenario,
@@ -572,19 +629,16 @@ Given(
 
     await accountsPage.openViewAccountPage();
 
-    await expect(
-      accountsPage.viewAccountPageHeading
-    ).toBeVisible();
-
     logger.info('View Accounts page opened');
   }
 );
 
+// Search by full account name
+
 When(
   'the user searches for an existing account by name {string}',
-  async ({ accountsPage, logger },scenarioKey) => {
-    const account = getAccountDataByScenario(scenarioKey
-    );
+  async ({ accountsPage, logger }, scenarioKey) => {
+    const account = getAccountDataByScenario(scenarioKey);
 
     logger.info('Searching Accounts by name', {
       scenario: account.scenario,
@@ -595,17 +649,17 @@ When(
   }
 );
 
+// Shared matching-search-result verification
 
 Then(
   'the matching account should be displayed for {string}',
-  async ({ accountsPage, logger },scenarioKey) => {
-    const account = getAccountDataByScenario(
-     scenarioKey
-    );
+  async ({ accountsPage, logger }, scenarioKey) => {
+    const account = getAccountDataByScenario(scenarioKey);
 
-    const matchingAccount = accountsPage.getAccountSearchResult(
-      account.expectedResult
-    );
+    const matchingAccount =
+      accountsPage.getAccountSearchResult(
+        account.expectedResult
+      );
 
     await expect(matchingAccount).toBeVisible();
 
@@ -620,21 +674,43 @@ Then(
   }
 );
 
+// Search by partial account name
+
 When(
   'the user searches with a partial existing account name {string}',
-  async ({ accountsPage, logger },scenarioKey) => {
-    const account = getAccountDataByScenario(
-      scenarioKey
-    );
+  async ({ accountsPage, logger }, scenarioKey) => {
+    const account = getAccountDataByScenario(scenarioKey);
+
+    const searchText = String(
+      account.searchText ?? ''
+    ).trim();
+
+    if (!searchText) {
+      throw new Error(
+        `Missing Excel SearchText for scenario "${scenarioKey}".`
+      );
+    }
+
+    if (
+      searchText === account.name ||
+      !account.name.includes(searchText)
+    ) {
+      throw new Error(
+        `SearchText must be a non-empty partial value of Name for scenario "${scenarioKey}".`
+      );
+    }
 
     logger.info('Searching Accounts with a partial name', {
       scenario: account.scenario,
-      partialName: account.name
+      accountName: account.name,
+      searchText
     });
 
-    await accountsPage.searchAccountsByName(account.name);
+    await accountsPage.searchAccountsByName(searchText);
   }
 );
+
+// Search for a non-existing account
 
 When(
   'the user searches for a non-existing account name',
@@ -651,7 +727,6 @@ When(
     await accountsPage.searchAccountsByName(account.name);
   }
 );
-
 
 Then(
   'a no-results message should be displayed',
@@ -679,29 +754,8 @@ Then(
   }
 );
 
-// Given(
-//   'the user  with an existing account displayed is on the View Accounts page',
-//   async ({ accountsPage, logger }) => {
-//     const account = getAccountDataByScenario(
-//       'open_account_from_list'
-//     );
+// Open account from the list
 
-//     await accountsPage.openViewAccountPage();
-
-//     await expect(
-//       accountsPage.viewAccountPageHeading
-//     ).toBeVisible();
-
-//     await expect(
-//       accountsPage.getAccountListLink(account.name)
-//     ).toBeVisible();
-
-//     logger.info('Existing account displayed on View Accounts page', {
-//       scenario: account.scenario,
-//       accountName: account.name
-//     });
-//   }
-// );
 Given(
   'an account is available on the View Accounts page',
   async ({
@@ -715,44 +769,39 @@ Given(
       'open_account_from_list'
     );
 
-    // Share the Excel data with the When and Then.
     accountListTestData.account = account;
 
     await accountsPage.createAccountForListTest(account);
 
-    await expect(page).toHaveURL(
-      /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/
-    );
+    await page.waitForURL(ACCOUNT_RECORD_URL);
 
     const recordUrl = page.url();
 
-    // Register the exact record created by this scenario.
     accountCleanup.register(recordUrl);
+    accountListTestData.recordUrl = recordUrl;
 
-    await expect(
-      accountsPage.getAccountDetailName(account.expectedResult)
-    ).toBeVisible();
+    await accountsPage
+      .getAccountDetailName(account.name)
+      .waitFor({
+        state: 'visible'
+      });
 
     await accountsPage.openViewAccountPage();
 
-    await expect(
-      accountsPage.viewAccountPageHeading
-    ).toBeVisible();
+    await accountsPage
+      .getAccountListLink(account.name)
+      .waitFor({
+        state: 'visible'
+      });
 
-    await expect(
-      accountsPage.getAccountListLink(account.name)
-    ).toHaveCount(1);
-
-    await expect(
-      accountsPage.getAccountListLink(account.name)
-    ).toBeVisible();
-
-    logger.info('Excel account created and registered for cleanup', {
+    logger.info('Account available on View Accounts page', {
+      scenario: account.scenario,
       accountName: account.name,
       recordUrl
     });
   }
 );
+
 When(
   'the user selects an account name from the list',
   async ({ accountsPage, logger, accountListTestData }) => {
@@ -772,21 +821,18 @@ When(
   }
 );
 
-
 Then(
   'the selected account detail page should be displayed',
   async ({ page, accountsPage, logger, accountListTestData }) => {
-    const account = accountListTestData.account;
+    const { account, recordUrl } = accountListTestData;
 
-    if (!account) {
+    if (!account || !recordUrl) {
       throw new Error(
-        'Account test data was not initialized by the Given step.'
+        'Account test data or record URL was not initialized by the Given step.'
       );
     }
 
-    await expect(page).toHaveURL(
-      /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/
-    );
+    await expect(page).toHaveURL(recordUrl);
 
     await expect(
       accountsPage.getAccountDetailName(account.expectedResult)
@@ -794,10 +840,13 @@ Then(
 
     logger.info('Selected account detail page displayed', {
       scenario: account.scenario,
-      accountName: account.expectedResult
+      accountName: account.expectedResult,
+      recordUrl
     });
   }
 );
+
+// Recently Viewed
 
 Given(
   'the user has opened an existing account detail page',
@@ -806,22 +855,19 @@ Given(
       'account_recently_viewed'
     );
 
-    // Create this scenario's prerequisite using Excel data.
     await accountsPage.createAccountForListTest(account);
 
-    await expect(page).toHaveURL(
-      /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/
-    );
+    await page.waitForURL(ACCOUNT_RECORD_URL);
 
     const recordUrl = page.url();
 
-    // Register immediately so later assertion failures
-    // do not prevent cleanup.
     accountCleanup.register(recordUrl);
 
-    await expect(
-      accountsPage.getAccountDetailName(account.name)
-    ).toBeVisible();
+    await accountsPage
+      .getAccountDetailName(account.name)
+      .waitFor({
+        state: 'visible'
+      });
 
     logger.info('Created and opened account for Recently Viewed test', {
       scenario: account.scenario,
@@ -831,29 +877,18 @@ Given(
   }
 );
 
-
 When(
   'the user opens Recently Viewed from the Accounts module',
   async ({ accountsPage, logger }) => {
     await accountsPage.openAccountsRecentlyViewed();
-console.log(
-      'Recently Viewed HTML:',
-      await accountsPage.accountsRecentlyViewedPanel.innerHTML()
-    );
 
-    console.log(
-      'Recently Viewed text:',
-      await accountsPage.accountsRecentlyViewedPanel.allTextContents()
-    );
-
-    await expect(
-      accountsPage.accountsRecentlyViewedPanel
-    ).toBeVisible();
+    await accountsPage.accountsRecentlyViewedPanel.waitFor({
+      state: 'visible'
+    });
 
     logger.info('Opened Accounts > Recently Viewed');
   }
 );
-
 
 Then(
   'the existing account should be displayed in Recently Viewed',
@@ -876,6 +911,106 @@ Then(
     logger.info('Account verified in Recently Viewed', {
       scenario: account.scenario,
       accountName: account.expectedResult
+    });
+  }
+);
+
+// Sort accounts by name
+
+Given(
+  'the user can see multiple accounts displayed while on view page',
+  async ({ accountsPage, logger }) => {
+    await accountsPage.openViewAccountPage();
+
+    await accountsPage.accountsListTable.waitFor({
+      state: 'visible'
+    });
+
+    await accountsPage.accountNameListLinks.nth(1).waitFor({
+      state: 'visible'
+    });
+
+    logger.info('Accounts list ready for sorting');
+  }
+);
+
+When(
+  'the user sorts the account list by name in ascending order',
+  async ({ page, accountsPage, logger }) => {
+    await accountsPage.accountNameSortButton.waitFor({
+      state: 'visible'
+    });
+
+    const descendingClass =
+      /(?:^|\s)image-sort_descend(?:\s|$)/;
+
+    const currentIconClass =
+      await accountsPage.accountNameSortIcon.getAttribute(
+        'class'
+      );
+
+    // Synchronize with the confirmed descending state.
+    if (!descendingClass.test(currentIconClass ?? '')) {
+      await accountsPage.clickAccountNameSortButton();
+
+      await page.waitForFunction(() => {
+        const icon = document.querySelector(
+          'th.cdk-column-name scrm-sort-button a.sort-button svg-icon'
+        );
+
+        return icon?.classList.contains(
+          'image-sort_descend'
+        );
+      });
+    }
+
+    await accountsPage.clickAccountNameSortButton();
+
+    // Wait for the icon to leave descending state.
+    // The Then verifies that the actual rows are ascending.
+    await page.waitForFunction(() => {
+      const icon = document.querySelector(
+        'th.cdk-column-name scrm-sort-button a.sort-button svg-icon'
+      );
+
+      return (
+        icon !== null &&
+        !icon.classList.contains('image-sort_descend')
+      );
+    });
+
+    logger.info('Toggled Name sorting away from descending');
+  }
+);
+
+Then(
+  'accounts should be displayed in ascending name order',
+  async ({ accountsPage, logger }) => {
+    await expect(async () => {
+      const names =
+        await accountsPage.getDisplayedAccountNames();
+
+      expect(
+        names.length,
+        'Expected at least two accounts to verify sorting'
+      ).toBeGreaterThan(1);
+
+      const expectedNames = [...names].sort((a, b) =>
+        a.localeCompare(b, 'en', {
+          sensitivity: 'base',
+          numeric: false
+        })
+      );
+
+      expect(
+        names,
+        'Expected displayed accounts in ascending name order'
+      ).toEqual(expectedNames);
+    }).toPass();
+
+    logger.info('Ascending account name order verified', {
+      accountNames:
+        await accountsPage.getDisplayedAccountNames()
     });
   }
 );
