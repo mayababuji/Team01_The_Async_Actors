@@ -1,0 +1,25 @@
+"Name","ID","Website","Email Address","Non Primary E-mails","Office Phone","Alternate Phone","Fax","Billing Street","Billing City","Billing State","Billing Postal Code","Billing Country","Shipping Street","Shipping City","Shipping State","Shipping Postal Code","Shipping Country","Description","Type","Industry","Annual Revenue","Employees","SIC Code","Ticker Symbol","Parent Account ID","Ownership","Campaign ID","Rating","Assigned to","Assigned User","Date Created","Date Modified","Modified By","Created By","Deleted","Longitude","Latitude","Geocode Status","Address"
+"Green Tractor Group Limited","12d56573-f2ed-4496-ae6d-cff5d5a1016f","www.phonesection.tw","qa.sales@example.tv","info.support@example.de","(671) 043-3201","","","4275 Elm Dr","Atlanta","NY","56146","USA","4275 Elm Dr","Atlanta","NY","56146","USA","","Press","Manufacturing","","","","","","","","","chris","seed_chris_id","2026-02-07 12:00","2026-10-16 18:01","1","1","0","","","",""
+"Coolview Net Ltd","50c53f5d-17c0-42fe-9a82-3ab19b83cee8","www.phoneinfo.org","support.kid@example.tv","kid.kid.support@example.de","(552) 447-3333","","","111 Vista Road","San Francisco","NY","29696","USA","111 Vista Road","San Francisco","NY","29696","USA","","Other","Environmental","","","","","","","","","chris","seed_chris_id","2022-06-19 11:30","2026-10-16 18:01","1","1","0","","","",""
+"Jungle Systems Inc","5121d92d-378e-4f5d-a690-95068bb57f95","www.sugarphone.co.jp","sales51@example.org","vegan41@example.biz","(322) 533-7657","","","4275 Elm Dr","Los Angeles","NY","44253","USA","4275 Elm Dr","Los Angeles","NY","44253","USA","","Partner","Telecommunications","","","","","","","","","chris","seed_chris_id","2025-01-04 17:00","2026-10-16 18:01","1","1","0","","","",""
+"Hammer Group Inc","794130f1-c04b-42f1-ae1a-380c58811da1","www.qadev.cn","support.sugar@example.de","phone37@example.edu","(649) 366-4931","","","74 South Cemetery Ave","Hartford","NY","53850","USA","74 South Cemetery Ave","Hartford","NY","53850","USA","","Prospect","Biotechnology","","","","","","","","","chris","seed_chris_id","2023-12-04 19:45","2026-10-16 18:01","1","1","0","","","",""
+"Sunyvale Reporting Ltd","7eef4665-421e-4a82-ac52-b1e6a7a28766","www.kidthe.biz","hr.sugar.the@example.biz","sales.beans.support@example.edu","(710) 799-9368","","","4275 Elm Dr","Santa Fe","NY","71547","USA","4275 Elm Dr","Santa Fe","NY","71547","USA","","Investor","Healthcare","","","","","","","","","chris","seed_chris_id","2022-08-27 12:15","2026-10-16 18:01","1","1","0","","","",""
+
+
+"This is a sample import file which provides an example of the expected contents of a file that is ready for import."
+"The file is a comma-delimited .csv file, using double-quotes as the field qualifier."
+
+"The header row is the top-most row in the file and contains the field labels as you would see them in the application."
+"These labels are used for mapping the data in the file to the fields in the application."
+
+"Notes: The database names could also be used in the header row. This is useful when you are using phpMyAdmin or another database tool to provide an exported list of data to import."
+"The column order is not critical as the import process matches the data to the appropriate fields based on the header row."
+
+
+"To use this file as a template, do the following:"
+"1. Remove the sample rows of data"
+"2. Remove the help text that you are reading right now"
+"3. Input your own data into the appropriate rows and columns"
+"4. Save the file to a known location on your system"
+"5. Click on the Import option from the Actions menu in the application and choose the file to upload"
+   

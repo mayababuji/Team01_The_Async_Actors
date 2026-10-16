@@ -26,14 +26,22 @@ const dotenvResult = dotenv.config({
   override: false
 });
 
-if (dotenvResult.error && dotenvResult.error.code !== 'ENOENT') {
+if (
+  dotenvResult.error &&
+  dotenvResult.error.code !== 'ENOENT'
+) {
   throw new Error(
     `Could not load ${envFile}: ${dotenvResult.error.message}`
   );
 }
 
-if (dotenvResult.error?.code === 'ENOENT' && !process.env.CI) {
-  throw new Error(`Local environment file not found: ${envPath}`);
+if (
+  dotenvResult.error?.code === 'ENOENT' &&
+  !process.env.CI
+) {
+  throw new Error(
+    `Local environment file not found: ${envPath}`
+  );
 }
 
 const {
@@ -42,13 +50,17 @@ const {
   LOGIN_PASSWORD
 } = process.env;
 
-for (const [name, value] of Object.entries({
-  BASE_URL,
-  LOGIN_USERNAME,
-  LOGIN_PASSWORD
-})) {
+for (
+  const [name, value] of Object.entries({
+    BASE_URL,
+    LOGIN_USERNAME,
+    LOGIN_PASSWORD
+  })
+) {
   if (!value) {
-    throw new Error(`${name} is missing for environment "${environment}"`);
+    throw new Error(
+      `${name} is missing for environment "${environment}"`
+    );
   }
 }
 
@@ -67,18 +79,17 @@ export default defineConfig({
 
   timeout: 90_000,
 
- expect: {
-  timeout: 20_000,
+  expect: {
+    timeout: 20_000,
+    toPass: {
+      timeout: 20_000
+    }
+  },
 
-  toPass: {
-    timeout: 20_000
-  }
-},
-
-  fullyParallel: false,
+  fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
-  workers:1,
+  workers: 2,
 
   reporter: [
     ['list'],
@@ -106,61 +117,88 @@ export default defineConfig({
     actionTimeout: 20_000,
     navigationTimeout: 90_000
   },
-projects: [
-  {
-    name: 'setup',
-    testDir: 'session',
-    testMatch: /auth\.setup\.js/
-  },
 
-  {
-    name: 'login-chromium',
-    testMatch: /login\.feature\.spec\.js/,
-    use: {
-      ...devices['Desktop Chrome']
-    }
-  },
-  {
-    name: 'login-firefox',
-    testMatch: /login\.feature\.spec\.js/,
-    use: {
-      ...devices['Desktop Firefox']
-    }
-  },
-  {
-    name: 'login-webkit',
-    testMatch: /login\.feature\.spec\.js/,
-    use: {
-      ...devices['Desktop Safari']
-    }
-  },
+  projects: [
+    {
+      name: 'setup',
+      testDir: 'session',
+      testMatch: /auth\.setup\.js/,
 
-  {
-    name: 'chromium',
-    testIgnore: /login\.feature\.spec\.js/,
-    dependencies: ['setup'],
-    use: {
-      ...devices['Desktop Chrome'],
-      storageState: 'playwright/.auth/user.json'
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: {
+          cookies: [],
+          origins: []
+        }
+      }
+    },
+
+    // Login tests: logged out, no setup dependency.
+    {
+      name: 'login-chromium',
+      testMatch: /login\.feature\.spec\.js/,
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: {
+          cookies: [],
+          origins: []
+        }
+      }
+    },
+
+    {
+      name: 'login-firefox',
+      testMatch: /login\.feature\.spec\.js/,
+      use: {
+        ...devices['Desktop Firefox'],
+        storageState: {
+          cookies: [],
+          origins: []
+        }
+      }
+    },
+
+    {
+      name: 'login-webkit',
+      testMatch: /login\.feature\.spec\.js/,
+      use: {
+        ...devices['Desktop Safari'],
+        storageState: {
+          cookies: [],
+          origins: []
+        }
+      }
+    },
+
+    // Non-login tests: use saved authentication.
+    {
+      name: 'chromium',
+      testIgnore: /login\.feature\.spec\.js/,
+      dependencies: ['setup'],
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'playwright/.auth/user.json'
+      }
+    },
+
+    {
+      name: 'firefox',
+      testIgnore: /login\.feature\.spec\.js/,
+      dependencies: ['setup'],
+      use: {
+        ...devices['Desktop Firefox'],
+        storageState: 'playwright/.auth/user.json'
+      }
+    },
+
+    {
+      name: 'webkit',
+      testIgnore: /login\.feature\.spec\.js/,
+      dependencies: ['setup'],
+      use: {
+        ...devices['Desktop Safari'],
+        storageState: 'playwright/.auth/user.json'
+      }
     }
-  },
-  {
-    name: 'firefox',
-    testIgnore: /login\.feature\.spec\.js/,
-    dependencies: ['setup'],
-    use: {
-      ...devices['Desktop Firefox'],
-      storageState: 'playwright/.auth/user.json'
-    }
-  },
-  {
-    name: 'webkit',
-    testIgnore: /login\.feature\.spec\.js/,
-    dependencies: ['setup'],
-    use: {
-      ...devices['Desktop Safari'],
-      storageState: 'playwright/.auth/user.json'
-    }
-  }
-]
+  ]
 });

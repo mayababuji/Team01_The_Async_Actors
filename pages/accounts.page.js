@@ -116,11 +116,11 @@ export class AccountsPage {
     // Unsaved-changes popup
     this.confirmLeaveAccountButton = page
       .locator('button.modal-button')
-      .filter({ hasText: /^\s*Ok\s*$/i });
+      .filter({ hasText: /cancel/i });
 
     this.dismissCancellationButton = page
       .locator('button.modal-button')
-      .filter({ hasText: /^\s*Cancel\s*$/ });
+      .filter({ hasText: /cancel/i });
 
     // Global search
     this.accountSearchNameInput = page.getByPlaceholder(
@@ -211,6 +211,22 @@ export class AccountsPage {
 
     this.accountNameSortIcon =
       this.accountNameSortButton.locator('svg-icon');
+      this.officePhoneInput = page
+  .locator(
+    'scrm-dynamic-field.dynamic-field-name-phone_office'
+  )
+  .getByRole('textbox');
+this.accountImportTemplateLink = page
+  .frameLocator('iframe[src*="module=Import"]')
+  .getByRole('link', {
+    name: 'Download Import File Template',
+    exact: true
+  });
+
+  this.accountImportFileInput = page
+  .frameLocator('iframe[src*="module=Import"]')
+  .locator('input[type="file"]');
+  
   }
 
   // Navigation
@@ -596,4 +612,18 @@ export class AccountsPage {
 
     return names.map(name => name.trim());
   }
+  async enterAccountOfficePhone(phone) {
+  await this.officePhoneInput.fill(String(phone));
+}
+async downloadAccountImportTemplate() {
+  const downloadPromise = this.page.waitForEvent('download');
+
+  await this.accountImportTemplateLink.click();
+
+  return await downloadPromise;
+}
+
+async selectAccountImportFile(filePath) {
+  await this.accountImportFileInput.setInputFiles(filePath);
+}
 }

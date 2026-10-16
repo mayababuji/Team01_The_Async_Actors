@@ -1,10 +1,10 @@
 @accounts
-Feature: Accounts module navigation
+Feature: Accounts management
 
   Background:
     Given the authenticated user is on the Suite8Demo home page
 
-  @AccountsNavigation @navi
+  @AccountsNavigation 
   Scenario: Verify Accounts module navigation
     When the user hovers over the Accounts module in the top navigation
     Then the user should see the Accounts dropdown options
@@ -131,3 +131,47 @@ Scenario: Update account website
   Given a new account exists for updating its website 'update_account_website'
   When the user updates the account website and saves the changes
   Then the account website should be updated successfully
+
+    @UpdateAccountOfficePhone
+  Scenario: Update account office phone number
+    Given a new account exists for updating its office phone number 'update_account_office_phone'
+    When the user updates the office phone number and saves the changes
+    Then the account office phone number should be updated successfully
+
+
+      @CancelAccountEdit
+  Scenario: Cancel changes while editing an account
+    Given the user is editing a newly created account 'cancel_account_edit'
+    When the user cancels the account changes
+    Then the existing account details should remain unchanged
+
+    @ImportAccounts @Positive @DownloadAccountImportTemplate
+  Scenario: Download the account import template
+    Given the user is on the Import Accounts page
+    When the user downloads the account import template
+    Then the account import template should be downloaded successfully
+
+
+      @ImportAccounts @Positive @SelectAccountImportFile
+  Scenario: Select a valid account import file
+    Given the user is on the Import Accounts page
+    When the user selects a valid account import file
+    Then the selected import filename should be displayed
+
+  # @ImportAccounts @Positive @ProceedWithValidImportFile
+  # Scenario: Proceed with a valid account import file
+  #   Given the user is on the Import Accounts page with a valid account import file selected
+  #   When the user clicks Next on the Import Accounts page
+  #   Then the next account import configuration step should be displayed
+
+  # @ImportAccounts @Positive @ImportNewAccounts
+  # Scenario: Import new accounts from a valid file
+  #   Given a valid import file containing new account data is available
+  #   When the user completes the account import using Create new records only
+  #   Then the imported accounts should contain the values provided in the file
+
+  # @ImportAccounts @Negative @ImportWithoutFile
+  # Scenario: Prevent account import without selecting a file
+  #   Given the user is on the Import Accounts page without a file selected
+  #   When the user attempts to proceed to the next import step
+  #   Then the user should remain on the Upload Import File page without starting an import

@@ -82,11 +82,17 @@ export function readAccountData() {
       scenario: String(row.Scenario ?? '').trim(),
       name: String(row.Name ?? '').trim(),
       searchText: String(row.SearchText ?? '').trim(),
+
       phone: String(row.Phone ?? '').trim(),
+      updatedPhone: String(
+        row.UpdatedPhone ?? ''
+      ).trim(),
+
       website: String(row.Website ?? '').trim(),
       updatedWebsite: String(
         row.UpdatedWebsite ?? ''
       ).trim(),
+
       email: String(row.Email ?? '').trim(),
 
       billingStreet: String(
@@ -126,12 +132,13 @@ export function readAccountData() {
       ).trim()
     };
 
-    // Preserve required fields for existing account rows.
+    // Required fields for all account rows.
     const requiredFields = [
       'scenario',
       'name',
       'expectedResult'
     ];
+    
 
     // Complete overview scenario.
     if (
@@ -165,6 +172,24 @@ export function readAccountData() {
       );
     }
 
+    // Office phone update scenario.
+    if (
+      accountRow.scenario === 'update_account_office_phone'
+    ) {
+      requiredFields.push(
+        'phone',
+        'updatedPhone'
+      );
+    }
+// Cancel account editing scenario.
+if (
+  accountRow.scenario === 'cancel_account_edit'
+) {
+  requiredFields.push(
+    'website',
+    'updatedWebsite'
+  );
+}
     // Validate required values before comparing them.
     for (const field of requiredFields) {
       if (!accountRow[field]) {
@@ -175,6 +200,7 @@ export function readAccountData() {
       }
     }
 
+    // Validate website update data.
     if (
       accountRow.scenario === 'update_account_website'
     ) {
@@ -198,6 +224,54 @@ export function readAccountData() {
       }
     }
 
+    // Validate office phone update data.
+    if (
+      accountRow.scenario === 'update_account_office_phone'
+    ) {
+      if (
+        accountRow.phone === accountRow.updatedPhone
+      ) {
+        throw new Error(
+          `Accounts Excel data row ${index + 2}: ` +
+          'Phone and UpdatedPhone must differ.'
+        );
+      }
+
+      if (
+        accountRow.expectedResult !==
+        accountRow.updatedPhone
+      ) {
+        throw new Error(
+          `Accounts Excel data row ${index + 2}: ` +
+          'ExpectedResult must match UpdatedPhone.'
+        );
+      }
+    }
+    // Validate cancel account editing data.
+if (
+  accountRow.scenario === 'cancel_account_edit'
+) {
+  if (
+    accountRow.website === accountRow.updatedWebsite
+  ) {
+    throw new Error(
+      `Accounts Excel data row ${index + 2}: ` +
+      'Website and UpdatedWebsite must differ.'
+    );
+  }
+
+  if (
+    accountRow.expectedResult !== accountRow.website
+  ) {
+    throw new Error(
+      `Accounts Excel data row ${index + 2}: ` +
+      'ExpectedResult must match the original Website ' +
+      'for cancel_account_edit.'
+    );
+  }
+}
+
     return accountRow;
   });
+  
 }
