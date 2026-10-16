@@ -1,4 +1,3 @@
-
 import XLSX from 'xlsx';
 import path from 'node:path';
 
@@ -14,7 +13,8 @@ function readSheetData(sheetName) {
 
   if (!worksheet) {
     throw new Error(
-      `Sheet "${sheetName}" was not found. Available sheets: ${workbook.SheetNames.join(', ')}`
+      `Sheet "${sheetName}" was not found. ` +
+      `Available sheets: ${workbook.SheetNames.join(', ')}`
     );
   }
 
@@ -24,11 +24,15 @@ function readSheetData(sheetName) {
   });
 
   if (rows.length === 0) {
-    throw new Error(`The "${sheetName}" worksheet has no data rows.`);
+    throw new Error(
+      `The "${sheetName}" worksheet has no data rows.`
+    );
   }
 
   return rows;
 }
+
+// Login data
 
 export function readLoginData() {
   return readSheetData('login').map((row, index) => {
@@ -36,7 +40,9 @@ export function readLoginData() {
       scenario: String(row.Scenario ?? '').trim(),
       username: String(row.Username ?? '').trim(),
       password: String(row.Password ?? '').trim(),
-      expectedResult: String(row.ExpectedResult ?? '').trim()
+      expectedResult: String(
+        row.ExpectedResult ?? ''
+      ).trim()
     };
 
     for (const field of ['scenario', 'expectedResult']) {
@@ -50,6 +56,9 @@ export function readLoginData() {
     return loginRow;
   });
 }
+
+// Retrieve one account scenario
+
 export function getAccountDataByScenario(scenarioName) {
   const account = readAccountData().find(
     row => row.scenario === scenarioName
@@ -57,47 +66,77 @@ export function getAccountDataByScenario(scenarioName) {
 
   if (!account) {
     throw new Error(
-      `Account scenario "${scenarioName}" was not found in the Accounts worksheet.`
+      `Account scenario "${scenarioName}" was not found ` +
+      'in the Accounts worksheet.'
     );
   }
 
   return account;
 }
+
+// Account data
+
 export function readAccountData() {
   return readSheetData('Accounts').map((row, index) => {
     const accountRow = {
       scenario: String(row.Scenario ?? '').trim(),
       name: String(row.Name ?? '').trim(),
-        searchText: String(row.SearchText ?? '').trim(),
+      searchText: String(row.SearchText ?? '').trim(),
       phone: String(row.Phone ?? '').trim(),
       website: String(row.Website ?? '').trim(),
+      updatedWebsite: String(
+        row.UpdatedWebsite ?? ''
+      ).trim(),
       email: String(row.Email ?? '').trim(),
 
-      billingStreet: String(row.BillingStreet ?? '').trim(),
-      billingPostalCode: String(row.BillingPostalCode ?? '').trim(),
-      billingCity: String(row.BillingCity ?? '').trim(),
-      billingState: String(row.BillingState ?? '').trim(),
-      billingCountry: String(row.BillingCountry ?? '').trim(),
+      billingStreet: String(
+        row.BillingStreet ?? ''
+      ).trim(),
+      billingPostalCode: String(
+        row.BillingPostalCode ?? ''
+      ).trim(),
+      billingCity: String(
+        row.BillingCity ?? ''
+      ).trim(),
+      billingState: String(
+        row.BillingState ?? ''
+      ).trim(),
+      billingCountry: String(
+        row.BillingCountry ?? ''
+      ).trim(),
 
-      shippingStreet: String(row.ShippingStreet ?? '').trim(),
-      shippingPostalCode: String(row.ShippingPostalCode ?? '').trim(),
-      shippingCity: String(row.ShippingCity ?? '').trim(),
-      shippingState: String(row.ShippingState ?? '').trim(),
-      shippingCountry: String(row.ShippingCountry ?? '').trim(),
+      shippingStreet: String(
+        row.ShippingStreet ?? ''
+      ).trim(),
+      shippingPostalCode: String(
+        row.ShippingPostalCode ?? ''
+      ).trim(),
+      shippingCity: String(
+        row.ShippingCity ?? ''
+      ).trim(),
+      shippingState: String(
+        row.ShippingState ?? ''
+      ).trim(),
+      shippingCountry: String(
+        row.ShippingCountry ?? ''
+      ).trim(),
 
-      expectedResult: String(row.ExpectedResult ?? '').trim()
+      expectedResult: String(
+        row.ExpectedResult ?? ''
+      ).trim()
     };
 
-    // These remain required for your existing positive account rows.
+    // Preserve required fields for existing account rows.
     const requiredFields = [
       'scenario',
       'name',
       'expectedResult'
     ];
 
-    // Require complete data only for this new scenario.
+    // Complete overview scenario.
     if (
-      accountRow.scenario === 'create_account_complete_overview'
+      accountRow.scenario ===
+      'create_account_complete_overview'
     ) {
       requiredFields.push(
         'phone',
@@ -116,10 +155,45 @@ export function readAccountData() {
       );
     }
 
+    // Website update scenario.
+    if (
+      accountRow.scenario === 'update_account_website'
+    ) {
+      requiredFields.push(
+        'website',
+        'updatedWebsite'
+      );
+    }
+
+    // Validate required values before comparing them.
     for (const field of requiredFields) {
       if (!accountRow[field]) {
         throw new Error(
-          `Accounts Excel data row ${index + 2} is missing "${field}".`
+          `Accounts Excel data row ${index + 2} ` +
+          `is missing "${field}".`
+        );
+      }
+    }
+
+    if (
+      accountRow.scenario === 'update_account_website'
+    ) {
+      if (
+        accountRow.website === accountRow.updatedWebsite
+      ) {
+        throw new Error(
+          `Accounts Excel data row ${index + 2}: ` +
+          'Website and UpdatedWebsite must differ.'
+        );
+      }
+
+      if (
+        accountRow.expectedResult !==
+        accountRow.updatedWebsite
+      ) {
+        throw new Error(
+          `Accounts Excel data row ${index + 2}: ` +
+          'ExpectedResult must match UpdatedWebsite.'
         );
       }
     }

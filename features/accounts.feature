@@ -125,3 +125,9 @@ Scenario: Sort accounts by name
   Given the user can see multiple accounts displayed while on view page
   When the user sorts the account list by name in ascending order
   Then accounts should be displayed in ascending name order
+
+  @accounts @UpdateAccountWebsite
+Scenario: Update account website
+  Given a new account exists for updating its website 'update_account_website'
+  When the user updates the account website and saves the changes
+  Then the account website should be updated successfully

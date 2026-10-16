@@ -1014,3 +1014,128 @@ Then(
     });
   }
 );
+
+Given(
+  'a new account exists for updating its website {string}',
+  async ({
+    page,
+    accountsPage,
+    accountListTestData,
+    accountCleanup,
+    logger
+  }, scenarioKey) => {
+    const account =
+      getAccountDataByScenario(scenarioKey);
+
+    accountListTestData.account = account;
+    accountListTestData.recordUrl = null;
+
+    await page.goto('/');
+
+    await accountsPage.openCreateAccountPage();
+
+    await accountsPage.enterAccountName(
+      account.name
+    );
+
+    await accountsPage.enterAccountWebsite(
+      account.website
+    );
+
+    await accountsPage.clickSaveOnCreateAccountPage();
+
+    await page.waitForURL(
+      /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/
+    );
+
+    const recordUrl = page.url();
+
+    accountListTestData.recordUrl = recordUrl;
+
+    // Register immediately so later failures still trigger cleanup.
+    accountCleanup.register(recordUrl);
+
+    await accountsPage.waitForAccountDetailPage();
+
+    logger.info(
+      'Created account for website update',
+      {
+        scenario: scenarioKey,
+        accountName: account.name,
+        originalWebsite: account.website,
+        recordUrl
+      }
+    );
+  }
+);
+When(
+  'the user updates the account website and saves the changes',
+  async ({
+    accountsPage,
+    accountListTestData,
+    logger
+  }) => {
+    const account = accountListTestData.account;
+
+    if (!account || !accountListTestData.recordUrl) {
+      throw new Error(
+        'Website update requires an account created by this scenario.'
+      );
+    }
+
+    await accountsPage.openAccountForEditing();
+
+    await accountsPage.enterAccountWebsite(
+      account.updatedWebsite
+    );
+
+    await accountsPage.saveAccountChanges();
+
+    logger.info(
+      'Updated account website',
+      {
+        accountName: account.name,
+        updatedWebsite: account.updatedWebsite,
+        recordUrl: accountListTestData.recordUrl
+      }
+    );
+  }
+);
+Then(
+  'the account website should be updated successfully',
+  async ({
+    accountsPage,
+    accountListTestData,
+    logger
+  }) => {
+    const account = accountListTestData.account;
+
+    if (!account || !accountListTestData.recordUrl) {
+      throw new Error(
+        'Website verification requires an account created by this scenario.'
+      );
+    }
+
+    await accountsPage.reloadAccountDetailPage();
+
+    await accountsPage.openAccountForEditing();
+
+    await expect(
+      accountsPage.accountNameInput
+    ).toHaveValue(account.name);
+
+    await expect(
+      accountsPage.websiteInput
+    ).toHaveValue(account.expectedResult);
+
+    await accountsPage.cancelAccountEditing();
+
+    logger.info(
+      'Verified saved account website',
+      {
+        accountName: account.name,
+        expectedWebsite: account.expectedResult
+      }
+    );
+  }
+);

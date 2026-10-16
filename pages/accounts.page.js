@@ -97,7 +97,9 @@ export class AccountsPage {
       shippingCountryInput: 'shipping_address_country'
     };
 
-    for (const [property, fieldName] of Object.entries(addressFields)) {
+    for (
+      const [property, fieldName] of Object.entries(addressFields)
+    ) {
       this[property] = page
         .locator(
           `scrm-dynamic-field.dynamic-field-name-${fieldName}`
@@ -172,9 +174,7 @@ export class AccountsPage {
         'scrm-dropdown-button [ngbdropdownmenu]'
       );
 
-
-
-     this.deleteAccountAction = page.getByText('Delete', {
+    this.deleteAccountAction = page.getByText('Delete', {
       exact: true
     });
 
@@ -251,29 +251,29 @@ export class AccountsPage {
     await this.importAccountsOption.click();
   }
 
-async openViewAccountPage() {
-  await this.hoverAccountsModule();
-  await this.viewAccountsOption.click();
+  async openViewAccountPage() {
+    await this.hoverAccountsModule();
+    await this.viewAccountsOption.click();
 
-  await this.viewAccountPageHeading.waitFor({
-    state: 'visible'
-  });
+    await this.viewAccountPageHeading.waitFor({
+      state: 'visible'
+    });
 
-  // Move to the lower-right area, outside the navigation dropdown.
-  const viewport = await this.page.evaluate(() => ({
-    width: window.innerWidth,
-    height: window.innerHeight
-  }));
+    // Move outside the navigation dropdown.
+    const viewport = await this.page.evaluate(() => ({
+      width: window.innerWidth,
+      height: window.innerHeight
+    }));
 
-  await this.page.mouse.move(
-    viewport.width - 20,
-    viewport.height - 20
-  );
+    await this.page.mouse.move(
+      viewport.width - 20,
+      viewport.height - 20
+    );
 
-  await this.accountsDropdown.waitFor({
-    state: 'hidden'
-  });
-}
+    await this.accountsDropdown.waitFor({
+      state: 'hidden'
+    });
+  }
 
   // Account creation and editing
 
@@ -352,6 +352,54 @@ async openViewAccountPage() {
   async enterUnsavedAccountData(account) {
     await this.enterAccountName(account.name);
     await this.emailInput.fill(account.email);
+  }
+
+  // Website update — new methods
+
+  async enterAccountWebsite(website) {
+    await this.websiteInput.fill(website);
+  }
+
+  async waitForAccountDetailPage() {
+    await this.overviewPanel.waitFor({
+      state: 'visible'
+    });
+
+    await this.editAccountButton.waitFor({
+      state: 'visible'
+    });
+  }
+
+  async saveAccountChanges() {
+    await this.saveButton.click();
+
+    await this.waitForAccountDetailPage();
+  }
+
+  async reloadAccountDetailPage() {
+    await this.page.reload();
+
+    await this.waitForAccountDetailPage();
+  }
+
+  async cancelAccountEditing() {
+    await this.cancelCreateAccountButton.click();
+
+    // Wait for either the confirmation popup or detail mode.
+    await this.confirmLeaveAccountButton
+      .or(this.editAccountButton)
+      .first()
+      .waitFor({
+        state: 'visible'
+      });
+
+    if (
+      await this.confirmLeaveAccountButton.isVisible()
+    ) {
+      await this.confirmLeaveAccountButton.click();
+    }
+
+    await this.waitForAccountDetailPage();
   }
 
   // Unsaved-changes popup
