@@ -1,12 +1,18 @@
 import { expect } from '@playwright/test';
 import { Given, When, Then } from '../fixtures.js';
 import { getAccountDataByScenario } from '../utils/excel-util.js';
+import { stat } from 'node:fs/promises';
+import path from 'node:path';
 
 const ACCOUNT_RECORD_URL =
   /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/;
 
 const ACCOUNTS_LIST_URL =
   /#\/accounts(?:\/index)?\/?(?:\?.*)?$/;
+  const ACCOUNT_IMPORT_FILE = path.resolve(
+  'test-data',
+  'AccountstoUpload.csv'
+);
 
 // Background
 
@@ -985,33 +991,17 @@ When(
 
 Then(
   'accounts should be displayed in ascending name order',
-  async ({ accountsPage, logger }) => {
+  async ({ accountsPage }) => {
     await expect(async () => {
-      const names =
-        await accountsPage.getDisplayedAccountNames();
+      const names = await accountsPage.getDisplayedAccountNames();
 
-      expect(
-        names.length,
-        'Expected at least two accounts to verify sorting'
-      ).toBeGreaterThan(1);
-
-      const expectedNames = [...names].sort((a, b) =>
-        a.localeCompare(b, 'en', {
-          sensitivity: 'base',
-          numeric: false
-        })
+      expect(names.length).toBeGreaterThan(1);
+      expect(names).toEqual(
+        [...names].sort((a, b) =>
+          a.localeCompare(b, 'en', { sensitivity: 'base' })
+        )
       );
-
-      expect(
-        names,
-        'Expected displayed accounts in ascending name order'
-      ).toEqual(expectedNames);
     }).toPass();
-
-    logger.info('Ascending account name order verified', {
-      accountNames:
-        await accountsPage.getDisplayedAccountNames()
-    });
   }
 );
 
@@ -1103,39 +1093,328 @@ When(
 );
 Then(
   'the account website should be updated successfully',
+  async ({ accountsPage, accountListTestData }) => {
+    const { account, recordUrl } = accountListTestData;
+
+    if (!account || !recordUrl) {
+      throw new Error('Account data or record URL is missing.');
+    }
+
+    await accountsPage.reloadAccountDetailPage();
+    await accountsPage.openAccountForEditing();
+
+    await expect(accountsPage.websiteInput)
+      .toHaveValue(account.expectedResult);
+
+    await accountsPage.cancelAccountEditing();
+  }
+);
+
+// Update account office phone number
+
+Given(
+  'a new account exists for updating its office phone number {string}',
+  async (
+    {
+      page,
+      accountsPage,
+      accountListTestData,
+      accountCleanup,
+      logger
+    },
+    scenarioKey
+  ) => {
+    const account = getAccountDataByScenario(scenarioKey);
+
+    accountListTestData.account = account;
+    accountListTestData.recordUrl = null;
+
+    await accountsPage.openCreateAccountPage();
+
+    await accountsPage.enterAccountName(account.name);
+
+    await accountsPage.enterAccountOfficePhone(
+      account.phone
+    );
+
+    await accountsPage.clickSaveOnCreateAccountPage();
+
+    await page.waitForURL(ACCOUNT_RECORD_URL);
+
+    const recordUrl = page.url();
+
+    // Register immediately so later failures still allow cleanup.
+    accountCleanup.register(recordUrl);
+
+    accountListTestData.recordUrl = recordUrl;
+
+    await accountsPage.waitForAccountDetailPage();
+
+    logger.info(
+      'Created account for office phone update',
+      {
+        scenario: scenarioKey,
+        accountName: account.name,
+        originalPhone: account.phone,
+        recordUrl
+      }
+    );
+  }
+);
+
+When(
+  'the user updates the office phone number and saves the changes',
   async ({
     accountsPage,
     accountListTestData,
     logger
   }) => {
-    const account = accountListTestData.account;
+    const { account, recordUrl } = accountListTestData;
 
-    if (!account || !accountListTestData.recordUrl) {
+    if (!account || !recordUrl) {
       throw new Error(
-        'Website verification requires an account created by this scenario.'
+        'Office phone update requires an account created by this scenario.'
       );
     }
 
-    await accountsPage.reloadAccountDetailPage();
-
     await accountsPage.openAccountForEditing();
 
-    await expect(
-      accountsPage.accountNameInput
-    ).toHaveValue(account.name);
+    await accountsPage.enterAccountOfficePhone(
+      account.updatedPhone
+    );
 
-    await expect(
-      accountsPage.websiteInput
-    ).toHaveValue(account.expectedResult);
+    await accountsPage.saveAccountChanges();
+
+    logger.info(
+      'Saved updated account office phone',
+      {
+        accountName: account.name,
+        updatedPhone: account.updatedPhone,
+        recordUrl
+      }
+    );
+  }
+);
+
+Then(
+  'the account office phone number should be updated successfully',
+  async ({ page, accountsPage, accountListTestData }) => {
+    const { account, recordUrl } = accountListTestData;
+
+    if (!account || !recordUrl) {
+      throw new Error('Account data or record URL is missing.');
+    }
+
+    await page.goto(recordUrl);
+    await accountsPage.waitForAccountDetailPage();
+    await accountsPage.openAccountForEditing();
+
+    await expect(accountsPage.officePhoneInput)
+      .toHaveValue(account.expectedResult);
+
+    await accountsPage.cancelAccountEditing();
+  }
+);
+
+// Cancel changes while editing an account
+
+Given(
+  'the user is editing a newly created account {string}',
+  async (
+    {
+      page,
+      accountsPage,
+      accountListTestData,
+      accountCleanup,
+      logger
+    },
+    scenarioKey
+  ) => {
+    const account = getAccountDataByScenario(scenarioKey);
+
+    accountListTestData.account = account;
+    accountListTestData.recordUrl = null;
+
+    // Create an account specifically for this scenario.
+    await accountsPage.openCreateAccountPage();
+
+    await accountsPage.enterAccountName(account.name);
+
+    await accountsPage.enterAccountWebsite(
+      account.website
+    );
+
+    await accountsPage.clickSaveOnCreateAccountPage();
+
+    await page.waitForURL(ACCOUNT_RECORD_URL);
+
+    const recordUrl = page.url();
+
+    // Register immediately so later failures still allow cleanup.
+    accountCleanup.register(recordUrl);
+
+    accountListTestData.recordUrl = recordUrl;
+
+    await accountsPage.waitForAccountDetailPage();
+
+    // Open the saved account and make an unsaved change.
+    await accountsPage.openAccountForEditing();
+
+    await accountsPage.enterAccountWebsite(
+      account.updatedWebsite
+    );
+
+    logger.info(
+      'Created account and entered an unsaved website change',
+      {
+        scenario: scenarioKey,
+        accountName: account.name,
+        originalWebsite: account.website,
+        unsavedWebsite: account.updatedWebsite,
+        recordUrl
+      }
+    );
+  }
+);
+
+When(
+  'the user cancels the account changes',
+  async ({
+    accountsPage,
+    accountListTestData,
+    logger
+  }) => {
+    const { account, recordUrl } = accountListTestData;
+
+    if (!account || !recordUrl) {
+      throw new Error(
+        'Cancel editing requires an account created by this scenario.'
+      );
+    }
+
+    await accountsPage.clickCancelOnCreateAccountPage();
+
+    // Wait for the unsaved-changes confirmation.
+    await accountsPage.dismissCancellationButton.waitFor({
+      state: 'visible'
+    });
+
+    // Click Ok to discard the edits, not popup Cancel.
+    await accountsPage.confirmLeavingAccountCreation();
+
+    await accountsPage.confirmLeaveAccountButton.waitFor({
+      state: 'hidden'
+    });
+
+    logger.info(
+      'Cancelled editing and discarded the unsaved changes',
+      {
+        accountName: account.name,
+        discardedWebsite: account.updatedWebsite,
+        recordUrl
+      }
+    );
+  }
+);
+
+Then(
+  'the existing account details should remain unchanged',
+  async ({ page, accountsPage, accountListTestData, logger }) => {
+    const { account, recordUrl } = accountListTestData;
+
+    if (!account || !recordUrl) {
+      throw new Error('Account data or record URL is missing.');
+    }
+
+    await expect(page).toHaveURL(recordUrl);
+
+    await page.goto(recordUrl);
+    await accountsPage.waitForAccountDetailPage();
+    await accountsPage.openAccountForEditing();
+
+    await expect(accountsPage.accountNameInput)
+      .toHaveValue(account.name);
+
+    await expect(accountsPage.websiteInput)
+      .toHaveValue(account.expectedResult);
 
     await accountsPage.cancelAccountEditing();
 
-    logger.info(
-      'Verified saved account website',
-      {
-        accountName: account.name,
-        expectedWebsite: account.expectedResult
-      }
+    logger.info('Original account details verified after cancellation', {
+      accountName: account.name,
+      originalWebsite: account.expectedResult
+    });
+  }
+);
+
+Given(
+  'the user is on the Import Accounts page',
+  async ({ accountsPage }) => {
+    await accountsPage.openImportAccountPage();
+
+    await accountsPage.importAccountPageHeading.waitFor({
+      state: 'visible'
+    });
+  }
+);
+
+When(
+  'the user downloads the account import template',
+  async ({ accountsPage, accountImportTestData, $testInfo }) => {
+    const download =
+      await accountsPage.downloadAccountImportTemplate();
+
+    accountImportTestData.download = download;
+
+    await download.saveAs(
+      $testInfo.outputPath(download.suggestedFilename())
+    );
+  }
+);
+
+Then(
+  'the account import template should be downloaded successfully',
+  async ({ accountImportTestData }) => {
+    const { download } = accountImportTestData;
+
+    if (!download) {
+      throw new Error('No account import template download was captured.');
+    }
+
+    expect(await download.failure()).toBeNull();
+
+    const filePath = await download.path();
+
+    if (!filePath) {
+      throw new Error('Downloaded template file path is missing.');
+    }
+
+    expect((await stat(filePath)).size).toBeGreaterThan(0);
+  }
+);
+When(
+  'the user selects a valid account import file',
+  async ({ accountsPage }) => {
+    await accountsPage.selectAccountImportFile(
+      ACCOUNT_IMPORT_FILE
+    );
+  }
+);
+
+Then(
+  'the selected import filename should be displayed',
+  async ({ accountsPage }) => {
+    await expect(
+      accountsPage.accountImportFileInput
+    ).toBeVisible();
+
+    const filename =
+      await accountsPage.accountImportFileInput.evaluate(
+        input => input.files?.[0]?.name
+      );
+
+    expect(filename).toBe(
+      path.basename(ACCOUNT_IMPORT_FILE)
     );
   }
 );

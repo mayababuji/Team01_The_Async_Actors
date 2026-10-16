@@ -129,7 +129,10 @@ export const test = base.extend({
     {
       auto: true
     }
-  ]
+  ],
+  accountImportTestData: async ({}, use) => {
+  await use({ download: null });
+}
 });
 
 export const { Given, When, Then } = createBdd(test);
