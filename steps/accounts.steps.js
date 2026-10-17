@@ -8,7 +8,7 @@ const ACCOUNT_RECORD_URL =
   /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/;
 
 const ACCOUNTS_LIST_URL =
-  /#\/accounts(?:\/index)?\/?(?:\?.*)?$/;
+  /#\/accounts\/edit(?:\?.*)?$/;
   const ACCOUNT_IMPORT_FILE = path.resolve(
   'test-data',
   'AccountstoUpload.csv'
@@ -432,10 +432,12 @@ When(
 Then(
   'the user should be navigated back to the Accounts Dashboard page',
   async ({ page, accountsPage, logger }) => {
+    // //await page.pause();
+    // logger.info(`Current URL: ${page.url()}`);
     await expect(page).toHaveURL(ACCOUNTS_LIST_URL);
 
     await expect(
-      accountsPage.viewAccountPageHeading
+      accountsPage.accountsModule
     ).toBeVisible();
 
     logger.info('Returned to the Accounts page after cancelling');
