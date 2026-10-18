@@ -226,6 +226,11 @@ this.accountImportTemplateLink = page
   this.accountImportFileInput = page
   .frameLocator('iframe[src*="module=Import"]')
   .locator('input[type="file"]');
+ this.officePhoneDetail = page
+  .locator(
+    'scrm-dynamic-field.dynamic-field-name-phone_office'
+  )
+  .locator('a[href^="tel:"]');
   
   }
 
@@ -398,25 +403,22 @@ this.accountImportTemplateLink = page
     await this.waitForAccountDetailPage();
   }
 
-  async cancelAccountEditing() {
-    await this.cancelCreateAccountButton.click();
+async cancelAccountEditing() {
 
-    // Wait for either the confirmation popup or detail mode.
-    await this.confirmLeaveAccountButton
-      .or(this.editAccountButton)
-      .first()
-      .waitFor({
-        state: 'visible'
-      });
 
-    if (
-      await this.confirmLeaveAccountButton.isVisible()
-    ) {
-      await this.confirmLeaveAccountButton.click();
-    }
+  await this.cancelCreateAccountButton.click();
 
-    await this.waitForAccountDetailPage();
+  await this.confirmLeaveAccountButton
+    .or(this.editAccountButton)
+    .first()
+    .waitFor({ state: 'visible' });
+
+  if (await this.confirmLeaveAccountButton.isVisible()) {
+    await this.confirmLeaveAccountButton.click();
   }
+
+  await this.waitForAccountDetailPage();
+}
 
   // Unsaved-changes popup
 
