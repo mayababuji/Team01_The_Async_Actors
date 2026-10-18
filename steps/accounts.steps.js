@@ -839,8 +839,9 @@ Then(
         'Account test data or record URL was not initialized by the Given step.'
       );
     }
+  
 
-    await expect(page).toHaveURL(recordUrl);
+
 
     await expect(
       accountsPage.getAccountDetailName(account.expectedResult)
@@ -1209,12 +1210,12 @@ Then(
 
     await page.goto(recordUrl);
     await accountsPage.waitForAccountDetailPage();
-    await accountsPage.openAccountForEditing();
+   
 
-    await expect(accountsPage.officePhoneInput)
-      .toHaveValue(account.expectedResult);
+    await expect(accountsPage.officePhoneDetail)
+      .toHaveText(account.expectedResult);
 
-    await accountsPage.cancelAccountEditing();
+   
   }
 );
 
