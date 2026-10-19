@@ -158,20 +158,20 @@ Scenario: Update account website
     When the user selects a valid account import file
     Then the selected import filename should be displayed
 
-  # @ImportAccounts @Positive @ProceedWithValidImportFile
-  # Scenario: Proceed with a valid account import file
-  #   Given the user is on the Import Accounts page with a valid account import file selected
-  #   When the user clicks Next on the Import Accounts page
-  #   Then the next account import configuration step should be displayed
+  @ImportAccounts @Positive @ProceedWithValidImportFile
+  Scenario: Proceed with a valid account import file
+    Given the user is with a valid account import file selected on the Import Accounts page 
+    When the user clicks Next on the Import Accounts page
+    Then the next account import configuration step should be displayed
 
-  # @ImportAccounts @Positive @ImportNewAccounts
-  # Scenario: Import new accounts from a valid file
-  #   Given a valid import file containing new account data is available
-  #   When the user completes the account import using Create new records only
-  #   Then the imported accounts should contain the values provided in the file
+  @ImportAccounts @Positive @ImportNewAccounts
+  Scenario: Import new accounts from a valid file
+    Given a valid import file containing new account data is available
+    When the user completes the account import using Create new records only
+    Then the imported accounts should contain the values provided in the file
 
-  # @ImportAccounts @Negative @ImportWithoutFile
-  # Scenario: Prevent account import without selecting a file
-  #   Given the user is on the Import Accounts page without a file selected
-  #   When the user attempts to proceed to the next import step
-  #   Then the user should remain on the Upload Import File page without starting an import
+  @ImportAccounts @Negative @ImportWithoutFile
+  Scenario: Prevent account import without selecting a file
+    Given the user selects Import Accounts page without a file selected
+    When the user attempts to proceed to the next import step
+    Then the user should remain on the Upload Import File page without starting an import

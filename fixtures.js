@@ -130,8 +130,33 @@ export const test = base.extend({
       auto: true
     }
   ],
-  accountImportTestData: async ({}, use) => {
-  await use({ download: null });
+accountImportTestData: async (
+  { accountsPage, logger },
+  use
+) => {
+  const accountImportTestData = {
+    download: null,
+    importFile: null,
+    importedAccounts: [],
+    importCompleted: false
+  };
+
+  await use(accountImportTestData);
+
+  // Teardown: runs after the test finishes.
+  if (accountImportTestData.importCompleted) {
+    try {
+      logger.info('Undoing imported accounts');
+
+      await accountsPage.undoImportedAccounts();
+
+      logger.info('Imported accounts undone successfully');
+    } catch (error) {
+      logger.error('Failed to undo imported accounts', {
+        error: String(error)
+      });
+    }
+  }
 }
 });
 
