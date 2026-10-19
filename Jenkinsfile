@@ -113,22 +113,29 @@ pipeline {
             }
         }
 
-        stage('Run all BDD tests') {
-            steps {
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'suite8-login',
-                        usernameVariable: 'LOGIN_USERNAME',
-                        passwordVariable: 'LOGIN_PASSWORD'
-                    )
-                ]) {
-                    sh '''
-                        set +x
-                        npx playwright test
-                    '''
-                }
-            }
+stage('Run all BDD tests') {
+    steps {
+        withCredentials([
+            usernamePassword(
+                credentialsId: 'suite8-login',
+                usernameVariable: 'LOGIN_USERNAME',
+                passwordVariable: 'LOGIN_PASSWORD'
+            )
+        ]) {
+            sh '''
+                set +x
+
+                npx playwright test \
+                    --project=login-chromium \
+                    --project=login-firefox \
+                    --project=login-webkit \
+                    --project=chromium \
+                    --project=firefox \
+                    --project=webkit
+            '''
         }
+    }
+}
     }
 
     post {

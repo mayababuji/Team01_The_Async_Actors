@@ -133,30 +133,56 @@ export class AccountsPage {
     );
 
     // Recently Viewed
-    this.accountsDropdown = page
-      .locator('div.dropdown-menu.submenu')
-      .filter({
-        has: page.getByRole('link', {
-          name: 'Create Account',
-          exact: true
-        })
-      })
-      .filter({ visible: true });
+    // this.accountsDropdown = page
+    //   .locator('div.dropdown-menu.submenu')
+    //   .filter({
+    //     has: page.getByRole('link', {
+    //       name: 'Create Account',
+    //       exact: true
+    //     })
+    //   })
+    //   .filter({ visible: true });
 
-    this.accountsRecentlyViewedSection =
-      this.accountsDropdown.locator(
-        'scrm-sub-menu-recently-viewed'
-      );
+    // this.accountsRecentlyViewedSection =
+    //   this.accountsDropdown.locator(
+    //     'scrm-sub-menu-recently-viewed'
+    //   );
 
-    this.accountsRecentlyViewedTrigger =
-      this.accountsRecentlyViewedSection.locator(
-        'scrm-label[labelkey="LBL_LAST_VIEWED"]'
-      );
+    // this.accountsRecentlyViewedTrigger =
+    //   this.accountsRecentlyViewedSection.locator(
+    //     'scrm-label[labelkey="LBL_LAST_VIEWED"]'
+    //   );
 
-    this.accountsRecentlyViewedPanel =
-      this.accountsRecentlyViewedSection.locator(
-        'ul.dropdown-menu.submenu'
-      );
+    // this.accountsRecentlyViewedPanel =
+    //   this.accountsRecentlyViewedSection.locator(
+    //     'ul.dropdown-menu.submenu'
+    //   );
+
+    // Identify the visible Accounts dropdown.
+this.accountsDropdown = page
+  .locator('div.dropdown-menu.submenu')
+  .filter({
+    has: page.getByRole('link', {
+      name: 'Create Account',
+      exact: true
+    })
+  })
+  .filter({ visible: true });
+
+// Find the Recently Viewed section inside the Accounts dropdown.
+this.accountsRecentlyViewedSection = page
+  .locator('scrm-sub-menu-recently-viewed')
+  .within(this.accountsDropdown);
+
+// Find the trigger inside the Recently Viewed section.
+this.accountsRecentlyViewedTrigger = page
+  .locator('scrm-label[labelkey="LBL_LAST_VIEWED"]')
+  .within(this.accountsRecentlyViewedSection);
+
+// Find the submenu panel inside the Recently Viewed section.
+this.accountsRecentlyViewedPanel = page
+  .locator('ul.dropdown-menu.submenu')
+  .within(this.accountsRecentlyViewedSection);
 
     // Record deletion
     this.recordHeader = page.locator(

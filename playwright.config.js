@@ -118,87 +118,98 @@ export default defineConfig({
     navigationTimeout: 90_000
   },
 
-  projects: [
-    {
-      name: 'setup',
-      testDir: 'session',
-      testMatch: /auth\.setup\.js/,
+projects: [
+  {
+    name: 'setup',
+    default: false,
+    testDir: 'session',
+    testMatch: /auth\.setup\.js/,
 
-      use: {
-        ...devices['Desktop Chrome'],
-        storageState: {
-          cookies: [],
-          origins: []
-        }
-      }
-    },
-
-    // Login tests: logged out, no setup dependency.
-    {
-      name: 'login-chromium',
-      testMatch: /login\.feature\.spec\.js/,
-      use: {
-        ...devices['Desktop Chrome'],
-        storageState: {
-          cookies: [],
-          origins: []
-        }
-      }
-    },
-
-    {
-      name: 'login-firefox',
-      testMatch: /login\.feature\.spec\.js/,
-      use: {
-        ...devices['Desktop Firefox'],
-        storageState: {
-          cookies: [],
-          origins: []
-        }
-      }
-    },
-
-    {
-      name: 'login-webkit',
-      testMatch: /login\.feature\.spec\.js/,
-      use: {
-        ...devices['Desktop Safari'],
-        storageState: {
-          cookies: [],
-          origins: []
-        }
-      }
-    },
-
-    // Non-login tests: use saved authentication.
-    {
-      name: 'chromium',
-      testIgnore: /login\.feature\.spec\.js/,
-      dependencies: ['setup'],
-      use: {
-        ...devices['Desktop Chrome'],
-        storageState: 'playwright/.auth/user.json'
-      }
-    },
-
-    {
-      name: 'firefox',
-      testIgnore: /login\.feature\.spec\.js/,
-      dependencies: ['setup'],
-      use: {
-        ...devices['Desktop Firefox'],
-        storageState: 'playwright/.auth/user.json'
-      }
-    },
-
-    {
-      name: 'webkit',
-      testIgnore: /login\.feature\.spec\.js/,
-      dependencies: ['setup'],
-      use: {
-        ...devices['Desktop Safari'],
-        storageState: 'playwright/.auth/user.json'
+    use: {
+      ...devices['Desktop Chrome'],
+      storageState: {
+        cookies: [],
+        origins: []
       }
     }
-  ]
+  },
+
+  // Login tests: logged out, no setup dependency.
+  {
+    name: 'login-chromium',
+    testMatch: /login\.feature\.spec\.js/,
+
+    use: {
+      ...devices['Desktop Chrome'],
+      storageState: {
+        cookies: [],
+        origins: []
+      }
+    }
+  },
+
+  {
+    name: 'login-firefox',
+    default: false,
+    testMatch: /login\.feature\.spec\.js/,
+
+    use: {
+      ...devices['Desktop Firefox'],
+      storageState: {
+        cookies: [],
+        origins: []
+      }
+    }
+  },
+
+  {
+    name: 'login-webkit',
+    default: false,
+    testMatch: /login\.feature\.spec\.js/,
+
+    use: {
+      ...devices['Desktop Safari'],
+      storageState: {
+        cookies: [],
+        origins: []
+      }
+    }
+  },
+
+  // Non-login tests: use saved authentication.
+  {
+    name: 'chromium',
+    testIgnore: /login\.feature\.spec\.js/,
+    dependencies: ['setup'],
+
+    use: {
+      ...devices['Desktop Chrome'],
+      storageState: 'playwright/.auth/user.json'
+    }
+  },
+
+  {
+    name: 'firefox',
+    default: false,
+    testIgnore: /login\.feature\.spec\.js/,
+    dependencies: ['setup'],
+
+    use: {
+      ...devices['Desktop Firefox'],
+      storageState: 'playwright/.auth/user.json'
+    }
+  },
+
+  {
+    name: 'webkit',
+    default: false,
+    testIgnore: /login\.feature\.spec\.js/,
+    dependencies: ['setup'],
+
+    use: {
+      ...devices['Desktop Safari'],
+      storageState: 'playwright/.auth/user.json'
+    }
+  }
+]
 });
