@@ -99,9 +99,16 @@ jobs:
       - name: Generate BDD tests
         run: npx bddgen
 
-      - name: Run Playwright tests
+      - name: Run Playwright tests on all three browsers
         id: playwright_tests
-        run: npx playwright test
+        run: |
+          npx playwright test \
+            --project=login-chromium \
+            --project=login-firefox \
+            --project=login-webkit \
+            --project=chromium \
+            --project=firefox \
+            --project=webkit
         continue-on-error: true
 
       - name: Add environment details to Allure report
