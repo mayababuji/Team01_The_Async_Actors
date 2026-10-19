@@ -231,7 +231,118 @@ this.accountImportTemplateLink = page
     'scrm-dynamic-field.dynamic-field-name-phone_office'
   )
   .locator('a[href^="tel:"]');
-  
+
+  this.accountImportNextButton = page
+  .frameLocator('iframe[src*="module=Import"]')
+  .getByRole('button', {
+    name: /^next\s*>?$/i,
+    exact: true
+  });
+
+this.accountImportConfigurationHeading = page
+  .frameLocator('iframe[src*="module=Import"]')
+  .getByRole('heading', {
+    name: 'Step 2: Confirm Import File Properties'
+  });
+  this.importResultsHeading = page
+  .frameLocator('iframe[src*="module=Import"]')
+  .getByRole('heading', {
+    name: /step 5/i
+  });
+
+
+this.importResultsPanel = page
+  .frameLocator('iframe[src*="module=Import"]')
+  .locator('body');
+
+
+this.undoImportButton = page
+  .frameLocator('iframe[src*="module=Import"]')
+  .getByRole('button', {
+    name: 'Undo Import',
+    exact: true
+  });
+  // Step 2: Confirm Import File Properties
+this.importFilePropertiesHeading = page
+  .frameLocator('iframe[src*="module=Import"]')
+  .getByRole('heading', {
+    name: 'Step 2: Confirm Import File Properties'
+  });
+
+this.importFilePropertiesNextButton = page
+  .frameLocator('iframe[src*="module=Import"]')
+  .getByRole('button', {
+    name: 'Next >',
+    exact: true
+  });
+
+// Step 3: Confirm Field Mappings
+this.importFieldMappingsHeading = page
+  .frameLocator('iframe[src*="module=Import"]')
+  .getByRole('heading', {
+    name: 'Step 3: Confirm Field Mappings'
+  });
+
+this.importFieldMappingsNextButton = page
+  .frameLocator('iframe[src*="module=Import"]')
+  .getByRole('button', {
+    name: 'Next >',
+    exact: true
+  });
+
+// Step 4: Check for Possible Duplicates
+this.importDuplicatesHeading = page
+  .frameLocator('iframe[src*="module=Import"]')
+  .getByRole('heading', {
+    name: 'Step 4: Check for Possible Duplicates'
+  });
+
+this.importNewRecordsOnlyOption = page
+  .frameLocator('iframe[src*="module=Import"]')
+  .getByText('Create new records only', {
+    exact: true
+  });
+
+this.importNowButton = page
+  .frameLocator('iframe[src*="module=Import"]')
+  .getByRole('button', {
+    name: 'Import Now'
+  });
+
+// Step 5: Imported records
+this.importResultsHeading = page
+  .frameLocator('iframe[src*="module=Import"]')
+  .getByRole('heading', {
+    name: /step 5/i
+  });
+
+this.importResultsPanel = page
+  .frameLocator('iframe[src*="module=Import"]')
+  .locator('body');
+
+this.undoImportButton = page
+  .frameLocator('iframe[src*="module=Import"]')
+  .getByRole('button', {
+    name: 'Undo Import',
+    exact: true
+  });
+  this.importResultsSummary = page
+  .frameLocator('iframe[src*="module=Import"]')
+  .getByText('2 records were created', {
+    exact: true
+  });
+  this.importResultsCreatedTab = page
+  .frameLocator('iframe[src*="module=Import"]')
+  .getByText('Created Records', {
+    exact: true
+  });
+
+  this.accountImportMissingFileMessage = page
+  .frameLocator('iframe[src*="module=Import"]')
+  .locator('div.required.validation-message')
+  .filter({
+    hasText: 'Missing required fields: Select a file to upload.'
+  });
   }
 
   // Navigation
@@ -628,4 +739,103 @@ async downloadAccountImportTemplate() {
 async selectAccountImportFile(filePath) {
   await this.accountImportFileInput.setInputFiles(filePath);
 }
+async isAccountImportFileSelected() {
+  const filename = await this.accountImportFileInput.evaluate(
+    input => input.files?.[0]?.name
+  );
+
+  return Boolean(filename);
+}
+
+async clickAccountImportNextButton() {
+  await this.accountImportNextButton.click();
+}
+
+async waitForAccountImportConfigurationStep() {
+  await this.accountImportConfigurationHeading.waitFor({
+    state: 'visible'
+  });
+}
+
+getImportedAccountRow(accountName) {
+  return this.importResultsPanel
+    .getByRole('row')
+    .filter({
+      hasText: accountName
+    });
+}
+
+getImportedAccountField(accountName, value) {
+  return this.getImportedAccountRow(accountName)
+    .getByText(value, { exact: true });
+}
+
+
+getImportedAccountField(accountName, value) {
+  return this.getImportedAccountRow(accountName)
+    .getByText(value, { exact: true });
+}
+async confirmImportFileProperties() {
+  await this.importFilePropertiesHeading.waitFor({
+    state: 'visible'
+  });
+
+  await this.importFilePropertiesNextButton.click();
+}
+
+async confirmAccountFieldMappings() {
+  await this.importFieldMappingsHeading.waitFor({
+    state: 'visible'
+  });
+
+  await this.importFieldMappingsNextButton.click();
+}
+
+async importNewRecordsOnly() {
+  await this.importDuplicatesHeading.waitFor({
+    state: 'visible'
+  });
+
+  //await this.importNewRecordsOnlyOption.check();
+
+  await this.importNowButton.click();
+
+  await this.importResultsHeading.waitFor({
+    state: 'visible'
+  });
+}
+
+async waitForImportResults() {
+  await this.importResultsHeading.waitFor({
+    state: 'visible'
+  });
+}
+
+async undoImportedAccounts() {
+  await this.undoImportButton.click();
+}
+
+async clearAccountImportFile() {
+  await this.accountImportFileInput.setInputFiles([]);
+}
+
+async getSelectedAccountImportFileName() {
+  return await this.accountImportFileInput.evaluate(
+    input => input.files?.[0]?.name ?? null
+  );
+}
+
+async attemptAccountImportNext() {
+  await this.accountImportNextButton.waitFor({
+    state: 'visible'
+  });
+
+  const isEnabled =
+    await this.accountImportNextButton.isEnabled();
+
+  if (isEnabled) {
+    await this.accountImportNextButton.click();
+  }
+}
+
 }

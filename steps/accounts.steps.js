@@ -1,8 +1,9 @@
 import { expect } from '@playwright/test';
 import { Given, When, Then } from '../fixtures.js';
-import { getAccountDataByScenario } from '../utils/excel-util.js';
-import { stat } from 'node:fs/promises';
 import path from 'node:path';
+import { stat } from 'node:fs/promises';
+import { readAccountImportCsv } from '../utils/csv-util.js';
+import { getAccountDataByScenario } from '../utils/excel-util.js';
 
 const ACCOUNT_RECORD_URL =
   /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/;
@@ -11,7 +12,7 @@ const ACCOUNTS_LIST_URL =
   /#\/accounts\/edit(?:\?.*)?$/;
   const ACCOUNT_IMPORT_FILE = path.resolve(
   'test-data',
-  'AccountstoUpload.csv'
+  'AccountsImportNew.csv'
 );
 
 // Background
@@ -1418,6 +1419,271 @@ Then(
 
     expect(filename).toBe(
       path.basename(ACCOUNT_IMPORT_FILE)
+    );
+  }
+);
+
+
+Given(
+  'the user is with a valid account import file selected on the Import Accounts page',
+  async ({ accountsPage, logger }) => {
+    logger.info(
+      'Opening Import Accounts page and selecting valid import file'
+    );
+
+    await accountsPage.openImportAccountPage();
+
+    await accountsPage.importAccountPageHeading.waitFor({
+      state: 'visible'
+    });
+
+    await accountsPage.selectAccountImportFile(
+      ACCOUNT_IMPORT_FILE
+    );
+
+    logger.info('Valid account import file selected');
+  }
+);
+
+When(
+  'the user clicks Next on the Import Accounts page',
+  async ({ accountsPage, logger }) => {
+    logger.info('Clicking Next on the Import Accounts page');
+
+    await accountsPage.clickAccountImportNextButton();
+
+    logger.info('Clicked Next on the Import Accounts page');
+  }
+);
+
+Then(
+  'the next account import configuration step should be displayed',
+  async ({ accountsPage, logger }) => {
+    logger.info(
+      'Verifying next account import configuration step'
+    );
+
+    await expect(
+      accountsPage.accountImportConfigurationHeading
+    ).toBeVisible();
+
+    await expect(
+      accountsPage.accountImportConfigurationHeading
+    ).toHaveText(
+      'Step 2: Confirm Import File Properties'
+    );
+
+    await expect(
+      accountsPage.accountImportFileInput
+    ).not.toBeVisible();
+
+    await expect(
+      accountsPage.accountImportNextButton
+    ).toBeVisible();
+
+    logger.info(
+      'Next account import configuration step displayed'
+    );
+  }
+);
+
+Given(
+  'a valid import file containing new account data is available',
+  async ({ accountsPage, accountImportTestData, logger }) => {
+    const importedAccounts = await readAccountImportCsv(
+      ACCOUNT_IMPORT_FILE
+    );
+
+
+    accountImportTestData.importFile = ACCOUNT_IMPORT_FILE;
+    accountImportTestData.importedAccounts = importedAccounts;
+
+
+    await accountsPage.openImportAccountPage();
+
+
+    await accountsPage.importAccountPageHeading.waitFor({
+      state: 'visible'
+    });
+
+
+    await accountsPage.selectAccountImportFile(
+      ACCOUNT_IMPORT_FILE
+    );
+
+
+    logger.info('Valid account import file is available', {
+      importFile: ACCOUNT_IMPORT_FILE,
+      importedAccountCount: importedAccounts.length
+    });
+  }
+);
+
+
+When(
+  'the user completes the account import using Create new records only',
+  async ({ accountsPage, accountImportTestData, logger }) => {
+    logger.info(
+      'Completing account import using Create new records only'
+    );
+
+
+    await accountsPage.clickAccountImportNextButton();
+
+
+    await accountsPage.confirmImportFileProperties();
+
+
+    await accountsPage.confirmAccountFieldMappings();
+
+
+    await accountsPage.importNewRecordsOnly();
+
+
+    accountImportTestData.importCompleted = true;
+
+
+    logger.info(
+      'Account import completed using Create new records only'
+    );
+  }
+);
+
+
+Then(
+  'the imported accounts should contain the values provided in the file',
+  async ({ accountsPage, accountImportTestData, logger }) => {
+    const importedAccounts =
+      accountImportTestData.importedAccounts;
+
+    if (!importedAccounts?.length) {
+      throw new Error(
+        'Imported account data was not initialized by the Given step.'
+      );
+    }
+
+    logger.info(
+      'Verifying imported accounts contain values from the import file'
+    );
+
+    // Verify the import summary.
+    await expect(
+      accountsPage.importResultsHeading
+    ).toBeVisible();
+
+    await expect(
+      accountsPage.importResultsSummary
+    ).toHaveText('2 records were created');
+
+    await expect(
+      accountsPage.importResultsCreatedTab
+    ).toBeVisible();
+
+    // Verify each imported account row.
+    for (const account of importedAccounts) {
+      const accountRow =
+        accountsPage.getImportedAccountRow(account.Name);
+
+      await expect(accountRow).toBeVisible();
+
+      await expect(accountRow).toContainText(account.Name);
+
+      if (account['Office Phone']) {
+        await expect(
+          accountsPage.getImportedAccountField(
+            account.Name,
+            account['Office Phone']
+          )
+        ).toBeVisible();
+      }
+
+      if (account['Email Address']) {
+        await expect(
+          accountsPage.getImportedAccountField(
+            account.Name,
+            account['Email Address']
+          )
+        ).toBeVisible();
+      }
+    }
+
+    logger.info(
+      'Imported account names, phone numbers, and email addresses verified in Step 5'
+    );
+  }
+);
+Given(
+  'the user selects Import Accounts page without a file selected',
+  async ({ accountsPage, logger }) => {
+    logger.info(
+      'Opening Import Accounts page without selecting a file'
+    );
+
+    await accountsPage.openImportAccountPage();
+
+    await accountsPage.importAccountPageHeading.waitFor({
+      state: 'visible'
+    });
+
+    await accountsPage.clearAccountImportFile();
+
+    logger.info(
+      'Import Accounts page opened without a file selected'
+    );
+  }
+);
+
+When(
+  'the user attempts to proceed to the next import step',
+  async ({ accountsPage, logger }) => {
+    logger.info(
+      'Attempting to proceed to the next import step without selecting a file'
+    );
+
+    await accountsPage.attemptAccountImportNext();
+  }
+);
+
+Then(
+  'the user should remain on the Upload Import File page without starting an import',
+  async ({ accountsPage, logger }) => {
+    logger.info(
+      'Verifying missing-file validation and the Upload Import File page'
+    );
+
+    await expect(
+      accountsPage.accountImportMissingFileMessage
+    ).toBeVisible();
+
+    await expect(
+      accountsPage.accountImportMissingFileMessage
+    ).toHaveText(
+      'Missing required fields: Select a file to upload.'
+    );
+
+    await expect(
+      accountsPage.importAccountPageHeading
+    ).toBeVisible();
+
+    await expect(
+      accountsPage.importAccountPageHeading
+    ).toHaveText('Step 1: Upload Import File');
+
+    await expect(
+      accountsPage.accountImportFileInput
+    ).toBeVisible();
+
+    const selectedFileName =
+      await accountsPage.getSelectedAccountImportFileName();
+
+    expect(selectedFileName).toBeNull();
+
+    await expect(
+      accountsPage.importFilePropertiesHeading
+    ).not.toBeVisible();
+
+    logger.info(
+      'Missing-file validation displayed and import did not proceed'
     );
   }
 );

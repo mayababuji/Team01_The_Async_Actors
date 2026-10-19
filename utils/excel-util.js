@@ -1,5 +1,9 @@
-import XLSX from 'xlsx';
+import * as XLSX from 'xlsx';
+import * as fs from 'node:fs';
 import path from 'node:path';
+
+// Enable filesystem access for SheetJS in Node ESM.
+XLSX.set_fs(fs);
 
 const filePath = path.resolve(
   process.cwd(),
