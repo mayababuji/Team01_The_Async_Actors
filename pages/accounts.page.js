@@ -1,67 +1,75 @@
+const ACCOUNT_RECORD_URL =
+  /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/;
+
 export class AccountsPage {
   constructor(page) {
     this.page = page;
 
+    // --------------------------------------------------
     // Navigation
+    // --------------------------------------------------
+
     this.accountsModule = page
       .getByText('Accounts', { exact: true })
       .filter({ visible: true });
 
     this.createAccountOption = page.getByRole('link', {
-      name: /create account/i
+      name: /^create account$/i
     });
 
     this.importAccountsOption = page.getByRole('link', {
-      name: /import accounts/i
+      name: /^import accounts$/i
     });
 
     this.viewAccountsOption = page.getByRole('link', {
-      name: /view accounts/i
+      name: /^view accounts$/i
     });
 
+    // --------------------------------------------------
     // Page headings and panels
+    // --------------------------------------------------
+
     this.createAccountPageHeading = page.getByText('Create', {
       exact: true
     });
-
-    this.importAccountPageHeading = page
-      .frameLocator('iframe[src*="module=Import"]')
-      .getByRole('heading', {
-        name: 'Step 1: Upload Import File'
-      });
 
     this.viewAccountPageHeading = page.getByText('ACCOUNTS', {
       exact: true
     });
 
     this.overviewPanel = page.getByRole('tabpanel', {
-      name: 'OVERVIEW',
-      exact: true
+      name: /^overview$/i
     });
 
+    // --------------------------------------------------
     // Form buttons
+    // --------------------------------------------------
+
     this.saveButton = page.getByRole('button', {
-      name: 'Save',
-      exact: true
+      name: /^save$/i
     });
 
     this.cancelCreateAccountButton = page.getByRole('button', {
-      name: 'Cancel',
-      exact: true
+      name: /^cancel$/i
     });
 
     this.editAccountButton = page.getByRole('button', {
-      name: 'Edit',
-      exact: true
+      name: /^edit$/i
     });
 
+    // --------------------------------------------------
     // Validation
+    // --------------------------------------------------
+
     this.nameValidationMessage = page.getByText(
       'Missing required field: Name',
       { exact: true }
     );
 
+    // --------------------------------------------------
     // Overview inputs
+    // --------------------------------------------------
+
     this.accountNameInput = page
       .locator('scrm-field.field-name-name')
       .getByRole('textbox');
@@ -77,12 +85,27 @@ export class AccountsPage {
       .getByRole('textbox');
 
     this.emailInput = page
-      .locator(
-        'scrm-dynamic-field.dynamic-field-type-email'
-      )
+      .locator('scrm-dynamic-field.dynamic-field-type-email')
       .getByRole('textbox');
 
+   this.primaryEmailControl = page
+  .locator(
+    'scrm-dynamic-field.dynamic-field-name-primary_address'
+  )
+  .getByRole('checkbox', {
+    includeHidden: true
+  });
+
+    this.officePhoneDetail = page
+      .locator(
+        'scrm-dynamic-field.dynamic-field-name-phone_office'
+      )
+      .locator('a[href^="tel:"]');
+
+    // --------------------------------------------------
     // Address inputs
+    // --------------------------------------------------
+
     const addressFields = {
       billingStreetInput: 'billing_address_street',
       billingPostalCodeInput: 'billing_address_postalcode',
@@ -97,9 +120,7 @@ export class AccountsPage {
       shippingCountryInput: 'shipping_address_country'
     };
 
-    for (
-      const [property, fieldName] of Object.entries(addressFields)
-    ) {
+    for (const [property, fieldName] of Object.entries(addressFields)) {
       this[property] = page
         .locator(
           `scrm-dynamic-field.dynamic-field-name-${fieldName}`
@@ -107,13 +128,11 @@ export class AccountsPage {
         .getByRole('textbox');
     }
 
-    this.primaryEmailControl = page
-      .locator(
-        'scrm-dynamic-field.dynamic-field-name-primary_address'
-      )
-      .locator('input[type="checkbox"]');
-
+    // --------------------------------------------------
     // Unsaved-changes popup
+    // Existing selectors preserved pending label verification.
+    // --------------------------------------------------
+
     this.confirmLeaveAccountButton = page
       .locator('button.modal-button')
       .filter({ hasText: /cancel/i });
@@ -122,7 +141,17 @@ export class AccountsPage {
       .locator('button.modal-button')
       .filter({ hasText: /cancel/i });
 
+this.discardUnsavedChangesButton = page.getByRole(
+  'button',
+  {
+    name: /^proceed$/i
+  }
+);
+
+    // --------------------------------------------------
     // Global search
+    // --------------------------------------------------
+
     this.accountSearchNameInput = page.getByPlaceholder(
       'Search...',
       { exact: true }
@@ -132,246 +161,238 @@ export class AccountsPage {
       'scrm-classic-view-ui iframe'
     );
 
+    // --------------------------------------------------
     // Recently Viewed
-    // this.accountsDropdown = page
-    //   .locator('div.dropdown-menu.submenu')
-    //   .filter({
-    //     has: page.getByRole('link', {
-    //       name: 'Create Account',
-    //       exact: true
-    //     })
-    //   })
-    //   .filter({ visible: true });
+    // --------------------------------------------------
 
-    // this.accountsRecentlyViewedSection =
-    //   this.accountsDropdown.locator(
-    //     'scrm-sub-menu-recently-viewed'
-    //   );
+    this.accountsDropdown = page
+      .locator('div.dropdown-menu.submenu')
+      .filter({
+        has: page.getByRole('link', {
+          name: /^create account$/i
+        })
+      })
+      .filter({ visible: true });
 
-    // this.accountsRecentlyViewedTrigger =
-    //   this.accountsRecentlyViewedSection.locator(
-    //     'scrm-label[labelkey="LBL_LAST_VIEWED"]'
-    //   );
+    this.accountsRecentlyViewedSection = page
+      .locator('scrm-sub-menu-recently-viewed')
+      .within(this.accountsDropdown);
 
-    // this.accountsRecentlyViewedPanel =
-    //   this.accountsRecentlyViewedSection.locator(
-    //     'ul.dropdown-menu.submenu'
-    //   );
+    this.accountsRecentlyViewedTrigger = page
+      .locator('scrm-label[labelkey="LBL_LAST_VIEWED"]')
+      .within(this.accountsRecentlyViewedSection);
 
-    // Identify the visible Accounts dropdown.
-this.accountsDropdown = page
-  .locator('div.dropdown-menu.submenu')
-  .filter({
-    has: page.getByRole('link', {
-      name: 'Create Account',
-      exact: true
-    })
-  })
-  .filter({ visible: true });
+    this.accountsRecentlyViewedPanel = page
+      .locator('ul.dropdown-menu.submenu')
+      .within(this.accountsRecentlyViewedSection);
 
-// Find the Recently Viewed section inside the Accounts dropdown.
-this.accountsRecentlyViewedSection = page
-  .locator('scrm-sub-menu-recently-viewed')
-  .within(this.accountsDropdown);
-
-// Find the trigger inside the Recently Viewed section.
-this.accountsRecentlyViewedTrigger = page
-  .locator('scrm-label[labelkey="LBL_LAST_VIEWED"]')
-  .within(this.accountsRecentlyViewedSection);
-
-// Find the submenu panel inside the Recently Viewed section.
-this.accountsRecentlyViewedPanel = page
-  .locator('ul.dropdown-menu.submenu')
-  .within(this.accountsRecentlyViewedSection);
-
+    // --------------------------------------------------
     // Record deletion
+    // --------------------------------------------------
     this.recordHeader = page.locator(
       'scrm-base-record-header'
     );
 
-    this.recordActionsButton =
-      this.recordHeader.getByRole('button', {
-        name: 'Actions',
-        exact: true
-      });
 
-    this.recordActionsMenu =
-      this.recordHeader.locator(
-        'scrm-dropdown-button [ngbdropdownmenu]'
-      );
+    this.recordActionsButton = page
+      .getByRole('button', {
+        name: /^actions$/i
+      })
+      .within(this.recordHeader);
+
+
+    this.recordActionsMenu = page
+      .locator('scrm-dropdown-button [ngbdropdownmenu]')
+      .within(this.recordHeader);
 
     this.deleteAccountAction = page.getByText('Delete', {
       exact: true
     });
 
-    this.confirmDeleteAccountButton = page.getByRole(
-      'button',
-      {
-        name: 'Proceed',
-        exact: true
-      }
-    );
+    this.confirmDeleteAccountButton = page.getByRole('button', {
+      name: /^proceed$/i
+    });
 
     this.deleteAccountConfirmationMessage = page.getByText(
       'Are you sure you want to delete this record?',
       { exact: true }
     );
 
+    // --------------------------------------------------
     // Accounts list and sorting
-    this.accountsListTable = page.getByRole('table');
+    // --------------------------------------------------
 
-    this.accountNameColumnHeader =
-      this.accountsListTable.locator(
-        'th.cdk-column-name'
-      );
-
-    this.accountNameListLinks =
-      this.accountsListTable.locator(
-        'tbody a[href*="/accounts/record/"]'
-      );
-
-    this.accountNameSortButton =
-      this.accountNameColumnHeader.locator(
-        'scrm-sort-button a.sort-button'
-      );
-
-    this.accountNameSortIcon =
-      this.accountNameSortButton.locator('svg-icon');
-      this.officePhoneInput = page
-  .locator(
-    'scrm-dynamic-field.dynamic-field-name-phone_office'
-  )
-  .getByRole('textbox');
-this.accountImportTemplateLink = page
-  .frameLocator('iframe[src*="module=Import"]')
-  .getByRole('link', {
-    name: 'Download Import File Template',
-    exact: true
-  });
-
-  this.accountImportFileInput = page
-  .frameLocator('iframe[src*="module=Import"]')
-  .locator('input[type="file"]');
- this.officePhoneDetail = page
-  .locator(
-    'scrm-dynamic-field.dynamic-field-name-phone_office'
-  )
-  .locator('a[href^="tel:"]');
-
-  this.accountImportNextButton = page
-  .frameLocator('iframe[src*="module=Import"]')
-  .getByRole('button', {
-    name: /^next\s*>?$/i,
-    exact: true
-  });
-
-this.accountImportConfigurationHeading = page
-  .frameLocator('iframe[src*="module=Import"]')
-  .getByRole('heading', {
-    name: 'Step 2: Confirm Import File Properties'
-  });
-  this.importResultsHeading = page
-  .frameLocator('iframe[src*="module=Import"]')
-  .getByRole('heading', {
-    name: /step 5/i
-  });
+      this.accountsListTable = page.getByRole('table');
 
 
-this.importResultsPanel = page
-  .frameLocator('iframe[src*="module=Import"]')
-  .locator('body');
+    this.accountNameColumnHeader = page
+      .locator('th.cdk-column-name')
+      .within(this.accountsListTable);
 
 
-this.undoImportButton = page
-  .frameLocator('iframe[src*="module=Import"]')
-  .getByRole('button', {
-    name: 'Undo Import',
-    exact: true
-  });
-  // Step 2: Confirm Import File Properties
-this.importFilePropertiesHeading = page
-  .frameLocator('iframe[src*="module=Import"]')
-  .getByRole('heading', {
-    name: 'Step 2: Confirm Import File Properties'
-  });
+    this.accountNameListLinks = page
+      .locator('tbody a[href*="/accounts/record/"]')
+      .within(this.accountsListTable);
 
-this.importFilePropertiesNextButton = page
-  .frameLocator('iframe[src*="module=Import"]')
-  .getByRole('button', {
-    name: 'Next >',
-    exact: true
-  });
 
-// Step 3: Confirm Field Mappings
-this.importFieldMappingsHeading = page
-  .frameLocator('iframe[src*="module=Import"]')
-  .getByRole('heading', {
-    name: 'Step 3: Confirm Field Mappings'
-  });
+    this.accountNameSortButton = page
+      .locator('scrm-sort-button a.sort-button')
+      .within(this.accountNameColumnHeader);
 
-this.importFieldMappingsNextButton = page
-  .frameLocator('iframe[src*="module=Import"]')
-  .getByRole('button', {
-    name: 'Next >',
-    exact: true
-  });
 
-// Step 4: Check for Possible Duplicates
-this.importDuplicatesHeading = page
-  .frameLocator('iframe[src*="module=Import"]')
-  .getByRole('heading', {
-    name: 'Step 4: Check for Possible Duplicates'
-  });
+    this.accountNameSortIcon = page
+      .locator('svg-icon')
+      .within(this.accountNameSortButton);
 
-this.importNewRecordsOnlyOption = page
-  .frameLocator('iframe[src*="module=Import"]')
-  .getByText('Create new records only', {
-    exact: true
-  });
+       // --------------------------------------------------
+    // Import Accounts iframe
+    // --------------------------------------------------
 
-this.importNowButton = page
-  .frameLocator('iframe[src*="module=Import"]')
-  .getByRole('button', {
-    name: 'Import Now'
-  });
 
-// Step 5: Imported records
-this.importResultsHeading = page
-  .frameLocator('iframe[src*="module=Import"]')
-  .getByRole('heading', {
-    name: /step 5/i
-  });
+    this.importFrame = page.frameLocator(
+      'iframe[src*="module=Import"]'
+    );
 
-this.importResultsPanel = page
-  .frameLocator('iframe[src*="module=Import"]')
-  .locator('body');
 
-this.undoImportButton = page
-  .frameLocator('iframe[src*="module=Import"]')
-  .getByRole('button', {
-    name: 'Undo Import',
-    exact: true
-  });
-  this.importResultsSummary = page
-  .frameLocator('iframe[src*="module=Import"]')
-  .getByText('2 records were created', {
-    exact: true
-  });
-  this.importResultsCreatedTab = page
-  .frameLocator('iframe[src*="module=Import"]')
-  .getByText('Created Records', {
-    exact: true
-  });
+    this.importFrameBody = this.importFrame.locator('body');
 
-  this.accountImportMissingFileMessage = page
-  .frameLocator('iframe[src*="module=Import"]')
-  .locator('div.required.validation-message')
-  .filter({
-    hasText: 'Missing required fields: Select a file to upload.'
-  });
+
+    // --------------------------------------------------
+    // Import Step 1: Upload Import File
+    // --------------------------------------------------
+
+
+    this.importAccountPageHeading = page
+      .getByRole('heading', {
+        name: /^step 1:\s*upload import file$/i
+      })
+      .within(this.importFrameBody);
+
+
+    this.accountImportTemplateLink = page
+      .getByRole('link', {
+        name: /^download import file template$/i
+      })
+      .within(this.importFrameBody);
+
+
+    this.accountImportFileInput = page
+      .locator('input[type="file"]')
+      .within(this.importFrameBody);
+
+
+    this.accountImportNextButton = page
+      .getByRole('button', {
+        name: /^next\s*>?$/i
+      })
+      .within(this.importFrameBody);
+
+
+    this.accountImportMissingFileMessage = page
+      .locator('div.required.validation-message')
+      .filter({
+        hasText:
+          /^missing required fields:\s*select a file to upload\.$/i
+      })
+      .within(this.importFrameBody);
+
+
+    this.importNewRecordsOnlyOption = page
+      .getByText('Create new records only', {
+        exact: true
+      })
+      .within(this.importFrameBody);
+       // --------------------------------------------------
+    // Import Step 2: Confirm Import File Properties
+    // --------------------------------------------------
+
+
+    this.importFilePropertiesHeading = page
+      .getByRole('heading', {
+        name: /^step 2:\s*confirm import file properties$/i
+      })
+      .within(this.importFrameBody);
+    // Aliases retain compatibility with existing step definitions.
+    this.accountImportConfigurationHeading =
+      this.importFilePropertiesHeading;
+
+    this.importFilePropertiesNextButton =
+      this.accountImportNextButton;
+
+        // --------------------------------------------------
+    // Import Step 3: Confirm Field Mappings
+    // --------------------------------------------------
+
+
+    this.importFieldMappingsHeading = page
+      .getByRole('heading', {
+        name: /^step 3:\s*confirm field mappings$/i
+      })
+      .within(this.importFrameBody);
+
+
+    this.importFieldMappingsNextButton =
+      this.accountImportNextButton;
+
+
+    // --------------------------------------------------
+    // Import Step 4: Check for Possible Duplicates
+    // --------------------------------------------------
+
+
+    this.importDuplicatesHeading = page
+      .getByRole('heading', {
+        name: /^step 4:\s*check for possible duplicates$/i
+      })
+      .within(this.importFrameBody);
+
+
+    this.importNowButton = page
+      .getByRole('button', {
+        name: /^import now$/i
+      })
+      .within(this.importFrameBody);
+
+
+    // --------------------------------------------------
+    // Import Step 5: View Import Results
+    // --------------------------------------------------
+
+
+    this.importResultsHeading = page
+      .getByRole('heading', {
+        name: /^step 5:\s*view import results$/i
+      })
+      .within(this.importFrameBody);
+
+
+    this.importResultsPanel = this.importFrameBody;
+
+
+    this.importResultsSummary = page
+      .getByText(
+        /^\s*\d+\s+records\s+were\s+created\s*$/i
+      )
+      .within(this.importResultsPanel);
+
+
+    this.importResultsCreatedTab = page
+      .getByText('Created Records', {
+        exact: true
+      })
+      .within(this.importResultsPanel);
+
+
+    this.undoImportButton = page
+      .getByRole('button', {
+        name: /^undo import$/i
+      })
+      .within(this.importResultsPanel);
   }
 
+  // --------------------------------------------------
   // Navigation
+  // --------------------------------------------------
 
   async hoverAccountsModule() {
     await this.accountsModule.hover();
@@ -417,7 +438,6 @@ this.undoImportButton = page
       state: 'visible'
     });
 
-    // Move outside the navigation dropdown.
     const viewport = await this.page.evaluate(() => ({
       width: window.innerWidth,
       height: window.innerHeight
@@ -433,10 +453,20 @@ this.undoImportButton = page
     });
   }
 
+  // --------------------------------------------------
   // Account creation and editing
+  // --------------------------------------------------
 
   async enterAccountName(name) {
     await this.accountNameInput.fill(name);
+  }
+
+  async enterAccountWebsite(website) {
+    await this.websiteInput.fill(website);
+  }
+
+  async enterAccountOfficePhone(phone) {
+    await this.officePhoneInput.fill(String(phone));
   }
 
   async clickSaveOnCreateAccountPage() {
@@ -501,21 +531,9 @@ this.undoImportButton = page
     await this.emailInput.fill(account.email);
   }
 
-  getEmailValidationMessage(expectedMessage) {
-    return this.page.getByText(expectedMessage, {
-      exact: true
-    });
-  }
-
   async enterUnsavedAccountData(account) {
     await this.enterAccountName(account.name);
     await this.emailInput.fill(account.email);
-  }
-
-  // Website update — new methods
-
-  async enterAccountWebsite(website) {
-    await this.websiteInput.fill(website);
   }
 
   async waitForAccountDetailPage() {
@@ -530,34 +548,118 @@ this.undoImportButton = page
 
   async saveAccountChanges() {
     await this.saveButton.click();
-
     await this.waitForAccountDetailPage();
   }
 
   async reloadAccountDetailPage() {
     await this.page.reload();
-
     await this.waitForAccountDetailPage();
   }
 
-async cancelAccountEditing() {
+  async cancelAccountEditing() {
+    await this.cancelCreateAccountButton.click();
+
+    await this.confirmLeaveAccountButton
+      .or(this.editAccountButton)
+      .first()
+      .waitFor({ state: 'visible' });
+
+    if (await this.confirmLeaveAccountButton.isVisible()) {
+      await this.confirmLeaveAccountButton.click();
+    }
+
+    await this.waitForAccountDetailPage();
+  }
+    async cancelAccountEditingAndDiscardChanges() {
+    await this.clickCancelOnCreateAccountPage();
 
 
-  await this.cancelCreateAccountButton.click();
+    await this.discardUnsavedChangesButton.waitFor({
+      state: 'visible'
+    });
 
-  await this.confirmLeaveAccountButton
-    .or(this.editAccountButton)
-    .first()
-    .waitFor({ state: 'visible' });
 
-  if (await this.confirmLeaveAccountButton.isVisible()) {
-    await this.confirmLeaveAccountButton.click();
+    await this.discardUnsavedChangesButton.click();
+
+
+    await this.discardUnsavedChangesButton.waitFor({
+      state: 'hidden'
+    });
+
+
+    await this.waitForAccountDetailPage();
+  }
+    // --------------------------------------------------
+  // Account creation helpers
+  // --------------------------------------------------
+
+
+  async waitForAccountRecordPage() {
+    await this.page.waitForURL(ACCOUNT_RECORD_URL);
+
+
+    return this.page.url();
   }
 
-  await this.waitForAccountDetailPage();
-}
 
-  // Unsaved-changes popup
+  async createAccount(account) {
+    await this.openCreateAccountPage();
+    await this.enterAccountName(account.name);
+    await this.clickSaveOnCreateAccountPage();
+
+
+    return await this.waitForAccountRecordPage();
+  }
+
+
+  async createCompleteAccount(account) {
+    await this.openCreateAccountPage();
+    await this.enterCompleteOverviewInformation(account);
+    await this.clickSaveOnCreateAccountPage();
+
+
+    return await this.waitForAccountRecordPage();
+  }
+
+
+  async createAccountWithPrimaryEmail(account) {
+    await this.openCreateAccountPage();
+    await this.enterAccountWithPrimaryEmail(account);
+    await this.clickSaveOnCreateAccountPage();
+
+
+    return await this.waitForAccountRecordPage();
+  }
+
+
+  async openAccountEditing() {
+    await this.openAccountForEditing();
+  }
+
+
+  async getSelectedImportFileName() {
+    return await this.getSelectedAccountImportFileName();
+  }
+
+
+  async getImportSummaryText() {
+    await this.importResultsSummary.waitFor({
+      state: 'visible'
+    });
+
+
+    return await this.importResultsSummary.innerText();
+  }
+
+  // --------------------------------------------------
+  // Validation and unsaved-changes popup
+  // --------------------------------------------------
+
+  getEmailValidationMessage(expectedMessage) {
+    return this.page.getByText(expectedMessage, {
+      exact: true
+    });
+  }
 
   getUnsavedChangesMessage(expectedMessage) {
     return this.page.getByText(expectedMessage, {
@@ -573,7 +675,54 @@ async cancelAccountEditing() {
     await this.dismissCancellationButton.click();
   }
 
+async openSavedAccountForVerification(recordUrl) {
+  await this.page.goto(recordUrl);
+
+  await this.waitForAccountDetailPage();
+
+  await this.openAccountForEditing();
+
+  try {
+    await this.accountNameInput.waitFor({
+      state: 'visible'
+    });
+
+    await this.websiteInput.waitFor({
+      state: 'visible'
+    });
+  } catch (error) {
+    console.log('Verification URL:', this.page.url());
+
+    console.log(
+      'Record header HTML:',
+      await this.recordHeader.innerHTML()
+    );
+
+    console.log(
+      'Textbox HTML:',
+      await this.page.getByRole('textbox').evaluateAll(
+        inputs => inputs.map(input => input.outerHTML)
+      )
+    );
+
+    throw error;
+  }
+}
+async createAccountWithWebsite(account) {
+  await this.openCreateAccountPage();
+
+  await this.enterAccountName(account.name);
+
+  await this.enterAccountWebsite(account.website);
+
+  await this.clickSaveOnCreateAccountPage();
+
+  return await this.waitForAccountRecordPage();
+}
+
+  // --------------------------------------------------
   // Search
+  // --------------------------------------------------
 
   async searchAccountsByName(accountName) {
     await this.accountSearchNameInput.fill(accountName);
@@ -590,13 +739,14 @@ async cancelAccountEditing() {
   }
 
   getAccountSearchNoResultsMessage(expectedMessage) {
-    return this.searchResultsFrame.getByText(
-      expectedMessage,
-      { exact: true }
-    );
+    return this.searchResultsFrame.getByText(expectedMessage, {
+      exact: true
+    });
   }
 
+  // --------------------------------------------------
   // Accounts list
+  // --------------------------------------------------
 
   getAccountListLink(accountName) {
     return this.page.getByRole('link', {
@@ -609,7 +759,9 @@ async cancelAccountEditing() {
     await this.getAccountListLink(accountName).click();
   }
 
+  // --------------------------------------------------
   // Recently Viewed
+  // --------------------------------------------------
 
   async openAccountsRecentlyViewed() {
     await this.hoverAccountsModule();
@@ -623,7 +775,9 @@ async cancelAccountEditing() {
     );
   }
 
+  // --------------------------------------------------
   // Test-data setup
+  // --------------------------------------------------
 
   async createAccountForListTest(account) {
     await this.openCreateAccountPage();
@@ -631,7 +785,9 @@ async cancelAccountEditing() {
     await this.clickSaveOnCreateAccountPage();
   }
 
+  // --------------------------------------------------
   // Test-data cleanup
+  // --------------------------------------------------
 
   async deleteAccountByUrl(recordUrl) {
     const target = new URL(recordUrl);
@@ -739,129 +895,198 @@ async cancelAccountEditing() {
     });
   }
 
+  // --------------------------------------------------
   // Sorting
+  // --------------------------------------------------
+
 
   async clickAccountNameSortButton() {
     await this.accountNameSortButton.click();
   }
 
+
   async getDisplayedAccountNames() {
     const names =
       await this.accountNameListLinks.allTextContents();
 
+
     return names.map(name => name.trim());
   }
-  async enterAccountOfficePhone(phone) {
-  await this.officePhoneInput.fill(String(phone));
-}
-async downloadAccountImportTemplate() {
-  const downloadPromise = this.page.waitForEvent('download');
 
-  await this.accountImportTemplateLink.click();
 
-  return await downloadPromise;
-}
+  async getNameSortIconClass() {
+    return await this.accountNameSortIcon.getAttribute(
+      'class'
+    );
+  }
 
-async selectAccountImportFile(filePath) {
-  await this.accountImportFileInput.setInputFiles(filePath);
-}
-async isAccountImportFileSelected() {
-  const filename = await this.accountImportFileInput.evaluate(
-    input => input.files?.[0]?.name
-  );
 
-  return Boolean(filename);
-}
+  async isNameSortedDescending() {
+    const iconClass =
+      await this.getNameSortIconClass();
 
-async clickAccountImportNextButton() {
-  await this.accountImportNextButton.click();
-}
 
-async waitForAccountImportConfigurationStep() {
-  await this.accountImportConfigurationHeading.waitFor({
-    state: 'visible'
-  });
-}
+    return /(?:^|\s)image-sort_descend(?:\s|$)/.test(
+      iconClass ?? ''
+    );
+  }
 
-getImportedAccountRow(accountName) {
-  return this.importResultsPanel
-    .getByRole('row')
-    .filter({
-      hasText: accountName
+
+  async waitForNameSortDescending() {
+    await this.page.waitForFunction(() => {
+      const icon = document.querySelector(
+        'th.cdk-column-name scrm-sort-button a.sort-button svg-icon'
+      );
+
+
+      return icon?.classList.contains(
+        'image-sort_descend'
+      );
     });
-}
-
-getImportedAccountField(accountName, value) {
-  return this.getImportedAccountRow(accountName)
-    .getByText(value, { exact: true });
-}
+  }
 
 
-getImportedAccountField(accountName, value) {
-  return this.getImportedAccountRow(accountName)
-    .getByText(value, { exact: true });
-}
-async confirmImportFileProperties() {
-  await this.importFilePropertiesHeading.waitFor({
-    state: 'visible'
-  });
+  async waitForNameSortNotDescending() {
+    await this.page.waitForFunction(() => {
+      const icon = document.querySelector(
+        'th.cdk-column-name scrm-sort-button a.sort-button svg-icon'
+      );
 
-  await this.importFilePropertiesNextButton.click();
-}
 
-async confirmAccountFieldMappings() {
-  await this.importFieldMappingsHeading.waitFor({
-    state: 'visible'
-  });
+      return (
+        icon !== null &&
+        !icon.classList.contains('image-sort_descend')
+      );
+    });
+  }
 
-  await this.importFieldMappingsNextButton.click();
-}
 
-async importNewRecordsOnly() {
-  await this.importDuplicatesHeading.waitFor({
-    state: 'visible'
-  });
+  async sortAccountsByNameAscending() {
+    await this.accountNameSortButton.waitFor({
+      state: 'visible'
+    });
 
-  //await this.importNewRecordsOnlyOption.check();
 
-  await this.importNowButton.click();
+    if (!(await this.isNameSortedDescending())) {
+      await this.clickAccountNameSortButton();
+      await this.waitForNameSortDescending();
+    }
 
-  await this.importResultsHeading.waitFor({
-    state: 'visible'
-  });
-}
 
-async waitForImportResults() {
-  await this.importResultsHeading.waitFor({
-    state: 'visible'
-  });
-}
+    await this.clickAccountNameSortButton();
+    await this.waitForNameSortNotDescending();
+  }
+  // --------------------------------------------------
+  // Import: template and file selection
+  // --------------------------------------------------
 
-async undoImportedAccounts() {
-  await this.undoImportButton.click();
-}
+  async downloadAccountImportTemplate() {
+    const downloadPromise = this.page.waitForEvent('download');
 
-async clearAccountImportFile() {
-  await this.accountImportFileInput.setInputFiles([]);
-}
+    await this.accountImportTemplateLink.click();
 
-async getSelectedAccountImportFileName() {
-  return await this.accountImportFileInput.evaluate(
-    input => input.files?.[0]?.name ?? null
-  );
-}
+    return await downloadPromise;
+  }
 
-async attemptAccountImportNext() {
-  await this.accountImportNextButton.waitFor({
-    state: 'visible'
-  });
+  async selectAccountImportFile(filePath) {
+    await this.accountImportFileInput.setInputFiles(filePath);
+  }
 
-  const isEnabled =
-    await this.accountImportNextButton.isEnabled();
+  async clearAccountImportFile() {
+    await this.accountImportFileInput.setInputFiles([]);
+  }
 
-  if (isEnabled) {
+  async getSelectedAccountImportFileName() {
+    return await this.accountImportFileInput.evaluate(
+      input => input.files?.[0]?.name ?? null
+    );
+  }
+
+  async isAccountImportFileSelected() {
+    const filename =
+      await this.getSelectedAccountImportFileName();
+
+    return filename !== null;
+  }
+
+  // --------------------------------------------------
+  // Import: wizard navigation
+  // --------------------------------------------------
+
+  async clickAccountImportNextButton() {
     await this.accountImportNextButton.click();
   }
-}
 
+  async waitForAccountImportConfigurationStep() {
+    await this.accountImportConfigurationHeading.waitFor({
+      state: 'visible'
+    });
+  }
+
+  async confirmImportFileProperties() {
+    await this.importFilePropertiesHeading.waitFor({
+      state: 'visible'
+    });
+
+    await this.importFilePropertiesNextButton.click();
+  }
+
+  async confirmAccountFieldMappings() {
+    await this.importFieldMappingsHeading.waitFor({
+      state: 'visible'
+    });
+
+    await this.importFieldMappingsNextButton.click();
+  }
+
+  async importNewRecordsOnly() {
+    await this.importDuplicatesHeading.waitFor({
+      state: 'visible'
+    });
+
+    await this.importNowButton.click();
+
+    await this.waitForImportResults();
+  }
+
+  async waitForImportResults() {
+    await this.importResultsHeading.waitFor({
+      state: 'visible'
+    });
+  }
+
+  async attemptAccountImportNext() {
+    await this.accountImportNextButton.waitFor({
+      state: 'visible'
+    });
+
+    if (await this.accountImportNextButton.isEnabled()) {
+      await this.accountImportNextButton.click();
+    }
+  }
+
+  // --------------------------------------------------
+  // Import: result locators and cleanup
+  // --------------------------------------------------
+
+  getImportedAccountRow(accountName) {
+    return this.importResultsPanel
+      .getByRole('row')
+      .filter({
+        has: this.importFrame.getByText(accountName, {
+          exact: true
+        })
+      });
+  }
+
+  getImportedAccountField(accountName, value) {
+    return this.getImportedAccountRow(accountName)
+      .getByText(value, {
+        exact: true
+      });
+  }
+
+  async undoImportedAccounts() {
+    await this.undoImportButton.click();
+  }
 }
