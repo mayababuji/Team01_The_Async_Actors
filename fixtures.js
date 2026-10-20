@@ -4,6 +4,7 @@ import { test as base, createBdd } from 'playwright-bdd';
 
 import { LoginPage } from './pages/login.page.js';
 import { AccountsPage } from './pages/accounts.page.js';
+import { OpportunitiesPage } from './pages/opportunities.page.js';
 import { readLoginData } from './utils/excel-util.js';
 import { createLogger } from './utils/logger.js';
 
@@ -15,6 +16,9 @@ export const test = base.extend({
   accountsPage: async ({ page }, use) => {
     await use(new AccountsPage(page));
   },
+  opportunitiesPage: async ({ page }, use) => {
+  await use(new OpportunitiesPage(page));
+},
   accountListTestData: async ({}, use) => {
   await use({
     account: null,
