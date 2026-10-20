@@ -1592,7 +1592,7 @@ Then(
 
     await expect(
       accountsPage.accountImportFileInput
-    ).not.toBeVisible();
+    ).toBeHidden();
 
 
     await expect(
@@ -1808,7 +1808,7 @@ Then(
 
     await expect(
       accountsPage.importFilePropertiesHeading
-    ).not.toBeVisible();
+    ).toBeHidden();
 
 
     logger.info(

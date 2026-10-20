@@ -1,6 +1,9 @@
 export class OpportunitiesPage {
   constructor(page) {
     this.page = page;
+     // --------------------------------------------------
+    // LOCATORS
+    // --------------------------------------------------
 
     // --------------------------------------------------
     // Navigation
@@ -34,6 +37,34 @@ export class OpportunitiesPage {
         name: /^view opportunities$/i
       }
     );
+    // --------------------------------------------------
+// Page headings
+// --------------------------------------------------
+
+this.viewOpportunitiesPageHeading = page.getByText(
+  'OPPORTUNITIES',
+  {
+    exact: true
+  }
+);
+
+// --------------------------------------------------
+// Import Opportunities iframe
+// --------------------------------------------------
+
+this.importFrame = page.frameLocator(
+  'iframe[src*="module=Import"]'
+);
+
+this.importFrameBody = this.importFrame.locator('body');
+
+
+
+this.importOpportunitiesPageHeading = page
+  .frameLocator('iframe[src*="module=Import"]')
+  .getByRole('heading', {
+    name: /^step 1:\s*upload import file$/i
+  });
   }
 
   // --------------------------------------------------
@@ -61,4 +92,19 @@ export class OpportunitiesPage {
 
     return option;
   }
+
+  async openViewOpportunitiesPage() {
+  await this.hoverOpportunitiesModule();
+
+  await this.viewOpportunitiesOption.click();
+}
+// --------------------------------------------------
+// Navigation actions
+// --------------------------------------------------
+
+async openImportOpportunitiesPage() {
+  await this.hoverOpportunitiesModule();
+
+  await this.importOpportunitiesOption.click();
+}
 }
