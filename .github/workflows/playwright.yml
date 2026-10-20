@@ -103,6 +103,7 @@ jobs:
         id: playwright_tests
         run: |
           npx playwright test \
+            --shuffle \
             --project=login-chromium \
             --project=login-firefox \
             --project=login-webkit \

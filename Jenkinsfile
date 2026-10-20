@@ -126,6 +126,7 @@ stage('Run all BDD tests') {
                 set +x
 
                 npx playwright test \
+                    --shuffle \
                     --project=login-chromium \
                     --project=login-firefox \
                     --project=login-webkit \
