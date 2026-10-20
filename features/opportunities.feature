@@ -11,3 +11,13 @@ Feature: Opportunities management
       | Create Opportunity   |
       | Import Opportunities |
       | View Opportunities   | 
+
+   @ViewOpportunitiesNavigation
+  Scenario: Verify View Opportunities page navigation
+    When the user opens the Opportunities module and clicks View Opportunities
+    Then the user should be navigated to the View Opportunities page
+
+      @ImportOpportunitiesNavigation
+  Scenario: Verify Import Opportunities page navigation
+    When the user opens the Opportunities module and clicks Import Opportunities
+    Then the user should be navigated to the Import Opportunities page
