@@ -1,3 +1,4 @@
+// https://github.com/mskelton/eslint-plugin-playwright
 import playwright from 'eslint-plugin-playwright';
 
 export default [
@@ -19,7 +20,8 @@ export default [
   },
 
   // --------------------------------------------------
-  // Playwright source files
+  // Shared Playwright rules
+  // Applies to steps, pages, session files, and fixtures
   // --------------------------------------------------
   {
     ...playwright.configs['flat/recommended'],
@@ -34,13 +36,28 @@ export default [
     rules: {
       ...playwright.configs['flat/recommended'].rules,
 
+      // Disallow debugging pauses.
       'playwright/no-page-pause': 'error',
-      'playwright/no-wait-for-timeout': 'error'
+
+      // Disallow fixed waits.
+      'playwright/no-wait-for-timeout': 'error',
+
+      // Disallow hard-coded Playwright timeout values.
+      'playwright/no-magic-timeouts': 'error',
+
+      // Prefer user-facing locators, with specific exceptions.
+      'playwright/no-raw-locators': [
+        'error',
+        {
+          allowed: ['iframe', "[aria-busy='false']"]
+        }
+      ]
     }
   },
 
   // --------------------------------------------------
   // BDD step-definition rules
+  // Applies only to step-definition files
   // --------------------------------------------------
   {
     files: ['steps/**/*.steps.js'],
@@ -51,8 +68,6 @@ export default [
 
       // Given and When intentionally do not contain assertions.
       'playwright/expect-expect': 'off',
-//Disallow magic numbers as Playwright timeout values
-      'playwright/no-magic-timeouts': 'error',
 
       // Reject direct expect() calls inside Given and When.
       'no-restricted-syntax': [

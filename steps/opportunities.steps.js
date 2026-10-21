@@ -82,3 +82,37 @@ Then(
     logger.info('Import Opportunities page verified');
   }
 );
+Given(
+  'the user is on the Create Opportunity page',
+  async ({ opportunitiesPage, logger }) => {
+    await opportunitiesPage.openCreateOpportunityPage();
+
+    logger.info('Opened Create Opportunity page');
+  }
+);
+
+When(
+  'the user saves the opportunity without entering mandatory fields',
+  async ({ opportunitiesPage, logger }) => {
+    await opportunitiesPage.saveOpportunity();
+
+    logger.info('Clicked Save without entering opportunity details');
+  }
+);
+
+Then(
+  'required-field validation messages should be displayed for:',
+  async ({ opportunitiesPage, logger }, dataTable) => {
+    const fieldNames = dataTable.raw().map(([fieldName]) => fieldName);
+
+    for (const fieldName of fieldNames) {
+      await expect(
+        opportunitiesPage.getRequiredFieldValidationMessage(fieldName)
+      ).toBeVisible();
+
+      logger.info('Required-field validation message verified', {
+        fieldName
+      });
+    }
+  }
+);
