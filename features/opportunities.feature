@@ -21,3 +21,14 @@ Feature: Opportunities management
   Scenario: Verify Import Opportunities page navigation
     When the user opens the Opportunities module and clicks Import Opportunities
     Then the user should be navigated to the Import Opportunities page
+
+   @CreateOpportunityRequiredFields
+  Scenario: Verify required field validation on Create Opportunity page
+    Given the user is on the Create Opportunity page
+    When the user saves the opportunity without entering mandatory fields
+    Then required-field validation messages should be displayed for:
+      | Opportunity Name    |
+      | Account Name        |
+      | Opportunity Amount  |
+      | Sales Stage         |
+      | Expected Close Date |

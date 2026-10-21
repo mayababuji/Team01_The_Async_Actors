@@ -70,20 +70,26 @@ export class AccountsPage {
     // Overview inputs
     // --------------------------------------------------
 
-    this.accountNameInput = page
-      .locator('scrm-field.field-name-name')
-      .getByRole('textbox');
+    // this.accountNameInput = page
+    //   .locator('scrm-field.field-name-name')
+    //   .getByRole('textbox');
 
-    this.websiteInput = page
-      .locator('scrm-field.field-name-website')
-      .getByRole('textbox');
+//     this.accountNameInput = page.getByRole('textbox', {
+//   name: 'Name',
+//   exact: true
+// });
+this.accountNameInput = page.getByRole('textbox').nth(1);
 
-    this.officePhoneInput = page
-      .locator(
-        'scrm-dynamic-field.dynamic-field-name-phone_office'
-      )
-      .getByRole('textbox');
-
+    // this.websiteInput = page
+    //   .locator('scrm-field.field-name-website')
+    //   .getByRole('textbox');
+this.websiteInput = page.getByRole('textbox').nth(2);
+    // this.officePhoneInput = page
+    //   .locator(
+    //     'scrm-dynamic-field.dynamic-field-name-phone_office'
+    //   )
+    //   .getByRole('textbox');
+this.officePhoneInput = page.getByRole('textbox').nth(3);
     this.emailInput = page
       .locator('scrm-dynamic-field.dynamic-field-type-email')
       .getByRole('textbox');
@@ -101,6 +107,7 @@ export class AccountsPage {
         'scrm-dynamic-field.dynamic-field-name-phone_office'
       )
       .locator('a[href^="tel:"]');
+     
 
     // --------------------------------------------------
     // Address inputs
@@ -276,9 +283,15 @@ this.discardUnsavedChangesButton = page.getByRole(
       .within(this.importFrameBody);
 
 
-    this.accountImportFileInput = page
-      .locator('input[type="file"]')
-      .within(this.importFrameBody);
+    // this.accountImportFileInput = page
+    //   .locator('input[type="file"]')
+    //   .within(this.importFrameBody);
+
+      // File input requires a structural selector in this import form.
+  // eslint-disable-next-line playwright/no-raw-locators
+    this.accountImportFileInput = this.importFrame
+
+  .locator('input[type="file"]');
 
 
     this.accountImportNextButton = page
@@ -458,6 +471,14 @@ this.discardUnsavedChangesButton = page.getByRole(
   // --------------------------------------------------
 
   async enterAccountName(name) {
+    // Temporary diagnostic: inspect the original field container.
+  // eslint-disable-next-line playwright/no-raw-locators
+  // const nameField = this.page.locator('scrm-field.field-name-name');
+
+  // console.log(
+  //   'Account Name field ARIA snapshot:\n',
+  //   await nameField.ariaSnapshot()
+  // );
     await this.accountNameInput.fill(name);
   }
 

@@ -1,12 +1,9 @@
 export class OpportunitiesPage {
   constructor(page) {
     this.page = page;
-     // --------------------------------------------------
-    // LOCATORS
-    // --------------------------------------------------
 
     // --------------------------------------------------
-    // Navigation
+    // Navigation locators
     // --------------------------------------------------
 
     this.opportunitiesModule = page
@@ -17,54 +14,43 @@ export class OpportunitiesPage {
         visible: true
       });
 
-    this.createOpportunityOption = page.getByRole(
-      'link',
-      {
-        name: /^create opportunity$/i
-      }
-    );
+    this.createOpportunityOption = page.getByRole('link', {
+      name: /^create opportunity$/i
+    });
 
-    this.importOpportunitiesOption = page.getByRole(
-      'link',
-      {
-        name: /^import opportunities$/i
-      }
-    );
+    this.importOpportunitiesOption = page.getByRole('link', {
+      name: /^import opportunities$/i
+    });
 
-    this.viewOpportunitiesOption = page.getByRole(
-      'link',
-      {
-        name: /^view opportunities$/i
-      }
-    );
+    this.viewOpportunitiesOption = page.getByRole('link', {
+      name: /^view opportunities$/i
+    });
+
     // --------------------------------------------------
-// Page headings
+    // Page headings
+    // --------------------------------------------------
+
+    this.viewOpportunitiesPageHeading = page.getByText(
+      'OPPORTUNITIES',
+      {
+        exact: true
+      }
+    );
+
+    this.importOpportunitiesPageHeading = page
+      .frameLocator('iframe[src*="module=Import"]')
+      .getByRole('heading', {
+        name: /^step 1:\s*upload import file$/i
+      });
+
+     // --------------------------------------------------
+// Create Opportunity
 // --------------------------------------------------
 
-this.viewOpportunitiesPageHeading = page.getByText(
-  'OPPORTUNITIES',
-  {
-    exact: true
-  }
-);
-
-// --------------------------------------------------
-// Import Opportunities iframe
-// --------------------------------------------------
-
-this.importFrame = page.frameLocator(
-  'iframe[src*="module=Import"]'
-);
-
-this.importFrameBody = this.importFrame.locator('body');
-
-
-
-this.importOpportunitiesPageHeading = page
-  .frameLocator('iframe[src*="module=Import"]')
-  .getByRole('heading', {
-    name: /^step 1:\s*upload import file$/i
-  });
+this.saveOpportunityButton = page.getByRole('button', {
+  name: 'Save',
+  exact: true
+});
   }
 
   // --------------------------------------------------
@@ -94,17 +80,39 @@ this.importOpportunitiesPageHeading = page
   }
 
   async openViewOpportunitiesPage() {
+    await this.hoverOpportunitiesModule();
+    await this.viewOpportunitiesOption.click();
+  }
+
+  async openImportOpportunitiesPage() {
+    await this.hoverOpportunitiesModule();
+    await this.importOpportunitiesOption.click();
+  }
+  // --------------------------------------------------
+// Create Opportunity actions
+// --------------------------------------------------
+
+async openCreateOpportunityPage() {
   await this.hoverOpportunitiesModule();
 
-  await this.viewOpportunitiesOption.click();
+  await this.createOpportunityOption.click();
 }
+
+async saveOpportunity() {
+  await this.saveOpportunityButton.click();
+}
+
 // --------------------------------------------------
-// Navigation actions
+// Validation locators
 // --------------------------------------------------
 
-async openImportOpportunitiesPage() {
-  await this.hoverOpportunitiesModule();
-
-  await this.importOpportunitiesOption.click();
+getRequiredFieldValidationMessage(fieldName) {
+  return this.page.getByText(
+    `Missing required field: ${fieldName}`,
+    {
+      exact: true
+    }
+  );
 }
+
 }
