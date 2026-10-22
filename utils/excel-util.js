@@ -2,6 +2,7 @@ import * as XLSX from 'xlsx';
 import * as fs from 'node:fs';
 import path from 'node:path';
 
+
 // Enable filesystem access for SheetJS in Node ESM.
 XLSX.set_fs(fs);
 
@@ -278,4 +279,142 @@ if (
     return accountRow;
   });
   
+}
+// --------------------------------------------------
+// Opportunity data
+// Worksheet name intentionally matches: opputinuites
+// --------------------------------------------------
+
+const OPPORTUNITIES_SHEET_NAME = 'opputinuites';
+
+export function readOpportunityData() {
+  return readSheetData(OPPORTUNITIES_SHEET_NAME).map(
+    (row, index) => {
+      const opportunityRow = {
+        scenario: String(row.Scenario ?? '').trim(),
+
+        name: String(
+          row.OpportunityName ?? ''
+        ).trim(),
+
+        accountName: String(
+          row.AccountName ?? ''
+        ).trim(),
+
+        amount: String(
+          row.OpportunityAmount ?? ''
+        ).trim(),
+
+        salesStage: String(
+          row.SalesStage ?? ''
+        ).trim(),
+
+        expectedCloseDate: String(
+          row.ExpectedCloseDate ?? ''
+        )
+          .trim()
+          .replace(/^'/, '')
+          .trim()
+      };
+
+      // Every opportunity row must identify its scenario.
+      if (!opportunityRow.scenario) {
+        throw new Error(
+          `${OPPORTUNITIES_SHEET_NAME} Excel data row ` +
+          `${index + 2} is missing "Scenario".`
+        );
+      }
+
+      // Required values for successful opportunity creation.
+      if (
+        opportunityRow.scenario ===
+        'create_opportunity_valid_mandatory'
+      ) {
+        const requiredFields = [
+          'name',
+          'accountName',
+          'amount',
+          'salesStage',
+          'expectedCloseDate'
+        ];
+
+        for (const field of requiredFields) {
+          if (!opportunityRow[field]) {
+            throw new Error(
+              `${OPPORTUNITIES_SHEET_NAME} Excel data row ` +
+              `${index + 2} is missing "${field}".`
+            );
+          }
+        }
+
+        // Require an unformatted numeric value, e.g. 5000 or 5000.50.
+        const numericAmount = Number(
+          opportunityRow.amount
+        );
+
+        if (
+          !/^\d+(?:\.\d+)?$/.test(opportunityRow.amount) ||
+          !Number.isFinite(numericAmount) ||
+          numericAmount <= 0
+        ) {
+          throw new Error(
+            `${OPPORTUNITIES_SHEET_NAME} Excel data row ` +
+            `${index + 2}: OpportunityAmount must be a positive ` +
+            'number without currency symbols or thousands separators.'
+          );
+        }
+
+        // Require a real calendar date written as YYYY-MM-DD.
+        const dateText =
+          opportunityRow.expectedCloseDate;
+
+        const parsedDate =
+          /^\d{4}-\d{2}-\d{2}$/.test(dateText)
+            ? new Date(`${dateText}T00:00:00.000Z`)
+            : null;
+
+        if (
+          !parsedDate ||
+          Number.isNaN(parsedDate.getTime()) ||
+          parsedDate.toISOString().slice(0, 10) !== dateText
+        ) {
+          throw new Error(
+            `${OPPORTUNITIES_SHEET_NAME} Excel data row ` +
+            `${index + 2}: ExpectedCloseDate must be a valid ` +
+            'calendar date in YYYY-MM-DD format. ' +
+            `Received: ${JSON.stringify(dateText)}.`
+          );
+        }
+      }
+
+      return opportunityRow;
+    }
+  );
+}
+
+// --------------------------------------------------
+// Retrieve one opportunity scenario
+// --------------------------------------------------
+
+export function getOpportunityDataByScenario(scenarioName) {
+  const matchingRows = readOpportunityData().filter(
+    row => row.scenario === scenarioName
+  );
+
+  if (matchingRows.length === 0) {
+    throw new Error(
+      `Opportunity scenario "${scenarioName}" was not found ` +
+      `in the "${OPPORTUNITIES_SHEET_NAME}" worksheet.`
+    );
+  }
+
+  if (matchingRows.length > 1) {
+    throw new Error(
+      `Opportunity scenario "${scenarioName}" appears more than once ` +
+      `in the "${OPPORTUNITIES_SHEET_NAME}" worksheet. ` +
+      'Scenario values must be unique.'
+    );
+  }
+
+  return matchingRows[0];
 }

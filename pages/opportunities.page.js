@@ -43,32 +43,150 @@ export class OpportunitiesPage {
         name: /^step 1:\s*upload import file$/i
       });
 
-     // --------------------------------------------------
-// Create Opportunity
-// --------------------------------------------------
+    // --------------------------------------------------
+    // Create Opportunity locators
+    // --------------------------------------------------
 
-this.saveOpportunityButton = page.getByRole('button', {
-  name: 'Save',
-  exact: true
-});
-  }
+    this.basicPanel = page.getByRole('tabpanel', {
+      name: 'BASIC',
+      exact: true
+    });
 
-  // --------------------------------------------------
-  // Navigation actions
-  // --------------------------------------------------
+    this.opportunityNameInput = this.basicPanel
+      .getByRole('textbox')
+      .nth(0);
 
-  async hoverOpportunitiesModule() {
-    await this.opportunitiesModule.hover();
-  }
+    this.opportunityAmountInput = this.basicPanel
+      .getByRole('textbox')
+      .nth(1);
 
-  getDropdownOption(optionName) {
-    const options = {
+    this.accountNameDropdown = this.basicPanel
+      .getByRole('combobox', {
+        name: 'Select an item',
+        exact: true
+      })
+      .nth(0);
+
+    this.accountSearchInput = page.locator('input:focus');
+
+    this.salesStageSelect = this.basicPanel
+      .locator('select')
+      .filter({
+        has: page.locator('option', {
+          hasText: 'Negotiation/Review'
+        })
+      });
+
+    this.expectedCloseDateInput = this.basicPanel
+      .getByPlaceholder('yyyy-mm-dd', {
+        exact: true
+      });
+
+    this.saveOpportunityButton = page.getByRole('button', {
+      name: 'Save',
+      exact: true
+    });
+
+    // --------------------------------------------------
+    // Opportunity detail locators
+    // --------------------------------------------------
+
+    this.opportunityDetailTitleContainer = page.locator(
+      'scrm-dynamic-label'
+    );
+
+    // --------------------------------------------------
+    // Opportunity record deletion locators
+    // --------------------------------------------------
+
+    this.opportunityRecordActionsButton = page
+      .getByRole('button', {
+        name: /^actions$/i
+      })
+      .filter({
+        visible: true
+      });
+
+    this.deleteOpportunityAction = page
+      .getByText('Delete', {
+        exact: true
+      })
+      .filter({
+        visible: true
+      });
+
+    this.deleteOpportunityConfirmationMessage = page.getByText(
+      'Are you sure you want to delete this record?',
+      {
+        exact: true
+      }
+    );
+
+    this.confirmDeleteOpportunityButton = page
+      .getByRole('button', {
+        name: /^proceed$/i
+      })
+      .filter({
+        visible: true
+      });
+
+    // --------------------------------------------------
+    // Navigation option mapping
+    // --------------------------------------------------
+
+    this.dropdownOptions = {
       'Create Opportunity': this.createOpportunityOption,
       'Import Opportunities': this.importOpportunitiesOption,
       'View Opportunities': this.viewOpportunitiesOption
     };
+  }
 
-    const option = options[optionName];
+  // --------------------------------------------------
+  // Parameterized locators
+  // --------------------------------------------------
+
+  getAccountSuggestion(accountName) {
+    return this.page.getByText(accountName, {
+      exact: true
+    });
+  }
+
+  getRequiredFieldValidationMessage(fieldName) {
+    return this.page.getByText(
+      `Missing required field: ${fieldName}`,
+      {
+        exact: true
+      }
+    );
+  }
+
+  getOpportunityDetailHeading(opportunityName) {
+    return this.opportunityDetailTitleContainer.getByText(
+      opportunityName,
+      {
+        exact: true
+      }
+    );
+  }
+
+  // --------------------------------------------------
+  // Locator accessors used by existing steps
+  // --------------------------------------------------
+
+  getBasicPanel() {
+    return this.basicPanel;
+  }
+
+  getOpportunityNameInput() {
+    return this.opportunityNameInput;
+  }
+
+  getOpportunityAmountInput() {
+    return this.opportunityAmountInput;
+  }
+
+  getDropdownOption(optionName) {
+    const option = this.dropdownOptions[optionName];
 
     if (!option) {
       throw new Error(
@@ -77,6 +195,14 @@ this.saveOpportunityButton = page.getByRole('button', {
     }
 
     return option;
+  }
+
+  // --------------------------------------------------
+  // Navigation actions
+  // --------------------------------------------------
+
+  async hoverOpportunitiesModule() {
+    await this.opportunitiesModule.hover();
   }
 
   async openViewOpportunitiesPage() {
@@ -88,31 +214,173 @@ this.saveOpportunityButton = page.getByRole('button', {
     await this.hoverOpportunitiesModule();
     await this.importOpportunitiesOption.click();
   }
+
+  async openCreateOpportunityPage() {
+    await this.hoverOpportunitiesModule();
+    await this.createOpportunityOption.click();
+
+    await this.expectedCloseDateInput.waitFor({
+      state: 'visible'
+    });
+  }
+
   // --------------------------------------------------
-// Create Opportunity actions
-// --------------------------------------------------
+  // Create Opportunity actions
+  // --------------------------------------------------
 
-async openCreateOpportunityPage() {
-  await this.hoverOpportunitiesModule();
+  async enterMandatoryOpportunityDetails(opportunity) {
+    await this.enterOpportunityName(
+      opportunity.name
+    );
 
-  await this.createOpportunityOption.click();
-}
+    // Fill Amount before opening the account search dropdown.
+    await this.enterOpportunityAmount(
+      opportunity.amount
+    );
 
-async saveOpportunity() {
-  await this.saveOpportunityButton.click();
-}
+    await this.selectSalesStage(
+      opportunity.salesStage
+    );
 
-// --------------------------------------------------
-// Validation locators
-// --------------------------------------------------
+    await this.enterExpectedCloseDate(
+      opportunity.expectedCloseDate
+    );
 
-getRequiredFieldValidationMessage(fieldName) {
-  return this.page.getByText(
-    `Missing required field: ${fieldName}`,
-    {
-      exact: true
+    await this.enterOpportunityAccountName(
+      opportunity.accountName
+    );
+  }
+
+  async enterOpportunityName(name) {
+    await this.basicPanel.waitFor({
+      state: 'visible'
+    });
+
+    await this.opportunityNameInput.fill(
+      String(name)
+    );
+  }
+
+  async enterOpportunityAmount(amount) {
+    await this.opportunityAmountInput.fill(
+      String(amount ?? '').trim()
+    );
+
+    await this.opportunityAmountInput.press('Tab');
+  }
+
+  async enterOpportunityAccountName(accountName) {
+    const accountSuggestion = this.getAccountSuggestion(
+      accountName
+    );
+
+    await this.accountNameDropdown.click();
+
+    await this.accountSearchInput.fill('');
+
+    await this.accountSearchInput.pressSequentially(
+      accountName.trim().slice(0, 4),
+      {
+        delay: 100
+      }
+    );
+
+    // Select the matching suggestion without pressing Enter.
+    await accountSuggestion.click();
+  }
+
+  async selectSalesStage(salesStage) {
+    await this.salesStageSelect.selectOption({
+      label: salesStage
+    });
+  }
+
+  async enterExpectedCloseDate(expectedCloseDate) {
+    await this.expectedCloseDateInput.fill(
+      expectedCloseDate
+    );
+  }
+
+  async saveOpportunity() {
+    await this.saveOpportunityButton.click();
+  }
+
+  // --------------------------------------------------
+  // Opportunity test-data cleanup
+  // --------------------------------------------------
+
+  async deleteOpportunityByUrl(recordUrl) {
+    const target = new URL(recordUrl);
+    const current = new URL(this.page.url());
+
+    // Prevent cleanup from navigating to another origin.
+    if (target.origin !== current.origin) {
+      throw new Error(
+        `Refusing cleanup on a different origin: ${target.origin}`
+      );
     }
-  );
-}
 
+    const recordPattern =
+      /^#\/opportunities\/record\/([^/?#]+)(?:[/?#]|$)/;
+
+    const targetMatch = target.hash.match(recordPattern);
+
+    if (!targetMatch) {
+      throw new Error(
+        `Cleanup requires an opportunity detail URL: ${recordUrl}`
+      );
+    }
+
+    const recordId = targetMatch[1];
+    const currentMatch = current.hash.match(recordPattern);
+
+    const isTargetRecord =
+      current.origin === target.origin &&
+      currentMatch?.[1] === recordId;
+
+    if (!isTargetRecord) {
+      await this.page.goto(recordUrl);
+    }
+
+    await this.page.waitForURL(url => {
+      const match = url.hash.match(recordPattern);
+
+      return (
+        url.origin === target.origin &&
+        match?.[1] === recordId
+      );
+    });
+
+    await this.opportunityRecordActionsButton.waitFor({
+      state: 'visible'
+    });
+
+    const expanded =
+      await this.opportunityRecordActionsButton.getAttribute(
+        'aria-expanded'
+      );
+
+    if (expanded !== 'true') {
+      await this.opportunityRecordActionsButton.click();
+    }
+
+    await this.deleteOpportunityAction.click();
+
+    await this.deleteOpportunityConfirmationMessage.waitFor({
+      state: 'visible'
+    });
+
+    await this.confirmDeleteOpportunityButton.click();
+
+    await this.deleteOpportunityConfirmationMessage.waitFor({
+      state: 'hidden'
+    });
+
+    await this.page.waitForURL(url => {
+      return (
+        url.origin === target.origin &&
+        /^#\/opportunities\/?(?:\?.*)?$/.test(url.hash)
+      );
+    });
+  }
 }

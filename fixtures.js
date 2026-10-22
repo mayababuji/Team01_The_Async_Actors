@@ -1,14 +1,17 @@
-
-
 import { test as base, createBdd } from 'playwright-bdd';
 
 import { LoginPage } from './pages/login.page.js';
 import { AccountsPage } from './pages/accounts.page.js';
 import { OpportunitiesPage } from './pages/opportunities.page.js';
+
 import { readLoginData } from './utils/excel-util.js';
 import { createLogger } from './utils/logger.js';
 
 export const test = base.extend({
+  // --------------------------------------------------
+  // Page objects
+  // --------------------------------------------------
+
   loginPage: async ({ page }, use) => {
     await use(new LoginPage(page));
   },
@@ -16,57 +19,151 @@ export const test = base.extend({
   accountsPage: async ({ page }, use) => {
     await use(new AccountsPage(page));
   },
+
   opportunitiesPage: async ({ page }, use) => {
-  await use(new OpportunitiesPage(page));
-},
+    await use(new OpportunitiesPage(page));
+  },
+
+  // --------------------------------------------------
+  // Account scenario data
+  // --------------------------------------------------
+
   accountListTestData: async ({}, use) => {
-  await use({
-    account: null,
-     recordUrl: null
-  });
-},
-  accountCleanup: async ({ accountsPage, logger }, use) => {
-  const recordUrls = new Set();
-
-  try {
     await use({
-      register(recordUrl) {
-        recordUrls.add(recordUrl);
-      }
+      account: null,
+      recordUrl: null
     });
-  } finally {
-    const failures = [];
+  },
 
-    for (const recordUrl of [...recordUrls].reverse()) {
-      try {
-        logger.info('Deleting test-created account', {
-          recordUrl
-        });
+  // --------------------------------------------------
+  // Opportunity scenario data
+  // One object shared by Given, When, and Then
+  // --------------------------------------------------
 
-        await accountsPage.deleteAccountByUrl(recordUrl);
+  opportunityTestData: async ({}, use) => {
+    await use({
+      opportunity: null,
+      accountRecordUrl: null,
+      opportunityRecordUrl: null
+    });
+  },
 
-        logger.info('Test-created account deleted', {
-          recordUrl
-        });
-      } catch (error) {
-        failures.push(error);
+  // --------------------------------------------------
+  // Account cleanup
+  // --------------------------------------------------
 
-        logger.error('Account cleanup failed', {
-          recordUrl,
-          error: String(error)
-        });
+  accountCleanup: async ({ accountsPage, logger }, use) => {
+    const recordUrls = new Set();
+
+    try {
+      await use({
+        register(recordUrl) {
+          recordUrls.add(recordUrl);
+        }
+      });
+    } finally {
+      const failures = [];
+
+      for (const recordUrl of [...recordUrls].reverse()) {
+        try {
+          logger.info('Deleting test-created account', {
+            recordUrl
+          });
+
+          await accountsPage.deleteAccountByUrl(recordUrl);
+
+          logger.info('Test-created account deleted', {
+            recordUrl
+          });
+        } catch (error) {
+          failures.push(error);
+
+          logger.error('Account cleanup failed', {
+            recordUrl,
+            error: String(error)
+          });
+        }
+      }
+
+      if (failures.length > 0) {
+        throw new AggregateError(
+          failures,
+          'Failed to delete one or more test-created accounts.'
+        );
       }
     }
+  },
 
-    if (failures.length > 0) {
-      throw new AggregateError(
-        failures,
-        'Failed to delete one or more test-created accounts.'
-      );
+  // --------------------------------------------------
+  // Opportunity cleanup
+  // Dependency ensures this tears down before accountCleanup
+  // --------------------------------------------------
+
+  opportunityCleanup: async (
+    { opportunitiesPage, accountCleanup, logger },
+    use
+  ) => {
+    const recordUrls = new Set();
+
+    try {
+      await use({
+        register(recordUrl) {
+          if (
+            typeof opportunitiesPage.deleteOpportunityByUrl !==
+            'function'
+          ) {
+            throw new Error(
+              'Opportunity cleanup requires ' +
+              'OpportunitiesPage.deleteOpportunityByUrl(recordUrl). ' +
+              'Implement this method before running creation tests.'
+            );
+          }
+
+          recordUrls.add(recordUrl);
+        },
+
+        registerAccount(recordUrl) {
+          accountCleanup.register(recordUrl);
+        }
+      });
+    } finally {
+      const failures = [];
+
+      for (const recordUrl of [...recordUrls].reverse()) {
+        try {
+          logger.info('Deleting test-created opportunity', {
+            recordUrl
+          });
+
+          await opportunitiesPage.deleteOpportunityByUrl(
+            recordUrl
+          );
+
+          logger.info('Test-created opportunity deleted', {
+            recordUrl
+          });
+        } catch (error) {
+          failures.push(error);
+
+          logger.error('Opportunity cleanup failed', {
+            recordUrl,
+            error: String(error)
+          });
+        }
+      }
+
+      if (failures.length > 0) {
+        throw new AggregateError(
+          failures,
+          'Failed to delete one or more test-created opportunities.'
+        );
+      }
     }
-  }
-},
+  },
 
+  // --------------------------------------------------
+  // Login data
+  // --------------------------------------------------
 
   loginData: [
     async ({}, use) => {
@@ -94,6 +191,10 @@ export const test = base.extend({
       }
     });
   },
+
+  // --------------------------------------------------
+  // Logger
+  // --------------------------------------------------
 
   logger: [
     async ({}, use, testInfo) => {
@@ -134,34 +235,38 @@ export const test = base.extend({
       auto: true
     }
   ],
-accountImportTestData: async (
-  { accountsPage, logger },
-  use
-) => {
-  const accountImportTestData = {
-    download: null,
-    importFile: null,
-    importedAccounts: [],
-    importCompleted: false
-  };
 
-  await use(accountImportTestData);
+  // --------------------------------------------------
+  // Account import data and cleanup
+  // --------------------------------------------------
 
-  // Teardown: runs after the test finishes.
-  if (accountImportTestData.importCompleted) {
-    try {
-      logger.info('Undoing imported accounts');
+  accountImportTestData: async (
+    { accountsPage, logger },
+    use
+  ) => {
+    const accountImportTestData = {
+      download: null,
+      importFile: null,
+      importedAccounts: [],
+      importCompleted: false
+    };
 
-      await accountsPage.undoImportedAccounts();
+    await use(accountImportTestData);
 
-      logger.info('Imported accounts undone successfully');
-    } catch (error) {
-      logger.error('Failed to undo imported accounts', {
-        error: String(error)
-      });
+    if (accountImportTestData.importCompleted) {
+      try {
+        logger.info('Undoing imported accounts');
+
+        await accountsPage.undoImportedAccounts();
+
+        logger.info('Imported accounts undone successfully');
+      } catch (error) {
+        logger.error('Failed to undo imported accounts', {
+          error: String(error)
+        });
+      }
     }
   }
-}
 });
 
 export const { Given, When, Then } = createBdd(test);
