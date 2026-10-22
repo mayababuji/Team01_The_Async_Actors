@@ -1,6 +1,15 @@
 import { expect } from '@playwright/test';
 import {Given, When, Then } from '../fixtures.js';
 
+import {
+  getOpportunityDataByScenario
+} from '../utils/excel-util.js';
+const ACCOUNT_RECORD_URL =
+  /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/;
+
+const OPPORTUNITY_RECORD_URL =
+  /#\/opportunities\/record\/[^/?#]+(?:[/?#]|$)/;
+
 // --------------------------------------------------
 // Opportunities navigation
 // --------------------------------------------------
@@ -114,5 +123,187 @@ Then(
         fieldName
       });
     }
+  }
+);
+Given(
+  'a new account is created and the Create Opportunity page is opened for {string}',
+  async (
+    {
+      page,
+      accountsPage,
+      opportunitiesPage,
+      opportunityTestData,
+      opportunityCleanup,
+      logger
+    },
+    scenarioKey
+  ) => {
+    // Fail before creating records if opportunity cleanup is missing.
+    if (
+      typeof opportunitiesPage.deleteOpportunityByUrl !==
+      'function'
+    ) {
+      throw new Error(
+        'Implement OpportunitiesPage.deleteOpportunityByUrl(recordUrl) ' +
+        'before running the opportunity creation scenario.'
+      );
+    }
+
+
+    const excelData = getOpportunityDataByScenario(
+      scenarioKey
+    );
+
+    const opportunity = {
+      ...excelData
+    };
+
+    opportunityTestData.opportunity = opportunity;
+    opportunityTestData.accountRecordUrl = null;
+    opportunityTestData.opportunityRecordUrl = null;
+
+
+    // The feature Background has already opened the home page.
+
+
+    logger.info('Creating prerequisite account for opportunity', {
+      scenario: scenarioKey,
+      accountName: opportunity.accountName
+    });
+
+
+    await accountsPage.openCreateAccountPage();
+
+    await accountsPage.enterAccountName(
+      opportunity.accountName
+    );
+
+    await accountsPage.clickSaveOnCreateAccountPage();
+
+    await page.waitForURL(ACCOUNT_RECORD_URL);
+
+    const accountRecordUrl = page.url();
+
+    opportunityCleanup.registerAccount(
+      accountRecordUrl
+    );
+
+    opportunityTestData.accountRecordUrl =
+      accountRecordUrl;
+
+    logger.info('Prerequisite account created', {
+      scenario: scenarioKey,
+      accountName: opportunity.accountName,
+      accountRecordUrl
+    });
+
+    await opportunitiesPage.openCreateOpportunityPage();
+
+    logger.info('Opened Create Opportunity page', {
+      scenario: scenarioKey,
+      opportunityName: opportunity.name
+    });
+  }
+);
+When(
+  'the user enters the mandatory opportunity data and saves',
+  async (
+    {
+      page,
+      opportunitiesPage,
+      opportunityTestData,
+      opportunityCleanup,
+      logger
+    }
+  ) => {
+    const {
+      opportunity,
+      accountRecordUrl
+    } = opportunityTestData;
+
+    if (!opportunity || !accountRecordUrl) {
+      throw new Error(
+        'The Given step must initialize opportunity data ' +
+        'and create the prerequisite account.'
+      );
+    }
+
+    logger.info('Entering mandatory opportunity data', {
+      scenario: opportunity.scenario,
+      opportunityName: opportunity.name,
+      accountName: opportunity.accountName,
+      amount: opportunity.amount,
+      salesStage: opportunity.salesStage,
+      expectedCloseDate: opportunity.expectedCloseDate
+    });
+
+    await opportunitiesPage.enterMandatoryOpportunityDetails(
+      opportunity
+    );
+
+    await opportunitiesPage.saveOpportunity();
+
+    await page.waitForURL(
+      OPPORTUNITY_RECORD_URL
+    );
+
+    const opportunityRecordUrl = page.url();
+
+    // Register before the Then assertions.
+    opportunityCleanup.register(
+      opportunityRecordUrl
+    );
+
+    opportunityTestData.opportunityRecordUrl =
+      opportunityRecordUrl;
+
+    logger.info('Opportunity created and registered for cleanup', {
+      scenario: opportunity.scenario,
+      opportunityName: opportunity.name,
+      opportunityRecordUrl
+    });
+  }
+);
+
+Then(
+  'the newly created opportunity detail page should be displayed',
+  async (
+    {
+      page,
+      opportunitiesPage,
+      opportunityTestData,
+      logger
+    }
+  ) => {
+    const {
+      opportunity,
+      opportunityRecordUrl
+    } = opportunityTestData;
+
+    if (!opportunity || !opportunityRecordUrl) {
+      throw new Error(
+        'No created opportunity was captured by the When step.'
+      );
+    }
+
+    await expect(page).toHaveURL(
+      OPPORTUNITY_RECORD_URL
+    );
+
+    await expect(page).toHaveURL(
+      opportunityRecordUrl
+    );
+
+    await expect(
+      opportunitiesPage.getOpportunityDetailHeading(
+        opportunity.name
+      )
+    ).toBeVisible();
+
+    logger.info('Newly created opportunity detail page verified', {
+      scenario: opportunity.scenario,
+      opportunityName: opportunity.name,
+      opportunityRecordUrl
+    });
   }
 );
