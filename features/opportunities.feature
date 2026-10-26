@@ -50,3 +50,37 @@ Feature: Opportunities management
     Given a new account is created and the Create Opportunity page is opened for "create_opportunity_with_currency"
      When the user enters the mandatory opportunity data and saves
     Then the opportunity should be created with the currency and amount from Excel
+
+      @opportunities @positive @CreateOpportunityWithType
+  Scenario Outline: Create an opportunity with <type>
+    Given a new account is created and the Create Opportunity page is opened for "<scenario>"
+    When the user enters mandatory opportunity data, selects the type from Excel, and saves
+    Then the opportunity should be created with the selected type from Excel
+
+    Examples:
+      | scenario                             | type              |
+      | create_opportunity_existing_business | Existing Business |
+      | create_opportunity_new_business      | New Business      |
+
+        @opportunities @positive @CreateOpportunityWithLeadSource
+  Scenario Outline: Create an opportunity with lead source <leadSource>
+    Given a new account is created and the Create Opportunity page is opened for "<scenario>"
+    When the user enters mandatory opportunity data, selects the lead source from Excel, and saves
+    Then the opportunity should be created with the selected lead source from Excel
+
+    Examples:
+      | scenario                                           | leadSource        |
+      | create_opportunity_lead_source_cold_call            | Cold Call         |
+      | create_opportunity_lead_source_existing_customer    | Existing Customer |
+      | create_opportunity_lead_source_self_generated       | Self Generated    |
+      | create_opportunity_lead_source_employee             | Employee          |
+      | create_opportunity_lead_source_partner              | Partner           |
+      | create_opportunity_lead_source_public_relations     | Public Relations  |
+      | create_opportunity_lead_source_direct_mail          | Direct Mail       |
+      | create_opportunity_lead_source_conference           | Conference        |
+      | create_opportunity_lead_source_trade_show           | Trade Show        |
+      | create_opportunity_lead_source_web_site             | Web Site          |
+      | create_opportunity_lead_source_word_of_mouth        | Word of mouth     |
+      | create_opportunity_lead_source_email                | Email             |
+      | create_opportunity_lead_source_campaign             | Campaign          |
+      | create_opportunity_lead_source_other                | Other             |
