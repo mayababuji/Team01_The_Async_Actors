@@ -92,6 +92,23 @@ export class OpportunitiesPage {
       exact: true
     });
 
+    this.opportunityTypeSelect = this.basicPanel
+  .locator('select')
+  .filter({
+    has: page.getByRole('option', {
+      name: 'Existing Business',
+      exact: true
+    })
+  });
+  this.opportunityLeadSourceSelect = this.basicPanel
+  .locator('select')
+  .filter({
+    has: page.getByRole('option', {
+      name: 'Cold Call',
+      exact: true
+    })
+  });
+
     // --------------------------------------------------
     // Opportunity detail locators
     // --------------------------------------------------
@@ -104,6 +121,13 @@ export class OpportunitiesPage {
       'scrm-dynamic-field.dynamic-field-name-amount ' +
       'scrm-currency-detail'
     );
+    this.opportunityTypeDetail = this.basicPanel.locator(
+  'scrm-dynamic-field.dynamic-field-name-opportunity_type'
+);
+this.opportunityLeadSourceDetail =
+  this.basicPanel.locator(
+    'scrm-dynamic-field.dynamic-field-name-lead_source'
+  );
 
     // --------------------------------------------------
     // Opportunity deletion locators
@@ -358,4 +382,30 @@ export class OpportunitiesPage {
       );
     });
   }
+  getOpportunityTypeSelect() {
+  return this.opportunityTypeSelect;
+}
+
+
+getOpportunityTypeDetail() {
+  return this.opportunityTypeDetail;
+}
+async selectOpportunityType(opportunityType) {
+  await this.opportunityTypeSelect.selectOption({
+    label: opportunityType
+  });
+}
+getOpportunityLeadSourceSelect() {
+  return this.opportunityLeadSourceSelect;
+}
+
+
+getOpportunityLeadSourceDetail() {
+  return this.opportunityLeadSourceDetail;
+}
+async selectOpportunityLeadSource(leadSource) {
+  await this.opportunityLeadSourceSelect.selectOption({
+    label: leadSource
+  });
+}
 }

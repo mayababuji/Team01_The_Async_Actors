@@ -532,3 +532,233 @@ Then(
     );
   }
 );
+
+// --------------------------------------------------
+// Create opportunity with Type
+// --------------------------------------------------
+
+
+When(
+  'the user enters mandatory opportunity data, selects the type from Excel, and saves',
+  async ({
+    page,
+    opportunitiesPage,
+    opportunityTestData,
+    opportunityCleanup,
+    logger
+  }) => {
+    const opportunity =
+      opportunityTestData.opportunity;
+
+
+    if (!opportunity) {
+      throw new Error(
+        'Opportunity test data was not initialized ' +
+        'by the Given step.'
+      );
+    }
+
+
+    await opportunitiesPage
+      .enterMandatoryOpportunityDetails(
+        opportunity
+      );
+
+
+    await opportunitiesPage.selectOpportunityType(
+      opportunity.type
+    );
+
+
+    await opportunitiesPage.saveOpportunity();
+
+
+    await page.waitForURL(
+      /#\/opportunities\/record\/[^/?#]+(?:[/?#]|$)/
+    );
+
+
+    const opportunityRecordUrl = page.url();
+
+
+    // Register immediately so later failures still allow cleanup.
+    opportunityCleanup.register(
+      opportunityRecordUrl
+    );
+
+
+    opportunityTestData.opportunityRecordUrl =
+      opportunityRecordUrl;
+
+
+    logger.info(
+      'Opportunity created with the selected type',
+      {
+        scenario: opportunity.scenario,
+        opportunityName: opportunity.name,
+        opportunityType: opportunity.type,
+        opportunityRecordUrl
+      }
+    );
+  }
+);
+
+Then(
+  'the opportunity should be created with the selected type from Excel',
+  async ({
+    page,
+    opportunitiesPage,
+    opportunityTestData,
+    logger
+  }) => {
+    const {
+      opportunity,
+      opportunityRecordUrl
+    } = await verifyCreatedOpportunity(
+      page,
+      opportunitiesPage,
+      opportunityTestData
+    );
+
+
+    const typeDetail =
+      opportunitiesPage.getOpportunityTypeDetail();
+
+
+    await expect(typeDetail).toBeVisible();
+
+
+    await expect(typeDetail).toHaveText(
+      opportunity.type
+    );
+
+
+    logger.info(
+      'Saved opportunity type verified',
+      {
+        scenario: opportunity.scenario,
+        opportunityName: opportunity.name,
+        expectedType: opportunity.type,
+        opportunityRecordUrl
+      }
+    );
+  }
+);
+
+// --------------------------------------------------
+// Create opportunity with Lead Source
+// --------------------------------------------------
+
+
+When(
+  'the user enters mandatory opportunity data, selects the lead source from Excel, and saves',
+  async ({
+    page,
+    opportunitiesPage,
+    opportunityTestData,
+    opportunityCleanup,
+    logger
+  }) => {
+    const opportunity =
+      opportunityTestData.opportunity;
+
+
+    if (!opportunity) {
+      throw new Error(
+        'Opportunity test data was not initialized ' +
+        'by the Given step.'
+      );
+    }
+
+
+    await opportunitiesPage
+      .enterMandatoryOpportunityDetails(
+        opportunity
+      );
+
+
+    await opportunitiesPage
+      .selectOpportunityLeadSource(
+        opportunity.leadSource
+      );
+
+
+    await opportunitiesPage.saveOpportunity();
+
+
+    await page.waitForURL(
+      /#\/opportunities\/record\/[^/?#]+(?:[/?#]|$)/
+    );
+
+
+    const opportunityRecordUrl = page.url();
+
+
+    // Register immediately so later failures still allow cleanup.
+    opportunityCleanup.register(
+      opportunityRecordUrl
+    );
+
+
+    opportunityTestData.opportunityRecordUrl =
+      opportunityRecordUrl;
+
+
+    logger.info(
+      'Opportunity created with the selected lead source',
+      {
+        scenario: opportunity.scenario,
+        opportunityName: opportunity.name,
+        leadSource: opportunity.leadSource,
+        opportunityRecordUrl
+      }
+    );
+  }
+);
+
+Then(
+  'the opportunity should be created with the selected lead source from Excel',
+  async ({
+    page,
+    opportunitiesPage,
+    opportunityTestData,
+    logger
+  }) => {
+    const {
+      opportunity,
+      opportunityRecordUrl
+    } = await verifyCreatedOpportunity(
+      page,
+      opportunitiesPage,
+      opportunityTestData
+    );
+
+
+    const leadSourceDetail =
+      opportunitiesPage
+        .getOpportunityLeadSourceDetail();
+
+
+    await expect(
+      leadSourceDetail
+    ).toBeVisible();
+
+
+    await expect(
+      leadSourceDetail
+    ).toHaveText(
+      opportunity.leadSource
+    );
+
+
+    logger.info(
+      'Saved opportunity lead source verified',
+      {
+        scenario: opportunity.scenario,
+        opportunityName: opportunity.name,
+        expectedLeadSource: opportunity.leadSource,
+        opportunityRecordUrl
+      }
+    );
+  }
+);
