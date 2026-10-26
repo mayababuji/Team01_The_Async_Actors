@@ -7,12 +7,8 @@ export class OpportunitiesPage {
     // --------------------------------------------------
 
     this.opportunitiesModule = page
-      .getByText('Opportunities', {
-        exact: true
-      })
-      .filter({
-        visible: true
-      });
+      .getByText('Opportunities', { exact: true })
+      .filter({ visible: true });
 
     this.createOpportunityOption = page.getByRole('link', {
       name: /^create opportunity$/i
@@ -26,15 +22,19 @@ export class OpportunitiesPage {
       name: /^view opportunities$/i
     });
 
+    this.dropdownOptions = {
+      'Create Opportunity': this.createOpportunityOption,
+      'Import Opportunities': this.importOpportunitiesOption,
+      'View Opportunities': this.viewOpportunitiesOption
+    };
+
     // --------------------------------------------------
-    // Page headings
+    // Page heading locators
     // --------------------------------------------------
 
     this.viewOpportunitiesPageHeading = page.getByText(
       'OPPORTUNITIES',
-      {
-        exact: true
-      }
+      { exact: true }
     );
 
     this.importOpportunitiesPageHeading = page
@@ -69,6 +69,11 @@ export class OpportunitiesPage {
 
     this.accountSearchInput = page.locator('input:focus');
 
+    this.accountOptionsList = page.getByRole('listbox', {
+      name: 'Option List',
+      exact: true
+    });
+
     this.salesStageSelect = this.basicPanel
       .locator('select')
       .filter({
@@ -95,50 +100,31 @@ export class OpportunitiesPage {
       'scrm-dynamic-label'
     );
 
+    this.opportunityAmountDetail = this.basicPanel.locator(
+      'scrm-dynamic-field.dynamic-field-name-amount ' +
+      'scrm-currency-detail'
+    );
+
     // --------------------------------------------------
-    // Opportunity record deletion locators
+    // Opportunity deletion locators
     // --------------------------------------------------
 
     this.opportunityRecordActionsButton = page
-      .getByRole('button', {
-        name: /^actions$/i
-      })
-      .filter({
-        visible: true
-      });
+      .getByRole('button', { name: /^actions$/i })
+      .filter({ visible: true });
 
     this.deleteOpportunityAction = page
-      .getByText('Delete', {
-        exact: true
-      })
-      .filter({
-        visible: true
-      });
+      .getByText('Delete', { exact: true })
+      .filter({ visible: true });
 
     this.deleteOpportunityConfirmationMessage = page.getByText(
       'Are you sure you want to delete this record?',
-      {
-        exact: true
-      }
+      { exact: true }
     );
 
     this.confirmDeleteOpportunityButton = page
-      .getByRole('button', {
-        name: /^proceed$/i
-      })
-      .filter({
-        visible: true
-      });
-
-    // --------------------------------------------------
-    // Navigation option mapping
-    // --------------------------------------------------
-
-    this.dropdownOptions = {
-      'Create Opportunity': this.createOpportunityOption,
-      'Import Opportunities': this.importOpportunitiesOption,
-      'View Opportunities': this.viewOpportunitiesOption
-    };
+      .getByRole('button', { name: /^proceed$/i })
+      .filter({ visible: true });
   }
 
   // --------------------------------------------------
@@ -146,7 +132,7 @@ export class OpportunitiesPage {
   // --------------------------------------------------
 
   getAccountSuggestion(accountName) {
-    return this.page.getByText(accountName, {
+    return this.accountOptionsList.getByText(accountName, {
       exact: true
     });
   }
@@ -154,23 +140,19 @@ export class OpportunitiesPage {
   getRequiredFieldValidationMessage(fieldName) {
     return this.page.getByText(
       `Missing required field: ${fieldName}`,
-      {
-        exact: true
-      }
+      { exact: true }
     );
   }
 
   getOpportunityDetailHeading(opportunityName) {
     return this.opportunityDetailTitleContainer.getByText(
       opportunityName,
-      {
-        exact: true
-      }
+      { exact: true }
     );
   }
 
   // --------------------------------------------------
-  // Locator accessors used by existing steps
+  // Locator accessors
   // --------------------------------------------------
 
   getBasicPanel() {
@@ -183,6 +165,10 @@ export class OpportunitiesPage {
 
   getOpportunityAmountInput() {
     return this.opportunityAmountInput;
+  }
+
+  getOpportunityAmountDetail() {
+    return this.opportunityAmountDetail;
   }
 
   getDropdownOption(optionName) {
@@ -229,18 +215,12 @@ export class OpportunitiesPage {
   // --------------------------------------------------
 
   async enterMandatoryOpportunityDetails(opportunity) {
-    await this.enterOpportunityName(
-      opportunity.name
-    );
+    await this.enterOpportunityName(opportunity.name);
 
     // Fill Amount before opening the account search dropdown.
-    await this.enterOpportunityAmount(
-      opportunity.amount
-    );
+    await this.enterOpportunityAmount(opportunity.amount);
 
-    await this.selectSalesStage(
-      opportunity.salesStage
-    );
+    await this.selectSalesStage(opportunity.salesStage);
 
     await this.enterExpectedCloseDate(
       opportunity.expectedCloseDate
@@ -256,9 +236,7 @@ export class OpportunitiesPage {
       state: 'visible'
     });
 
-    await this.opportunityNameInput.fill(
-      String(name)
-    );
+    await this.opportunityNameInput.fill(String(name));
   }
 
   async enterOpportunityAmount(amount) {
@@ -275,17 +253,14 @@ export class OpportunitiesPage {
     );
 
     await this.accountNameDropdown.click();
-
     await this.accountSearchInput.fill('');
 
     await this.accountSearchInput.pressSequentially(
       accountName.trim().slice(0, 4),
-      {
-        delay: 100
-      }
+      { delay: 100 }
     );
 
-    // Select the matching suggestion without pressing Enter.
+    // Select the suggestion without submitting the form with Enter.
     await accountSuggestion.click();
   }
 
@@ -313,7 +288,7 @@ export class OpportunitiesPage {
     const target = new URL(recordUrl);
     const current = new URL(this.page.url());
 
-    // Prevent cleanup from navigating to another origin.
+    // Refuse cleanup on a different origin.
     if (target.origin !== current.origin) {
       throw new Error(
         `Refusing cleanup on a different origin: ${target.origin}`

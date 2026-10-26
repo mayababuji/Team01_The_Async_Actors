@@ -1,9 +1,14 @@
 import { expect } from '@playwright/test';
-import {Given, When, Then } from '../fixtures.js';
+import { Given, When, Then } from '../fixtures.js';
 
 import {
   getOpportunityDataByScenario
 } from '../utils/excel-util.js';
+
+// --------------------------------------------------
+// Record URL patterns
+// --------------------------------------------------
+
 const ACCOUNT_RECORD_URL =
   /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/;
 
@@ -11,7 +16,55 @@ const OPPORTUNITY_RECORD_URL =
   /#\/opportunities\/record\/[^/?#]+(?:[/?#]|$)/;
 
 // --------------------------------------------------
-// Opportunities navigation
+// Shared verification helpers
+// --------------------------------------------------
+
+async function verifyCreatedOpportunity(
+  page,
+  opportunitiesPage,
+  opportunityTestData
+) {
+  const {
+    opportunity,
+    opportunityRecordUrl
+  } = opportunityTestData;
+
+  if (!opportunity || !opportunityRecordUrl) {
+    throw new Error(
+      'The When step must create the opportunity ' +
+      'and capture its record URL before verification.'
+    );
+  }
+
+  await expect(page).toHaveURL(OPPORTUNITY_RECORD_URL);
+  await expect(page).toHaveURL(opportunityRecordUrl);
+
+  await expect(
+    opportunitiesPage.getOpportunityDetailHeading(
+      opportunity.name
+    )
+  ).toBeVisible();
+
+  return {
+    opportunity,
+    opportunityRecordUrl
+  };
+}
+
+function parseDisplayedUsdAmount(displayedAmount) {
+  const normalizedAmount = displayedAmount
+    .replace(/USD/gi, '')
+    .replace(/[$,\s]/g, '');
+
+  if (!/^\d+(?:\.\d+)?$/.test(normalizedAmount)) {
+    return null;
+  }
+
+  return Number(normalizedAmount);
+}
+
+// --------------------------------------------------
+// Opportunities dropdown navigation
 // --------------------------------------------------
 
 When(
@@ -36,16 +89,20 @@ Then(
 
     logger.info(
       'All Opportunities dropdown options are visible',
-      {
-        options
-      }
+      { options }
     );
   }
 );
+
+// --------------------------------------------------
+// View Opportunities navigation
+// --------------------------------------------------
+
 When(
   'the user opens the Opportunities module and clicks View Opportunities',
   async ({ opportunitiesPage, logger }) => {
     await opportunitiesPage.openViewOpportunitiesPage();
+
     logger.info('Clicked View Opportunities');
   }
 );
@@ -56,9 +113,10 @@ Then(
     await expect(
       opportunitiesPage.viewOpportunitiesPageHeading
     ).toBeVisible();
+
     await expect(
-  opportunitiesPage.viewOpportunitiesPageHeading
-).toHaveText('OPPORTUNITIES');
+      opportunitiesPage.viewOpportunitiesPageHeading
+    ).toHaveText('OPPORTUNITIES');
 
     logger.info('View Opportunities page displayed');
   }
@@ -91,6 +149,11 @@ Then(
     logger.info('Import Opportunities page verified');
   }
 );
+
+// --------------------------------------------------
+// Required-field validation
+// --------------------------------------------------
+
 Given(
   'the user is on the Create Opportunity page',
   async ({ opportunitiesPage, logger }) => {
@@ -105,26 +168,38 @@ When(
   async ({ opportunitiesPage, logger }) => {
     await opportunitiesPage.saveOpportunity();
 
-    logger.info('Clicked Save without entering opportunity details');
+    logger.info(
+      'Clicked Save without entering opportunity details'
+    );
   }
 );
 
 Then(
   'required-field validation messages should be displayed for:',
   async ({ opportunitiesPage, logger }, dataTable) => {
-    const fieldNames = dataTable.raw().map(([fieldName]) => fieldName);
+    const fieldNames = dataTable
+      .raw()
+      .map(([fieldName]) => fieldName);
 
     for (const fieldName of fieldNames) {
       await expect(
-        opportunitiesPage.getRequiredFieldValidationMessage(fieldName)
+        opportunitiesPage.getRequiredFieldValidationMessage(
+          fieldName
+        )
       ).toBeVisible();
 
-      logger.info('Required-field validation message verified', {
-        fieldName
-      });
+      logger.info(
+        'Required-field validation message verified',
+        { fieldName }
+      );
     }
   }
 );
+
+// --------------------------------------------------
+// Excel-driven opportunity creation: Given
+// --------------------------------------------------
+
 Given(
   'a new account is created and the Create Opportunity page is opened for {string}',
   async (
@@ -138,7 +213,7 @@ Given(
     },
     scenarioKey
   ) => {
-    // Fail before creating records if opportunity cleanup is missing.
+    // Fail before creating records if cleanup is missing.
     if (
       typeof opportunitiesPage.deleteOpportunityByUrl !==
       'function'
@@ -149,28 +224,21 @@ Given(
       );
     }
 
-
-    const excelData = getOpportunityDataByScenario(
-      scenarioKey
-    );
-
-    const opportunity = {
-      ...excelData
-    };
+   const opportunity =
+  getOpportunityDataByScenario(scenarioKey);
 
     opportunityTestData.opportunity = opportunity;
     opportunityTestData.accountRecordUrl = null;
     opportunityTestData.opportunityRecordUrl = null;
 
-
     // The feature Background has already opened the home page.
-
-
-    logger.info('Creating prerequisite account for opportunity', {
-      scenario: scenarioKey,
-      accountName: opportunity.accountName
-    });
-
+    logger.info(
+      'Creating prerequisite account for opportunity',
+      {
+        scenario: scenarioKey,
+        accountName: opportunity.accountName
+      }
+    );
 
     await accountsPage.openCreateAccountPage();
 
@@ -184,9 +252,8 @@ Given(
 
     const accountRecordUrl = page.url();
 
-    opportunityCleanup.registerAccount(
-      accountRecordUrl
-    );
+    // Register immediately after account creation.
+    opportunityCleanup.registerAccount(accountRecordUrl);
 
     opportunityTestData.accountRecordUrl =
       accountRecordUrl;
@@ -205,17 +272,20 @@ Given(
     });
   }
 );
+
+// --------------------------------------------------
+// Excel-driven opportunity creation: When
+// --------------------------------------------------
+
 When(
   'the user enters the mandatory opportunity data and saves',
-  async (
-    {
-      page,
-      opportunitiesPage,
-      opportunityTestData,
-      opportunityCleanup,
-      logger
-    }
-  ) => {
+  async ({
+    page,
+    opportunitiesPage,
+    opportunityTestData,
+    opportunityCleanup,
+    logger
+  }) => {
     const {
       opportunity,
       accountRecordUrl
@@ -243,67 +313,222 @@ When(
 
     await opportunitiesPage.saveOpportunity();
 
-    await page.waitForURL(
-      OPPORTUNITY_RECORD_URL
-    );
+    await page.waitForURL(OPPORTUNITY_RECORD_URL);
 
     const opportunityRecordUrl = page.url();
 
-    // Register before the Then assertions.
-    opportunityCleanup.register(
-      opportunityRecordUrl
-    );
+    // Register before running any Then assertions.
+    opportunityCleanup.register(opportunityRecordUrl);
 
     opportunityTestData.opportunityRecordUrl =
       opportunityRecordUrl;
 
-    logger.info('Opportunity created and registered for cleanup', {
-      scenario: opportunity.scenario,
-      opportunityName: opportunity.name,
+    logger.info(
+      'Opportunity created and registered for cleanup',
+      {
+        scenario: opportunity.scenario,
+        opportunityName: opportunity.name,
+        opportunityRecordUrl
+      }
+    );
+  }
+);
+
+// --------------------------------------------------
+// Verify created opportunity detail page
+// --------------------------------------------------
+
+Then(
+  'the newly created opportunity detail page should be displayed',
+  async ({
+    page,
+    opportunitiesPage,
+    opportunityTestData,
+    logger
+  }) => {
+    const {
+      opportunity,
       opportunityRecordUrl
-    });
+    } = await verifyCreatedOpportunity(
+      page,
+      opportunitiesPage,
+      opportunityTestData
+    );
+
+    logger.info(
+      'Newly created opportunity detail page verified',
+      {
+        scenario: opportunity.scenario,
+        opportunityName: opportunity.name,
+        opportunityRecordUrl
+      }
+    );
+  }
+);
+
+// --------------------------------------------------
+// Verify saved opportunity amount against Excel
+// --------------------------------------------------
+
+Then(
+  'the opportunity should be created with the amount from Excel',
+  async ({
+    page,
+    opportunitiesPage,
+    opportunityTestData,
+    logger
+  }) => {
+    const {
+      opportunity,
+      opportunityRecordUrl
+    } = await verifyCreatedOpportunity(
+      page,
+      opportunitiesPage,
+      opportunityTestData
+    );
+
+    const expectedAmount = Number(opportunity.amount);
+
+    if (
+      String(opportunity.amount ?? '').trim() === '' ||
+      !Number.isFinite(expectedAmount)
+    ) {
+      throw new Error(
+        'OpportunityAmount must contain a valid number in Excel.'
+      );
+    }
+
+    const amountDetail =
+      opportunitiesPage.getOpportunityAmountDetail();
+
+    await expect(amountDetail).toBeVisible();
+
+    await expect.poll(
+      async () => {
+        const displayedAmount =
+          await amountDetail.innerText();
+
+        return parseDisplayedUsdAmount(
+          displayedAmount
+        );
+      },
+      {
+        message:
+          'Saved Opportunity Amount should match the Excel value'
+      }
+    ).toBe(expectedAmount);
+
+    logger.info(
+      'Opportunity created with the expected amount',
+      {
+        scenario: opportunity.scenario,
+        opportunityName: opportunity.name,
+        expectedAmount,
+        opportunityRecordUrl
+      }
+    );
   }
 );
 
 Then(
-  'the newly created opportunity detail page should be displayed',
-  async (
-    {
-      page,
-      opportunitiesPage,
-      opportunityTestData,
-      logger
-    }
-  ) => {
+  'the opportunity should be created with the currency and amount from Excel',
+  async ({
+    page,
+    opportunitiesPage,
+    opportunityTestData,
+    logger
+  }) => {
     const {
       opportunity,
       opportunityRecordUrl
-    } = opportunityTestData;
+    } = await verifyCreatedOpportunity(
+      page,
+      opportunitiesPage,
+      opportunityTestData
+    );
 
-    if (!opportunity || !opportunityRecordUrl) {
+    const expectedAmount = Number(opportunity.amount);
+
+    const expectedCurrencyCode = String(
+      opportunity.currencyCode ?? ''
+    ).trim();
+
+    const expectedCurrencyDisplay = String(
+      opportunity.currencyDisplay ?? ''
+    ).trim();
+
+    if (
+      String(opportunity.amount ?? '').trim() === '' ||
+      !Number.isFinite(expectedAmount)
+    ) {
       throw new Error(
-        'No created opportunity was captured by the When step.'
+        'OpportunityAmount must contain a valid number in Excel.'
       );
     }
 
-    await expect(page).toHaveURL(
-      OPPORTUNITY_RECORD_URL
+    if (
+      expectedCurrencyCode !== 'USD' ||
+      expectedCurrencyDisplay !== '$'
+    ) {
+      throw new Error(
+        'This scenario requires CurrencyCode "USD" ' +
+        'and CurrencyDisplay "$" in Excel.'
+      );
+    }
+
+    const amountDetail =
+      opportunitiesPage.getOpportunityAmountDetail();
+
+    await expect(amountDetail).toBeVisible();
+
+    // Verify the saved currency display.
+    await expect(amountDetail).toContainText(
+      expectedCurrencyDisplay
     );
 
-    await expect(page).toHaveURL(
-      opportunityRecordUrl
+    // Verify the saved numeric amount.
+    await expect.poll(
+      async () => {
+        const displayedAmount =
+          await amountDetail.innerText();
+
+        if (
+          !displayedAmount.includes(
+            expectedCurrencyDisplay
+          )
+        ) {
+          return null;
+        }
+
+        const normalizedAmount = displayedAmount
+          .replace(expectedCurrencyDisplay, '')
+          .replace(/USD/gi, '')
+          .replace(/[,\s]/g, '');
+
+        if (
+          !/^\d+(?:\.\d+)?$/.test(normalizedAmount)
+        ) {
+          return null;
+        }
+
+        return Number(normalizedAmount);
+      },
+      {
+        message:
+          'Saved USD display and opportunity amount should match Excel'
+      }
+    ).toBe(expectedAmount);
+
+    logger.info(
+      'Opportunity created with the expected USD display and amount',
+      {
+        scenario: opportunity.scenario,
+        opportunityName: opportunity.name,
+        expectedCurrencyCode,
+        expectedCurrencyDisplay,
+        expectedAmount,
+        opportunityRecordUrl
+      }
     );
-
-    await expect(
-      opportunitiesPage.getOpportunityDetailHeading(
-        opportunity.name
-      )
-    ).toBeVisible();
-
-    logger.info('Newly created opportunity detail page verified', {
-      scenario: opportunity.scenario,
-      opportunityName: opportunity.name,
-      opportunityRecordUrl
-    });
   }
 );

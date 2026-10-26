@@ -2,18 +2,155 @@ import * as XLSX from 'xlsx';
 import * as fs from 'node:fs';
 import path from 'node:path';
 
-
 // Enable filesystem access for SheetJS in Node ESM.
 XLSX.set_fs(fs);
 
-const filePath = path.resolve(
+// --------------------------------------------------
+// Workbook configuration
+// --------------------------------------------------
+
+const FILE_PATH = path.resolve(
   process.cwd(),
   'test-data',
   'Team01_The_Async_Actors_Test_Data.xlsx'
 );
 
+const SHEET_NAMES = {
+  login: 'login',
+  accounts: 'Accounts',
+  opportunities: 'opputinuites'
+};
+
+// --------------------------------------------------
+// Scenario configuration
+// --------------------------------------------------
+
+const POSITIVE_OPPORTUNITY_SCENARIOS = new Set([
+  'create_opportunity_valid_mandatory',
+  'create_opportunity_with_amount',
+  'create_opportunity_with_currency'
+]);
+
+const ACCOUNT_REQUIRED_FIELDS_BY_SCENARIO = {
+  create_account_complete_overview: [
+    'phone',
+    'website',
+    'email',
+    'billingStreet',
+    'billingPostalCode',
+    'billingCity',
+    'billingState',
+    'billingCountry',
+    'shippingStreet',
+    'shippingPostalCode',
+    'shippingCity',
+    'shippingState',
+    'shippingCountry'
+  ],
+
+  update_account_website: [
+    'website',
+    'updatedWebsite'
+  ],
+
+  update_account_office_phone: [
+    'phone',
+    'updatedPhone'
+  ],
+
+  cancel_account_edit: [
+    'website',
+    'updatedWebsite'
+  ]
+};
+
+const OPPORTUNITY_REQUIRED_FIELDS = [
+  'name',
+  'accountName',
+  'amount',
+  'salesStage',
+  'expectedCloseDate'
+];
+
+// --------------------------------------------------
+// Excel column mappings
+// --------------------------------------------------
+
+const LOGIN_COLUMNS = {
+  scenario: 'Scenario',
+  username: 'Username',
+  password: 'Password',
+  expectedResult: 'ExpectedResult'
+};
+
+const ACCOUNT_COLUMNS = {
+  scenario: 'Scenario',
+  name: 'Name',
+  searchText: 'SearchText',
+
+  phone: 'Phone',
+  updatedPhone: 'UpdatedPhone',
+
+  website: 'Website',
+  updatedWebsite: 'UpdatedWebsite',
+
+  email: 'Email',
+
+  billingStreet: 'BillingStreet',
+  billingPostalCode: 'BillingPostalCode',
+  billingCity: 'BillingCity',
+  billingState: 'BillingState',
+  billingCountry: 'BillingCountry',
+
+  shippingStreet: 'ShippingStreet',
+  shippingPostalCode: 'ShippingPostalCode',
+  shippingCity: 'ShippingCity',
+  shippingState: 'ShippingState',
+  shippingCountry: 'ShippingCountry',
+
+  expectedResult: 'ExpectedResult'
+};
+
+const OPPORTUNITY_COLUMNS = {
+  scenario: 'Scenario',
+  name: 'OpportunityName',
+  accountName: 'AccountName',
+  amount: 'OpportunityAmount',
+  salesStage: 'SalesStage',
+  expectedCloseDate: 'ExpectedCloseDate',
+  currencyCode: 'CurrencyCode',
+  currencyDisplay: 'CurrencyDisplay'
+};
+
+// --------------------------------------------------
+// Shared helpers
+// --------------------------------------------------
+
+function toText(value) {
+  return String(value ?? '').trim();
+}
+
+function mapColumns(row, columns) {
+  return Object.fromEntries(
+    Object.entries(columns).map(([field, column]) => [
+      field,
+      toText(row[column])
+    ])
+  );
+}
+
+function requireFields(data, fields, rowLabel) {
+  for (const field of fields) {
+    if (!data[field]) {
+      throw new Error(
+        `${rowLabel} is missing "${field}".`
+      );
+    }
+  }
+}
+
 function readSheetData(sheetName) {
-  const workbook = XLSX.readFile(filePath);
+  const workbook = XLSX.readFile(FILE_PATH);
   const worksheet = workbook.Sheets[sheetName];
 
   if (!worksheet) {
@@ -37,183 +174,58 @@ function readSheetData(sheetName) {
   return rows;
 }
 
+// --------------------------------------------------
 // Login data
+// --------------------------------------------------
 
 export function readLoginData() {
-  return readSheetData('login').map((row, index) => {
-    const loginRow = {
-      scenario: String(row.Scenario ?? '').trim(),
-      username: String(row.Username ?? '').trim(),
-      password: String(row.Password ?? '').trim(),
-      expectedResult: String(
-        row.ExpectedResult ?? ''
-      ).trim()
-    };
+  return readSheetData(SHEET_NAMES.login).map(
+    (row, index) => {
+      const loginRow = mapColumns(
+        row,
+        LOGIN_COLUMNS
+      );
 
-    for (const field of ['scenario', 'expectedResult']) {
-      if (!loginRow[field]) {
-        throw new Error(
-          `Excel login row ${index + 2} is missing "${field}".`
-        );
-      }
+      requireFields(
+        loginRow,
+        ['scenario', 'expectedResult'],
+        `Excel login row ${index + 2}`
+      );
+
+      return loginRow;
     }
-
-    return loginRow;
-  });
-}
-
-// Retrieve one account scenario
-
-export function getAccountDataByScenario(scenarioName) {
-  const account = readAccountData().find(
-    row => row.scenario === scenarioName
   );
-
-  if (!account) {
-    throw new Error(
-      `Account scenario "${scenarioName}" was not found ` +
-      'in the Accounts worksheet.'
-    );
-  }
-
-  return account;
 }
 
-// Account data
+// --------------------------------------------------
+// Account validation
+// --------------------------------------------------
 
-export function readAccountData() {
-  return readSheetData('Accounts').map((row, index) => {
-    const accountRow = {
-      scenario: String(row.Scenario ?? '').trim(),
-      name: String(row.Name ?? '').trim(),
-      searchText: String(row.SearchText ?? '').trim(),
+function validateAccountData(accountRow, rowLabel) {
+  const scenarioFields =
+    ACCOUNT_REQUIRED_FIELDS_BY_SCENARIO[
+      accountRow.scenario
+    ] ?? [];
 
-      phone: String(row.Phone ?? '').trim(),
-      updatedPhone: String(
-        row.UpdatedPhone ?? ''
-      ).trim(),
-
-      website: String(row.Website ?? '').trim(),
-      updatedWebsite: String(
-        row.UpdatedWebsite ?? ''
-      ).trim(),
-
-      email: String(row.Email ?? '').trim(),
-
-      billingStreet: String(
-        row.BillingStreet ?? ''
-      ).trim(),
-      billingPostalCode: String(
-        row.BillingPostalCode ?? ''
-      ).trim(),
-      billingCity: String(
-        row.BillingCity ?? ''
-      ).trim(),
-      billingState: String(
-        row.BillingState ?? ''
-      ).trim(),
-      billingCountry: String(
-        row.BillingCountry ?? ''
-      ).trim(),
-
-      shippingStreet: String(
-        row.ShippingStreet ?? ''
-      ).trim(),
-      shippingPostalCode: String(
-        row.ShippingPostalCode ?? ''
-      ).trim(),
-      shippingCity: String(
-        row.ShippingCity ?? ''
-      ).trim(),
-      shippingState: String(
-        row.ShippingState ?? ''
-      ).trim(),
-      shippingCountry: String(
-        row.ShippingCountry ?? ''
-      ).trim(),
-
-      expectedResult: String(
-        row.ExpectedResult ?? ''
-      ).trim()
-    };
-
-    // Required fields for all account rows.
-    const requiredFields = [
+  requireFields(
+    accountRow,
+    [
       'scenario',
       'name',
-      'expectedResult'
-    ];
-    
-
-    // Complete overview scenario.
-    if (
-      accountRow.scenario ===
-      'create_account_complete_overview'
-    ) {
-      requiredFields.push(
-        'phone',
-        'website',
-        'email',
-        'billingStreet',
-        'billingPostalCode',
-        'billingCity',
-        'billingState',
-        'billingCountry',
-        'shippingStreet',
-        'shippingPostalCode',
-        'shippingCity',
-        'shippingState',
-        'shippingCountry'
-      );
-    }
-
-    // Website update scenario.
-    if (
-      accountRow.scenario === 'update_account_website'
-    ) {
-      requiredFields.push(
-        'website',
-        'updatedWebsite'
-      );
-    }
-
-    // Office phone update scenario.
-    if (
-      accountRow.scenario === 'update_account_office_phone'
-    ) {
-      requiredFields.push(
-        'phone',
-        'updatedPhone'
-      );
-    }
-// Cancel account editing scenario.
-if (
-  accountRow.scenario === 'cancel_account_edit'
-) {
-  requiredFields.push(
-    'website',
-    'updatedWebsite'
+      'expectedResult',
+      ...scenarioFields
+    ],
+    rowLabel
   );
-}
-    // Validate required values before comparing them.
-    for (const field of requiredFields) {
-      if (!accountRow[field]) {
-        throw new Error(
-          `Accounts Excel data row ${index + 2} ` +
-          `is missing "${field}".`
-        );
-      }
-    }
 
-    // Validate website update data.
-    if (
-      accountRow.scenario === 'update_account_website'
-    ) {
+  switch (accountRow.scenario) {
+    case 'update_account_website': {
       if (
-        accountRow.website === accountRow.updatedWebsite
+        accountRow.website ===
+        accountRow.updatedWebsite
       ) {
         throw new Error(
-          `Accounts Excel data row ${index + 2}: ` +
+          `${rowLabel}: ` +
           'Website and UpdatedWebsite must differ.'
         );
       }
@@ -223,21 +235,21 @@ if (
         accountRow.updatedWebsite
       ) {
         throw new Error(
-          `Accounts Excel data row ${index + 2}: ` +
+          `${rowLabel}: ` +
           'ExpectedResult must match UpdatedWebsite.'
         );
       }
+
+      break;
     }
 
-    // Validate office phone update data.
-    if (
-      accountRow.scenario === 'update_account_office_phone'
-    ) {
+    case 'update_account_office_phone': {
       if (
-        accountRow.phone === accountRow.updatedPhone
+        accountRow.phone ===
+        accountRow.updatedPhone
       ) {
         throw new Error(
-          `Accounts Excel data row ${index + 2}: ` +
+          `${rowLabel}: ` +
           'Phone and UpdatedPhone must differ.'
         );
       }
@@ -247,145 +259,216 @@ if (
         accountRow.updatedPhone
       ) {
         throw new Error(
-          `Accounts Excel data row ${index + 2}: ` +
+          `${rowLabel}: ` +
           'ExpectedResult must match UpdatedPhone.'
         );
       }
+
+      break;
     }
-    // Validate cancel account editing data.
-if (
-  accountRow.scenario === 'cancel_account_edit'
+
+    case 'cancel_account_edit': {
+      if (
+        accountRow.website ===
+        accountRow.updatedWebsite
+      ) {
+        throw new Error(
+          `${rowLabel}: ` +
+          'Website and UpdatedWebsite must differ.'
+        );
+      }
+
+      if (
+        accountRow.expectedResult !==
+        accountRow.website
+      ) {
+        throw new Error(
+          `${rowLabel}: ` +
+          'ExpectedResult must match the original Website ' +
+          'for cancel_account_edit.'
+        );
+      }
+
+      break;
+    }
+
+    default:
+      break;
+  }
+}
+
+// --------------------------------------------------
+// Account data
+// --------------------------------------------------
+
+export function readAccountData() {
+  return readSheetData(SHEET_NAMES.accounts).map(
+    (row, index) => {
+      const accountRow = mapColumns(
+        row,
+        ACCOUNT_COLUMNS
+      );
+
+      validateAccountData(
+        accountRow,
+        `Accounts Excel data row ${index + 2}`
+      );
+
+      return accountRow;
+    }
+  );
+}
+
+// --------------------------------------------------
+// Retrieve one account scenario
+// --------------------------------------------------
+
+export function getAccountDataByScenario(scenarioName) {
+  const account = readAccountData().find(
+    row => row.scenario === scenarioName
+  );
+
+  if (!account) {
+    throw new Error(
+      `Account scenario "${scenarioName}" was not found ` +
+      `in the ${SHEET_NAMES.accounts} worksheet.`
+    );
+  }
+
+  return account;
+}
+
+// --------------------------------------------------
+// Opportunity amount validation
+// --------------------------------------------------
+
+function validateOpportunityAmount(amount, rowLabel) {
+  const numericAmount = Number(amount);
+
+  if (
+    !/^\d+(?:\.\d+)?$/.test(amount) ||
+    !Number.isFinite(numericAmount) ||
+    numericAmount <= 0
+  ) {
+    throw new Error(
+      `${rowLabel}: OpportunityAmount must be a positive ` +
+      'number without currency symbols or thousands separators.'
+    );
+  }
+}
+
+// --------------------------------------------------
+// Opportunity date validation
+// --------------------------------------------------
+
+function validateExpectedCloseDate(dateText, rowLabel) {
+  const parsedDate =
+    /^\d{4}-\d{2}-\d{2}$/.test(dateText)
+      ? new Date(`${dateText}T00:00:00.000Z`)
+      : null;
+
+  if (
+    !parsedDate ||
+    Number.isNaN(parsedDate.getTime()) ||
+    parsedDate.toISOString().slice(0, 10) !== dateText
+  ) {
+    throw new Error(
+      `${rowLabel}: ExpectedCloseDate must be a valid ` +
+      'calendar date in YYYY-MM-DD format. ' +
+      `Received: ${JSON.stringify(dateText)}.`
+    );
+  }
+}
+
+// --------------------------------------------------
+// Opportunity scenario validation
+// --------------------------------------------------
+
+function validateOpportunityData(
+  opportunityRow,
+  rowLabel
 ) {
+  requireFields(
+    opportunityRow,
+    ['scenario'],
+    rowLabel
+  );
+
+  // Other scenarios may intentionally omit mandatory values.
   if (
-    accountRow.website === accountRow.updatedWebsite
+    !POSITIVE_OPPORTUNITY_SCENARIOS.has(
+      opportunityRow.scenario
+    )
   ) {
-    throw new Error(
-      `Accounts Excel data row ${index + 2}: ` +
-      'Website and UpdatedWebsite must differ.'
-    );
+    return;
   }
 
+  requireFields(
+    opportunityRow,
+    OPPORTUNITY_REQUIRED_FIELDS,
+    rowLabel
+  );
+
+  validateOpportunityAmount(
+    opportunityRow.amount,
+    rowLabel
+  );
+
+  validateExpectedCloseDate(
+    opportunityRow.expectedCloseDate,
+    rowLabel
+  );
+
+  // This environment only provides the default USD currency.
   if (
-    accountRow.expectedResult !== accountRow.website
+    opportunityRow.scenario ===
+    'create_opportunity_with_currency'
   ) {
-    throw new Error(
-      `Accounts Excel data row ${index + 2}: ` +
-      'ExpectedResult must match the original Website ' +
-      'for cancel_account_edit.'
+    requireFields(
+      opportunityRow,
+      ['currencyCode', 'currencyDisplay'],
+      rowLabel
     );
+
+    if (opportunityRow.currencyCode !== 'USD') {
+      throw new Error(
+        `${rowLabel}: CurrencyCode must be "USD" ` +
+        'because this environment only provides USD.'
+      );
+    }
+
+    if (opportunityRow.currencyDisplay !== '$') {
+      throw new Error(
+        `${rowLabel}: CurrencyDisplay must be "$" ` +
+        'for the USD detail-page verification.'
+      );
+    }
   }
 }
 
-    return accountRow;
-  });
-  
-}
 // --------------------------------------------------
 // Opportunity data
 // Worksheet name intentionally matches: opputinuites
 // --------------------------------------------------
 
-const OPPORTUNITIES_SHEET_NAME = 'opputinuites';
-
 export function readOpportunityData() {
-  return readSheetData(OPPORTUNITIES_SHEET_NAME).map(
+  return readSheetData(SHEET_NAMES.opportunities).map(
     (row, index) => {
-      const opportunityRow = {
-        scenario: String(row.Scenario ?? '').trim(),
+      const opportunityRow = mapColumns(
+        row,
+        OPPORTUNITY_COLUMNS
+      );
 
-        name: String(
-          row.OpportunityName ?? ''
-        ).trim(),
-
-        accountName: String(
-          row.AccountName ?? ''
-        ).trim(),
-
-        amount: String(
-          row.OpportunityAmount ?? ''
-        ).trim(),
-
-        salesStage: String(
-          row.SalesStage ?? ''
-        ).trim(),
-
-        expectedCloseDate: String(
-          row.ExpectedCloseDate ?? ''
-        )
-          .trim()
+      // Remove one literal leading apostrophe from Excel text dates.
+      opportunityRow.expectedCloseDate =
+        opportunityRow.expectedCloseDate
           .replace(/^'/, '')
-          .trim()
-      };
+          .trim();
 
-      // Every opportunity row must identify its scenario.
-      if (!opportunityRow.scenario) {
-        throw new Error(
-          `${OPPORTUNITIES_SHEET_NAME} Excel data row ` +
-          `${index + 2} is missing "Scenario".`
-        );
-      }
-
-      // Required values for successful opportunity creation.
-      if (
-        opportunityRow.scenario ===
-        'create_opportunity_valid_mandatory'
-      ) {
-        const requiredFields = [
-          'name',
-          'accountName',
-          'amount',
-          'salesStage',
-          'expectedCloseDate'
-        ];
-
-        for (const field of requiredFields) {
-          if (!opportunityRow[field]) {
-            throw new Error(
-              `${OPPORTUNITIES_SHEET_NAME} Excel data row ` +
-              `${index + 2} is missing "${field}".`
-            );
-          }
-        }
-
-        // Require an unformatted numeric value, e.g. 5000 or 5000.50.
-        const numericAmount = Number(
-          opportunityRow.amount
-        );
-
-        if (
-          !/^\d+(?:\.\d+)?$/.test(opportunityRow.amount) ||
-          !Number.isFinite(numericAmount) ||
-          numericAmount <= 0
-        ) {
-          throw new Error(
-            `${OPPORTUNITIES_SHEET_NAME} Excel data row ` +
-            `${index + 2}: OpportunityAmount must be a positive ` +
-            'number without currency symbols or thousands separators.'
-          );
-        }
-
-        // Require a real calendar date written as YYYY-MM-DD.
-        const dateText =
-          opportunityRow.expectedCloseDate;
-
-        const parsedDate =
-          /^\d{4}-\d{2}-\d{2}$/.test(dateText)
-            ? new Date(`${dateText}T00:00:00.000Z`)
-            : null;
-
-        if (
-          !parsedDate ||
-          Number.isNaN(parsedDate.getTime()) ||
-          parsedDate.toISOString().slice(0, 10) !== dateText
-        ) {
-          throw new Error(
-            `${OPPORTUNITIES_SHEET_NAME} Excel data row ` +
-            `${index + 2}: ExpectedCloseDate must be a valid ` +
-            'calendar date in YYYY-MM-DD format. ' +
-            `Received: ${JSON.stringify(dateText)}.`
-          );
-        }
-      }
+      validateOpportunityData(
+        opportunityRow,
+        `${SHEET_NAMES.opportunities} Excel data row ${index + 2}`
+      );
 
       return opportunityRow;
     }
@@ -396,7 +479,9 @@ export function readOpportunityData() {
 // Retrieve one opportunity scenario
 // --------------------------------------------------
 
-export function getOpportunityDataByScenario(scenarioName) {
+export function getOpportunityDataByScenario(
+  scenarioName
+) {
   const matchingRows = readOpportunityData().filter(
     row => row.scenario === scenarioName
   );
@@ -404,14 +489,14 @@ export function getOpportunityDataByScenario(scenarioName) {
   if (matchingRows.length === 0) {
     throw new Error(
       `Opportunity scenario "${scenarioName}" was not found ` +
-      `in the "${OPPORTUNITIES_SHEET_NAME}" worksheet.`
+      `in the "${SHEET_NAMES.opportunities}" worksheet.`
     );
   }
 
   if (matchingRows.length > 1) {
     throw new Error(
       `Opportunity scenario "${scenarioName}" appears more than once ` +
-      `in the "${OPPORTUNITIES_SHEET_NAME}" worksheet. ` +
+      `in the "${SHEET_NAMES.opportunities}" worksheet. ` +
       'Scenario values must be unique.'
     );
   }

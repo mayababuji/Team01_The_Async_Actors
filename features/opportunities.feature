@@ -38,3 +38,15 @@ Feature: Opportunities management
     Given a new account is created and the Create Opportunity page is opened for "create_opportunity_valid_mandatory"
     When the user enters the mandatory opportunity data and saves
     Then the newly created opportunity detail page should be displayed
+
+      @opportunities @CreateOpportunityWithAmount
+  Scenario: Create an opportunity with an amount
+    Given a new account is created and the Create Opportunity page is opened for "create_opportunity_with_amount"
+    When the user enters the mandatory opportunity data and saves
+    Then the opportunity should be created with the amount from Excel
+
+      @opportunities @CreateOpportunityWithCurrency
+  Scenario: Create an opportunity with a selected currency and amount
+    Given a new account is created and the Create Opportunity page is opened for "create_opportunity_with_currency"
+     When the user enters the mandatory opportunity data and saves
+    Then the opportunity should be created with the currency and amount from Excel
