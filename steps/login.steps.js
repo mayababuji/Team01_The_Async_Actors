@@ -18,6 +18,7 @@ When(
   async ({ loginPage ,logger}) => {
    logger.info('Submitting valid login credentials');
     await loginPage.login(env.username, env.password);
+
   }
 );
 

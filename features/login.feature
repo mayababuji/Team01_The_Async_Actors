@@ -33,4 +33,3 @@ Scenario: Verify password is hidden when user enters password
   Scenario: User cannot log in with an empty login
     When the user logs in using Excel data for scenario "empty_login"
     Then the login error message from Excel should be displayed
-
