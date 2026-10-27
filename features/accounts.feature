@@ -176,4 +176,9 @@ Scenario: Update account website
     When the user attempts to proceed to the next import step
     Then the user should remain on the Upload Import File page without starting an import
 
+  @DeleteAccount @Positive
+  Scenario: Delete an existing account
+    Given a new account exists for deletion "delete_account"
+    When the user deletes the account and confirms the deletion
+    Then the deleted account should no longer appear in search results
   

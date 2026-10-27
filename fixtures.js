@@ -7,6 +7,7 @@ import { OpportunitiesPage } from './pages/opportunities.page.js';
 import { readLoginData } from './utils/excel-util.js';
 import { createLogger } from './utils/logger.js';
 
+
 export const test = base.extend({
   // --------------------------------------------------
   // Page objects
@@ -24,8 +25,10 @@ export const test = base.extend({
     await use(new OpportunitiesPage(page));
   },
 
+
   // --------------------------------------------------
   // Account scenario data
+  // One object shared by Given, When, and Then
   // --------------------------------------------------
 
   accountListTestData: async ({}, use) => {
@@ -34,6 +37,7 @@ export const test = base.extend({
       recordUrl: null
     });
   },
+
 
   // --------------------------------------------------
   // Opportunity scenario data
@@ -48,17 +52,25 @@ export const test = base.extend({
     });
   },
 
+
   // --------------------------------------------------
   // Account cleanup
   // --------------------------------------------------
 
-  accountCleanup: async ({ accountsPage, logger }, use) => {
+  accountCleanup: async (
+    { accountsPage, logger },
+    use
+  ) => {
     const recordUrls = new Set();
 
     try {
       await use({
         register(recordUrl) {
           recordUrls.add(recordUrl);
+        },
+
+        unregister(recordUrl) {
+          recordUrls.delete(recordUrl);
         }
       });
     } finally {
@@ -66,22 +78,33 @@ export const test = base.extend({
 
       for (const recordUrl of [...recordUrls].reverse()) {
         try {
-          logger.info('Deleting test-created account', {
-            recordUrl
-          });
+          logger.info(
+            'Deleting test-created account',
+            {
+              recordUrl
+            }
+          );
 
-          await accountsPage.deleteAccountByUrl(recordUrl);
-
-          logger.info('Test-created account deleted', {
+          await accountsPage.deleteAccountByUrl(
             recordUrl
-          });
+          );
+
+          logger.info(
+            'Test-created account deleted',
+            {
+              recordUrl
+            }
+          );
         } catch (error) {
           failures.push(error);
 
-          logger.error('Account cleanup failed', {
-            recordUrl,
-            error: String(error)
-          });
+          logger.error(
+            'Account cleanup failed',
+            {
+              recordUrl,
+              error: String(error)
+            }
+          );
         }
       }
 
@@ -93,6 +116,7 @@ export const test = base.extend({
       }
     }
   },
+
 
   // --------------------------------------------------
   // Opportunity cleanup
@@ -122,6 +146,10 @@ export const test = base.extend({
           recordUrls.add(recordUrl);
         },
 
+        unregister(recordUrl) {
+          recordUrls.delete(recordUrl);
+        },
+
         registerAccount(recordUrl) {
           accountCleanup.register(recordUrl);
         }
@@ -131,24 +159,33 @@ export const test = base.extend({
 
       for (const recordUrl of [...recordUrls].reverse()) {
         try {
-          logger.info('Deleting test-created opportunity', {
-            recordUrl
-          });
+          logger.info(
+            'Deleting test-created opportunity',
+            {
+              recordUrl
+            }
+          );
 
           await opportunitiesPage.deleteOpportunityByUrl(
             recordUrl
           );
 
-          logger.info('Test-created opportunity deleted', {
-            recordUrl
-          });
+          logger.info(
+            'Test-created opportunity deleted',
+            {
+              recordUrl
+            }
+          );
         } catch (error) {
           failures.push(error);
 
-          logger.error('Opportunity cleanup failed', {
-            recordUrl,
-            error: String(error)
-          });
+          logger.error(
+            'Opportunity cleanup failed',
+            {
+              recordUrl,
+              error: String(error)
+            }
+          );
         }
       }
 
@@ -161,13 +198,16 @@ export const test = base.extend({
     }
   },
 
+
   // --------------------------------------------------
   // Login data
   // --------------------------------------------------
 
   loginData: [
     async ({}, use) => {
-      console.log('Loading Excel login data once for this worker...');
+      console.log(
+        'Loading Excel login data once for this worker...'
+      );
 
       const data = readLoginData();
 
@@ -192,6 +232,7 @@ export const test = base.extend({
     });
   },
 
+
   // --------------------------------------------------
   // Logger
   // --------------------------------------------------
@@ -200,24 +241,30 @@ export const test = base.extend({
     async ({}, use, testInfo) => {
       const { logger, logPath } = createLogger(testInfo);
 
-      logger.info('Test started', {
-        environment: process.env.TEST_ENV || 'local',
-        browser: testInfo.project.name,
-        retry: testInfo.retry,
-        testTitle: testInfo.title
-      });
+      logger.info(
+        'Test started',
+        {
+          environment: process.env.TEST_ENV || 'local',
+          browser: testInfo.project.name,
+          retry: testInfo.retry,
+          testTitle: testInfo.title
+        }
+      );
 
       try {
         await use(logger);
       } finally {
-        logger.info('Test finished', {
-          environment: process.env.TEST_ENV || 'local',
-          browser: testInfo.project.name,
-          retry: testInfo.retry,
-          testTitle: testInfo.title,
-          status: testInfo.status,
-          expectedStatus: testInfo.expectedStatus
-        });
+        logger.info(
+          'Test finished',
+          {
+            environment: process.env.TEST_ENV || 'local',
+            browser: testInfo.project.name,
+            retry: testInfo.retry,
+            testTitle: testInfo.title,
+            status: testInfo.status,
+            expectedStatus: testInfo.expectedStatus
+          }
+        );
 
         await new Promise((resolve, reject) => {
           logger.once('finish', resolve);
@@ -225,16 +272,20 @@ export const test = base.extend({
           logger.end();
         });
 
-        await testInfo.attach('Winston execution log', {
-          path: logPath,
-          contentType: 'application/json'
-        });
+        await testInfo.attach(
+          'Winston execution log',
+          {
+            path: logPath,
+            contentType: 'application/json'
+          }
+        );
       }
     },
     {
       auto: true
     }
   ],
+
 
   // --------------------------------------------------
   // Account import data and cleanup
@@ -255,18 +306,26 @@ export const test = base.extend({
 
     if (accountImportTestData.importCompleted) {
       try {
-        logger.info('Undoing imported accounts');
+        logger.info(
+          'Undoing imported accounts'
+        );
 
         await accountsPage.undoImportedAccounts();
 
-        logger.info('Imported accounts undone successfully');
+        logger.info(
+          'Imported accounts undone successfully'
+        );
       } catch (error) {
-        logger.error('Failed to undo imported accounts', {
-          error: String(error)
-        });
+        logger.error(
+          'Failed to undo imported accounts',
+          {
+            error: String(error)
+          }
+        );
       }
     }
   }
 });
+
 
 export const { Given, When, Then } = createBdd(test);

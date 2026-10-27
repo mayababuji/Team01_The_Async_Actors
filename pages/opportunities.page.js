@@ -116,6 +116,9 @@ this.opportunityDescriptionDetail = this.basicPanel
       exact: true
     })
   });
+  this.editOpportunityButton = page.getByRole('button', {
+  name: /^edit$/i
+});
 
     // --------------------------------------------------
     // Opportunity detail locators
@@ -428,5 +431,78 @@ async enterOpportunityDescription(description) {
   await this.opportunityDescriptionInput.fill(
     description
   );
+}
+getOpportunityAccessErrorMessage(expectedMessage) {
+  return this.page.getByText(
+    expectedMessage,
+    { exact: false }
+  );
+}
+// --------------------------------------------------
+// Opportunity editing
+// --------------------------------------------------
+
+
+async waitForOpportunityDetailPage(opportunityName) {
+  await this.getOpportunityDetailHeading(
+    opportunityName
+  ).waitFor({
+    state: 'visible'
+  });
+
+  await this.editOpportunityButton.waitFor({
+    state: 'visible'
+  });
+}
+
+
+async openOpportunityForEditing() {
+  await this.editOpportunityButton.click();
+
+  await this.opportunityAmountInput.waitFor({
+    state: 'visible'
+  });
+}
+
+
+async saveOpportunityChanges(opportunityName) {
+  await this.saveOpportunity();
+
+  await this.saveOpportunityButton.waitFor({
+    state: 'hidden'
+  });
+
+  await this.waitForOpportunityDetailPage(
+    opportunityName
+  );
+}
+
+
+async reloadOpportunityDetailPage(opportunityName) {
+  await this.page.reload();
+
+  await this.waitForOpportunityDetailPage(
+    opportunityName
+  );
+}
+async getDisplayedOpportunityAmount() {
+  const displayedAmount =
+    await this.opportunityAmountDetail.innerText();
+
+  const normalizedAmount = displayedAmount
+    .replace(/USD/gi, '')
+    .replace(/\$/g, '')
+    .replace(/[,\s]/g, '');
+
+  if (
+    !/^\d+(?:\.\d+)?$/.test(normalizedAmount)
+  ) {
+    throw new Error(
+      'Could not read the saved opportunity amount. ' +
+      `Received: ${JSON.stringify(displayedAmount)}.`
+    );
+  }
+
+  return Number(normalizedAmount);
 }
 }
