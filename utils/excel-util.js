@@ -35,7 +35,8 @@ const POSITIVE_ACCOUNT_SCENARIOS = new Set([
   'create_account_valid_mandatory',
   'create_account_complete_overview',
   'update_account_website',
-  'update_account_office_phone'
+  'update_account_office_phone',
+  'delete_account'
 ]);
 
 
@@ -92,6 +93,8 @@ const POSITIVE_OPPORTUNITY_SCENARIOS = new Set([
   'create_opportunity_with_amount',
   'create_opportunity_with_currency',
   'create_opportunity_with_description',
+  'delete_opportunity',
+  'update_opportunity_amount',
   ...OPPORTUNITY_TYPE_SCENARIOS,
   ...OPPORTUNITY_LEAD_SOURCE_SCENARIOS
 ]);
@@ -193,7 +196,8 @@ const OPPORTUNITY_COLUMNS = {
   currencyDisplay: 'CurrencyDisplay',
   type: 'OpportunityType',
   leadSource: 'LeadSource',
-  description: 'Description'
+  description: 'Description',
+  updatedAmount: 'UpdatedAmount'
 };
 
 
@@ -632,6 +636,32 @@ function validateOpportunityData(
       );
     }
   }
+  // Validate the updated amount only for the amount-update scenario.
+if (
+  opportunityRow.scenario ===
+  'update_opportunity_amount'
+) {
+  requireFields(
+    opportunityRow,
+    ['updatedAmount'],
+    rowLabel
+  );
+
+  validateOpportunityAmount(
+    opportunityRow.updatedAmount,
+    `${rowLabel} (UpdatedAmount)`
+  );
+
+  if (
+    Number(opportunityRow.amount) ===
+    Number(opportunityRow.updatedAmount)
+  ) {
+    throw new Error(
+      `${rowLabel}: OpportunityAmount and UpdatedAmount ` +
+      'must differ.'
+    );
+  }
+}
 }
 
 

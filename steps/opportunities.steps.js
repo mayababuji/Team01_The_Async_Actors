@@ -877,3 +877,372 @@ Then(
     );
   }
 );
+
+// --------------------------------------------------
+// Delete opportunity
+// --------------------------------------------------
+
+
+When(
+  'the user creates the opportunity and deletes it with confirmation',
+  async ({
+    page,
+    opportunitiesPage,
+    opportunityTestData,
+    opportunityCleanup,
+    logger
+  }) => {
+    const opportunity =
+      opportunityTestData.opportunity;
+
+
+    if (!opportunity) {
+      throw new Error(
+        'Opportunity test data was not initialized ' +
+        'by the Given step.'
+      );
+    }
+
+
+    await opportunitiesPage
+      .enterMandatoryOpportunityDetails(
+        opportunity
+      );
+
+
+    await opportunitiesPage.saveOpportunity();
+
+
+    await page.waitForURL(
+      /#\/opportunities\/record\/[^/?#]+(?:[/?#]|$)/
+    );
+
+
+    const opportunityRecordUrl = page.url();
+
+
+    // Register immediately for fallback cleanup.
+    opportunityCleanup.register(
+      opportunityRecordUrl
+    );
+
+
+    opportunityTestData.opportunityRecordUrl =
+      opportunityRecordUrl;
+
+
+    // Wait for the created record before deleting it.
+    await opportunitiesPage
+      .getOpportunityDetailHeading(
+        opportunity.name
+      )
+      .waitFor({
+        state: 'visible'
+      });
+
+
+    logger.info(
+      'Created opportunity for deletion',
+      {
+        scenario: opportunity.scenario,
+        opportunityName: opportunity.name,
+        opportunityRecordUrl
+      }
+    );
+
+
+    await opportunitiesPage.deleteOpportunityByUrl(
+      opportunityRecordUrl
+    );
+
+
+    // Prevent teardown from deleting it a second time.
+    opportunityCleanup.unregister(
+      opportunityRecordUrl
+    );
+
+
+    logger.info(
+      'Deleted the test-created opportunity',
+      {
+        scenario: opportunity.scenario,
+        opportunityName: opportunity.name,
+        opportunityRecordUrl
+      }
+    );
+  }
+);
+Then(
+  'the deleted opportunity should be inaccessible with message {string}',
+  async ({
+    page,
+    opportunitiesPage,
+    opportunityTestData,
+    logger
+  }, expectedMessage) => {
+    const {
+      opportunity,
+      opportunityRecordUrl
+    } = opportunityTestData;
+
+
+    if (!opportunity || !opportunityRecordUrl) {
+      throw new Error(
+        'Opportunity data or record URL is missing.'
+      );
+    }
+
+
+    // Verify the deletion returned to the opportunity list.
+    await expect(page).toHaveURL(
+      /#\/opportunities\/?(?:\?.*)?$/
+    );
+
+
+    await expect(
+      opportunitiesPage.viewOpportunitiesPageHeading
+    ).toBeVisible();
+
+
+    // Reopen the exact opportunity created by this scenario.
+    await page.goto(
+      opportunityRecordUrl
+    );
+
+
+    const accessError =
+      opportunitiesPage
+        .getOpportunityAccessErrorMessage(
+          expectedMessage
+        );
+
+
+    await expect(
+      accessError
+    ).toBeVisible();
+
+
+    logger.info(
+      'Deleted opportunity URL is inaccessible',
+      {
+        scenario: opportunity.scenario,
+        opportunityName: opportunity.name,
+        deletedOpportunityRecordUrl:
+          opportunityRecordUrl,
+        expectedMessage
+      }
+    );
+  }
+);
+
+// --------------------------------------------------
+// Update opportunity amount
+// --------------------------------------------------
+
+
+Given(
+  'a new opportunity exists for updating its amount {string}',
+  async ({
+    page,
+    accountsPage,
+    opportunitiesPage,
+    opportunityTestData,
+    opportunityCleanup,
+    logger
+  }, scenarioKey) => {
+    const opportunity =
+      getOpportunityDataByScenario(
+        scenarioKey
+      );
+
+    opportunityTestData.opportunity =
+      opportunity;
+
+    opportunityTestData.accountRecordUrl = null;
+
+    opportunityTestData.opportunityRecordUrl = null;
+
+
+    // Create the prerequisite account.
+    const accountRecordUrl =
+      await accountsPage.createAccount({
+        name: opportunity.accountName
+      });
+
+
+    // Register immediately for fallback cleanup.
+    opportunityCleanup.registerAccount(
+      accountRecordUrl
+    );
+
+    opportunityTestData.accountRecordUrl =
+      accountRecordUrl;
+
+
+    await accountsPage.waitForAccountDetailPage();
+
+
+    // Create the opportunity with the original amount.
+    await opportunitiesPage
+      .openCreateOpportunityPage();
+
+    await opportunitiesPage
+      .enterMandatoryOpportunityDetails(
+        opportunity
+      );
+
+    await opportunitiesPage.saveOpportunity();
+
+
+    await page.waitForURL(
+      /#\/opportunities\/record\/[^/?#]+(?:[/?#]|$)/
+    );
+
+    const opportunityRecordUrl = page.url();
+
+
+    opportunityCleanup.register(
+      opportunityRecordUrl
+    );
+
+    opportunityTestData.opportunityRecordUrl =
+      opportunityRecordUrl;
+
+
+    await opportunitiesPage
+      .waitForOpportunityDetailPage(
+        opportunity.name
+      );
+
+
+    logger.info(
+      'Created opportunity for amount update',
+      {
+        scenario: opportunity.scenario,
+        opportunityName: opportunity.name,
+        originalAmount: opportunity.amount,
+        accountRecordUrl,
+        opportunityRecordUrl
+      }
+    );
+  }
+);
+
+When(
+  'the user updates the opportunity amount from Excel and saves the changes',
+  async ({
+    opportunitiesPage,
+    opportunityTestData,
+    logger
+  }) => {
+    const {
+      opportunity,
+      opportunityRecordUrl
+    } = opportunityTestData;
+
+    if (!opportunity || !opportunityRecordUrl) {
+      throw new Error(
+        'Amount update requires an opportunity ' +
+        'created by the Given step.'
+      );
+    }
+
+
+    await opportunitiesPage
+      .openOpportunityForEditing();
+
+    await opportunitiesPage.enterOpportunityAmount(
+      opportunity.updatedAmount
+    );
+
+    await opportunitiesPage.saveOpportunityChanges(
+      opportunity.name
+    );
+
+
+    logger.info(
+      'Saved updated opportunity amount',
+      {
+        scenario: opportunity.scenario,
+        opportunityName: opportunity.name,
+        originalAmount: opportunity.amount,
+        updatedAmount: opportunity.updatedAmount,
+        opportunityRecordUrl
+      }
+    );
+  }
+);
+
+Then(
+  'the opportunity should display the updated amount',
+  async ({
+    page,
+    opportunitiesPage,
+    opportunityTestData,
+    logger
+  }) => {
+    const {
+      opportunity,
+      opportunityRecordUrl
+    } = opportunityTestData;
+
+    if (!opportunity || !opportunityRecordUrl) {
+      throw new Error(
+        'Opportunity data or record URL is missing.'
+      );
+    }
+
+
+    // Confirm that editing did not create another record.
+    await expect(page).toHaveURL(
+      opportunityRecordUrl
+    );
+
+
+    // Reload to verify the persisted value.
+    await opportunitiesPage
+      .reloadOpportunityDetailPage(
+        opportunity.name
+      );
+
+
+    await expect(page).toHaveURL(
+      opportunityRecordUrl
+    );
+
+    await expect(
+      opportunitiesPage.getOpportunityDetailHeading(
+        opportunity.name
+      )
+    ).toBeVisible();
+
+    await expect(
+      opportunitiesPage.getOpportunityAmountDetail()
+    ).toBeVisible();
+
+
+    await expect.poll(
+      async () => {
+        return await opportunitiesPage
+          .getDisplayedOpportunityAmount();
+      },
+      {
+        message:
+          'Saved opportunity amount should match UpdatedAmount from Excel'
+      }
+    ).toBe(
+      Number(opportunity.updatedAmount)
+    );
+
+
+    logger.info(
+      'Persisted opportunity amount verified',
+      {
+        scenario: opportunity.scenario,
+        opportunityName: opportunity.name,
+        expectedAmount: opportunity.updatedAmount,
+        opportunityRecordUrl
+      }
+    );
+  }
+);

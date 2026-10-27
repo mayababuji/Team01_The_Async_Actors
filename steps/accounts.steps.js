@@ -1816,3 +1816,183 @@ Then(
     );
   }
 );
+// --------------------------------------------------
+// Delete account
+// --------------------------------------------------
+
+
+Given(
+  'a new account exists for deletion {string}',
+  async ({
+    page,
+    accountsPage,
+    accountListTestData,
+    accountCleanup,
+    logger
+  }, scenarioKey) => {
+    const account =
+      getAccountDataByScenario(scenarioKey);
+
+
+    accountListTestData.account = account;
+    accountListTestData.recordUrl = null;
+
+
+    const recordUrl =
+      await accountsPage.createAccount(account);
+
+
+    // Register immediately for fallback cleanup.
+    accountCleanup.register(recordUrl);
+
+
+    accountListTestData.recordUrl = recordUrl;
+
+
+    await accountsPage.waitForAccountDetailPage();
+
+
+    // Establish that the account is searchable before deletion.
+    await accountsPage.searchAccountsByName(
+      account.name
+    );
+
+
+    await accountsPage
+      .getAccountSearchResult(account.name)
+      .waitFor({
+        state: 'visible'
+      });
+
+
+    // Return to the exact record created by this scenario.
+    await page.goto(recordUrl);
+
+
+    await accountsPage.waitForAccountDetailPage();
+
+
+    logger.info(
+      'Created account for deletion',
+      {
+        scenario: account.scenario,
+        accountName: account.name,
+        recordUrl
+      }
+    );
+  }
+);
+When(
+  'the user deletes the account and confirms the deletion',
+  async ({
+    accountsPage,
+    accountListTestData,
+    accountCleanup,
+    logger
+  }) => {
+    const {
+      account,
+      recordUrl
+    } = accountListTestData;
+
+
+    if (!account || !recordUrl) {
+      throw new Error(
+        'Account deletion requires an account ' +
+        'created by the Given step.'
+      );
+    }
+
+
+    await accountsPage.deleteAccountByUrl(
+      recordUrl
+    );
+
+
+    // The scenario already deleted this account.
+    accountCleanup.unregister(recordUrl);
+
+
+    logger.info(
+      'Deleted the test-created account',
+      {
+        scenario: account.scenario,
+        accountName: account.name,
+        recordUrl
+      }
+    );
+  }
+);
+
+Then(
+  'the deleted account should no longer appear in search results',
+  async ({
+    page,
+    accountsPage,
+    accountListTestData,
+    logger
+  }) => {
+    const {
+      account,
+      recordUrl
+    } = accountListTestData;
+
+
+    if (!account || !recordUrl) {
+      throw new Error(
+        'Account data or record URL is missing.'
+      );
+    }
+
+
+    await expect(page).toHaveURL(
+      /#\/accounts\/?(?:\?.*)?$/
+    );
+
+
+    await expect(
+      accountsPage.viewAccountPageHeading
+    ).toBeVisible();
+
+
+    await accountsPage.searchAccountsByName(
+      account.name
+    );
+
+
+    const noResultsMessage =
+      accountsPage.getAccountSearchNoResultsMessage(
+        account.expectedResult
+      );
+
+
+    // Wait for an explicit completed no-results state.
+    await expect(
+      noResultsMessage
+    ).toBeVisible();
+
+
+    await expect(
+      noResultsMessage
+    ).toHaveText(
+      account.expectedResult
+    );
+
+
+    await expect(
+      accountsPage.getAccountSearchResult(
+        account.name
+      )
+    ).toHaveCount(0);
+
+
+    logger.info(
+      'Deleted account is absent from search results',
+      {
+        scenario: account.scenario,
+        accountName: account.name,
+        deletedRecordUrl: recordUrl
+      }
+    );
+  }
+);
