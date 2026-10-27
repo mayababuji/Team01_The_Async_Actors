@@ -51,6 +51,14 @@ export class OpportunitiesPage {
       name: 'BASIC',
       exact: true
     });
+   this.opportunityDescriptionInput = this.basicPanel
+  .locator('textarea');
+
+
+this.opportunityDescriptionDetail = this.basicPanel
+  .locator(
+    'scrm-dynamic-field.dynamic-field-name-description'
+  );
 
     this.opportunityNameInput = this.basicPanel
       .getByRole('textbox')
@@ -407,5 +415,18 @@ async selectOpportunityLeadSource(leadSource) {
   await this.opportunityLeadSourceSelect.selectOption({
     label: leadSource
   });
+}
+getOpportunityDescriptionInput() {
+  return this.opportunityDescriptionInput;
+}
+
+
+getOpportunityDescriptionDetail() {
+  return this.opportunityDescriptionDetail;
+}
+async enterOpportunityDescription(description) {
+  await this.opportunityDescriptionInput.fill(
+    description
+  );
 }
 }

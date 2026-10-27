@@ -762,3 +762,118 @@ Then(
     );
   }
 );
+// --------------------------------------------------
+// Create opportunity with Description
+// --------------------------------------------------
+
+
+When(
+  'the user enters mandatory opportunity data, adds the description from Excel, and saves',
+  async ({
+    page,
+    opportunitiesPage,
+    opportunityTestData,
+    opportunityCleanup,
+    logger
+  }) => {
+    const opportunity =
+      opportunityTestData.opportunity;
+
+
+    if (!opportunity) {
+      throw new Error(
+        'Opportunity test data was not initialized ' +
+        'by the Given step.'
+      );
+    }
+
+
+    await opportunitiesPage
+      .enterMandatoryOpportunityDetails(
+        opportunity
+      );
+
+
+    await opportunitiesPage
+      .enterOpportunityDescription(
+        opportunity.description
+      );
+
+
+    await opportunitiesPage.saveOpportunity();
+
+
+    await page.waitForURL(
+      /#\/opportunities\/record\/[^/?#]+(?:[/?#]|$)/
+    );
+
+
+    const opportunityRecordUrl = page.url();
+
+
+    // Register immediately so later failures still allow cleanup.
+    opportunityCleanup.register(
+      opportunityRecordUrl
+    );
+
+
+    opportunityTestData.opportunityRecordUrl =
+      opportunityRecordUrl;
+
+
+    logger.info(
+      'Opportunity created with a description',
+      {
+        scenario: opportunity.scenario,
+        opportunityName: opportunity.name,
+        opportunityRecordUrl
+      }
+    );
+  }
+);
+
+Then(
+  'the opportunity should be created with the entered description from Excel',
+  async ({
+    page,
+    opportunitiesPage,
+    opportunityTestData,
+    logger
+  }) => {
+    const {
+      opportunity,
+      opportunityRecordUrl
+    } = await verifyCreatedOpportunity(
+      page,
+      opportunitiesPage,
+      opportunityTestData
+    );
+
+
+    const descriptionDetail =
+      opportunitiesPage
+        .getOpportunityDescriptionDetail();
+
+
+    await expect(
+      descriptionDetail
+    ).toBeVisible();
+
+
+    await expect(
+      descriptionDetail
+    ).toHaveText(
+      opportunity.description
+    );
+
+
+    logger.info(
+      'Saved opportunity description verified',
+      {
+        scenario: opportunity.scenario,
+        opportunityName: opportunity.name,
+        opportunityRecordUrl
+      }
+    );
+  }
+);

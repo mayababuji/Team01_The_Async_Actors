@@ -91,6 +91,7 @@ const POSITIVE_OPPORTUNITY_SCENARIOS = new Set([
   'create_opportunity_valid_mandatory',
   'create_opportunity_with_amount',
   'create_opportunity_with_currency',
+  'create_opportunity_with_description',
   ...OPPORTUNITY_TYPE_SCENARIOS,
   ...OPPORTUNITY_LEAD_SOURCE_SCENARIOS
 ]);
@@ -191,7 +192,8 @@ const OPPORTUNITY_COLUMNS = {
   currencyCode: 'CurrencyCode',
   currencyDisplay: 'CurrencyDisplay',
   type: 'OpportunityType',
-  leadSource: 'LeadSource'
+  leadSource: 'LeadSource',
+  description: 'Description'
 };
 
 
@@ -535,6 +537,19 @@ function validateOpportunityData(
     opportunityRow.expectedCloseDate,
     rowLabel
   );
+
+
+  // Require Description only for the description scenario.
+  if (
+    opportunityRow.scenario ===
+    'create_opportunity_with_description'
+  ) {
+    requireFields(
+      opportunityRow,
+      ['description'],
+      rowLabel
+    );
+  }
 
 
   // Validate Type only for the type scenarios.
