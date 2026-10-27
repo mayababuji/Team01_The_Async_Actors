@@ -105,8 +105,15 @@ export default defineConfig({
       {
         resultsDir: 'allure-results'
       }
+    ],
+    [
+      'perfetto',
+      {
+        outputFile: 'test-results/perfetto.json.gz'
+      }
     ]
   ],
+  
 
   use: {
     baseURL: BASE_URL,
