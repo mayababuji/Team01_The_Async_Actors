@@ -84,3 +84,9 @@ Feature: Opportunities management
       | create_opportunity_lead_source_email                | Email             |
       | create_opportunity_lead_source_campaign             | Campaign          |
       | create_opportunity_lead_source_other                | Other             |
+
+        @opportunities @positive @CreateOpportunityWithDescription
+  Scenario: Create an opportunity with a description
+    Given a new account is created and the Create Opportunity page is opened for "create_opportunity_with_description"
+    When the user enters mandatory opportunity data, adds the description from Excel, and saves
+    Then the opportunity should be created with the entered description from Excel
