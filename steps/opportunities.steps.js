@@ -1,23 +1,29 @@
 import { expect } from '@playwright/test';
 import { Given, When, Then } from '../fixtures.js';
 
+
 import {
   getOpportunityDataByScenario
 } from '../utils/excel-util.js';
+
 
 // --------------------------------------------------
 // Record URL patterns
 // --------------------------------------------------
 
+
 const ACCOUNT_RECORD_URL =
   /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/;
+
 
 const OPPORTUNITY_RECORD_URL =
   /#\/opportunities\/record\/[^/?#]+(?:[/?#]|$)/;
 
+
 // --------------------------------------------------
 // Shared verification helpers
 // --------------------------------------------------
+
 
 async function verifyCreatedOpportunity(
   page,
@@ -29,6 +35,7 @@ async function verifyCreatedOpportunity(
     opportunityRecordUrl
   } = opportunityTestData;
 
+
   if (!opportunity || !opportunityRecordUrl) {
     throw new Error(
       'The When step must create the opportunity ' +
@@ -36,8 +43,10 @@ async function verifyCreatedOpportunity(
     );
   }
 
+
   await expect(page).toHaveURL(OPPORTUNITY_RECORD_URL);
   await expect(page).toHaveURL(opportunityRecordUrl);
+
 
   await expect(
     opportunitiesPage.getOpportunityDetailHeading(
@@ -45,47 +54,57 @@ async function verifyCreatedOpportunity(
     )
   ).toBeVisible();
 
+
   return {
     opportunity,
     opportunityRecordUrl
   };
 }
 
+
 function parseDisplayedUsdAmount(displayedAmount) {
   const normalizedAmount = displayedAmount
     .replace(/USD/gi, '')
     .replace(/[$,\s]/g, '');
 
+
   if (!/^\d+(?:\.\d+)?$/.test(normalizedAmount)) {
     return null;
   }
 
+
   return Number(normalizedAmount);
 }
+
 
 // --------------------------------------------------
 // Opportunities dropdown navigation
 // --------------------------------------------------
+
 
 When(
   'the user hovers over the Opportunities module in the top navigation',
   async ({ opportunitiesPage, logger }) => {
     await opportunitiesPage.hoverOpportunitiesModule();
 
+
     logger.info('Hovered over Opportunities module');
   }
 );
+
 
 Then(
   'the user should see the Opportunities dropdown options',
   async ({ opportunitiesPage, logger }, dataTable) => {
     const options = dataTable.raw().flat();
 
+
     for (const optionName of options) {
       await expect(
         opportunitiesPage.getDropdownOption(optionName)
       ).toBeVisible();
     }
+
 
     logger.info(
       'All Opportunities dropdown options are visible',
@@ -94,18 +113,22 @@ Then(
   }
 );
 
+
 // --------------------------------------------------
 // View Opportunities navigation
 // --------------------------------------------------
+
 
 When(
   'the user opens the Opportunities module and clicks View Opportunities',
   async ({ opportunitiesPage, logger }) => {
     await opportunitiesPage.openViewOpportunitiesPage();
 
+
     logger.info('Clicked View Opportunities');
   }
 );
+
 
 Then(
   'the user should be navigated to the View Opportunities page',
@@ -114,26 +137,32 @@ Then(
       opportunitiesPage.viewOpportunitiesPageHeading
     ).toBeVisible();
 
+
     await expect(
       opportunitiesPage.viewOpportunitiesPageHeading
     ).toHaveText('OPPORTUNITIES');
+
 
     logger.info('View Opportunities page displayed');
   }
 );
 
+
 // --------------------------------------------------
 // Import Opportunities navigation
 // --------------------------------------------------
+
 
 When(
   'the user opens the Opportunities module and clicks Import Opportunities',
   async ({ opportunitiesPage, logger }) => {
     await opportunitiesPage.openImportOpportunitiesPage();
 
+
     logger.info('Clicked Import Opportunities');
   }
 );
+
 
 Then(
   'the user should be navigated to the Import Opportunities page',
@@ -142,37 +171,45 @@ Then(
       opportunitiesPage.importOpportunitiesPageHeading
     ).toBeVisible();
 
+
     await expect(
       opportunitiesPage.importOpportunitiesPageHeading
     ).toHaveText('Step 1: Upload Import File');
+
 
     logger.info('Import Opportunities page verified');
   }
 );
 
+
 // --------------------------------------------------
 // Required-field validation
 // --------------------------------------------------
+
 
 Given(
   'the user is on the Create Opportunity page',
   async ({ opportunitiesPage, logger }) => {
     await opportunitiesPage.openCreateOpportunityPage();
 
+
     logger.info('Opened Create Opportunity page');
   }
 );
+
 
 When(
   'the user saves the opportunity without entering mandatory fields',
   async ({ opportunitiesPage, logger }) => {
     await opportunitiesPage.saveOpportunity();
 
+
     logger.info(
       'Clicked Save without entering opportunity details'
     );
   }
 );
+
 
 Then(
   'required-field validation messages should be displayed for:',
@@ -181,12 +218,14 @@ Then(
       .raw()
       .map(([fieldName]) => fieldName);
 
+
     for (const fieldName of fieldNames) {
       await expect(
         opportunitiesPage.getRequiredFieldValidationMessage(
           fieldName
         )
       ).toBeVisible();
+
 
       logger.info(
         'Required-field validation message verified',
@@ -196,9 +235,11 @@ Then(
   }
 );
 
+
 // --------------------------------------------------
 // Excel-driven opportunity creation: Given
 // --------------------------------------------------
+
 
 Given(
   'a new account is created and the Create Opportunity page is opened for {string}',
@@ -213,7 +254,6 @@ Given(
     },
     scenarioKey
   ) => {
-    // Fail before creating records if cleanup is missing.
     if (
       typeof opportunitiesPage.deleteOpportunityByUrl !==
       'function'
@@ -224,14 +264,16 @@ Given(
       );
     }
 
-   const opportunity =
-  getOpportunityDataByScenario(scenarioKey);
+
+    const opportunity =
+      getOpportunityDataByScenario(scenarioKey);
+
 
     opportunityTestData.opportunity = opportunity;
     opportunityTestData.accountRecordUrl = null;
     opportunityTestData.opportunityRecordUrl = null;
 
-    // The feature Background has already opened the home page.
+
     logger.info(
       'Creating prerequisite account for opportunity',
       {
@@ -240,23 +282,30 @@ Given(
       }
     );
 
+
     await accountsPage.openCreateAccountPage();
+
 
     await accountsPage.enterAccountName(
       opportunity.accountName
     );
 
+
     await accountsPage.clickSaveOnCreateAccountPage();
+
 
     await page.waitForURL(ACCOUNT_RECORD_URL);
 
+
     const accountRecordUrl = page.url();
 
-    // Register immediately after account creation.
+
     opportunityCleanup.registerAccount(accountRecordUrl);
+
 
     opportunityTestData.accountRecordUrl =
       accountRecordUrl;
+
 
     logger.info('Prerequisite account created', {
       scenario: scenarioKey,
@@ -264,7 +313,9 @@ Given(
       accountRecordUrl
     });
 
+
     await opportunitiesPage.openCreateOpportunityPage();
+
 
     logger.info('Opened Create Opportunity page', {
       scenario: scenarioKey,
@@ -273,9 +324,11 @@ Given(
   }
 );
 
+
 // --------------------------------------------------
 // Excel-driven opportunity creation: When
 // --------------------------------------------------
+
 
 When(
   'the user enters the mandatory opportunity data and saves',
@@ -291,12 +344,14 @@ When(
       accountRecordUrl
     } = opportunityTestData;
 
+
     if (!opportunity || !accountRecordUrl) {
       throw new Error(
         'The Given step must initialize opportunity data ' +
         'and create the prerequisite account.'
       );
     }
+
 
     logger.info('Entering mandatory opportunity data', {
       scenario: opportunity.scenario,
@@ -307,21 +362,27 @@ When(
       expectedCloseDate: opportunity.expectedCloseDate
     });
 
+
     await opportunitiesPage.enterMandatoryOpportunityDetails(
       opportunity
     );
 
+
     await opportunitiesPage.saveOpportunity();
+
 
     await page.waitForURL(OPPORTUNITY_RECORD_URL);
 
+
     const opportunityRecordUrl = page.url();
 
-    // Register before running any Then assertions.
+
     opportunityCleanup.register(opportunityRecordUrl);
+
 
     opportunityTestData.opportunityRecordUrl =
       opportunityRecordUrl;
+
 
     logger.info(
       'Opportunity created and registered for cleanup',
@@ -334,9 +395,11 @@ When(
   }
 );
 
+
 // --------------------------------------------------
 // Verify created opportunity detail page
 // --------------------------------------------------
+
 
 Then(
   'the newly created opportunity detail page should be displayed',
@@ -355,6 +418,7 @@ Then(
       opportunityTestData
     );
 
+
     logger.info(
       'Newly created opportunity detail page verified',
       {
@@ -366,9 +430,11 @@ Then(
   }
 );
 
+
 // --------------------------------------------------
 // Verify saved opportunity amount against Excel
 // --------------------------------------------------
+
 
 Then(
   'the opportunity should be created with the amount from Excel',
@@ -387,7 +453,9 @@ Then(
       opportunityTestData
     );
 
+
     const expectedAmount = Number(opportunity.amount);
+
 
     if (
       String(opportunity.amount ?? '').trim() === '' ||
@@ -398,15 +466,19 @@ Then(
       );
     }
 
+
     const amountDetail =
       opportunitiesPage.getOpportunityAmountDetail();
 
+
     await expect(amountDetail).toBeVisible();
+
 
     await expect.poll(
       async () => {
         const displayedAmount =
           await amountDetail.innerText();
+
 
         return parseDisplayedUsdAmount(
           displayedAmount
@@ -417,6 +489,7 @@ Then(
           'Saved Opportunity Amount should match the Excel value'
       }
     ).toBe(expectedAmount);
+
 
     logger.info(
       'Opportunity created with the expected amount',
@@ -429,6 +502,7 @@ Then(
     );
   }
 );
+
 
 Then(
   'the opportunity should be created with the currency and amount from Excel',
@@ -447,15 +521,19 @@ Then(
       opportunityTestData
     );
 
+
     const expectedAmount = Number(opportunity.amount);
+
 
     const expectedCurrencyCode = String(
       opportunity.currencyCode ?? ''
     ).trim();
 
+
     const expectedCurrencyDisplay = String(
       opportunity.currencyDisplay ?? ''
     ).trim();
+
 
     if (
       String(opportunity.amount ?? '').trim() === '' ||
@@ -465,6 +543,7 @@ Then(
         'OpportunityAmount must contain a valid number in Excel.'
       );
     }
+
 
     if (
       expectedCurrencyCode !== 'USD' ||
@@ -476,21 +555,24 @@ Then(
       );
     }
 
+
     const amountDetail =
       opportunitiesPage.getOpportunityAmountDetail();
 
+
     await expect(amountDetail).toBeVisible();
 
-    // Verify the saved currency display.
+
     await expect(amountDetail).toContainText(
       expectedCurrencyDisplay
     );
 
-    // Verify the saved numeric amount.
+
     await expect.poll(
       async () => {
         const displayedAmount =
           await amountDetail.innerText();
+
 
         if (
           !displayedAmount.includes(
@@ -500,16 +582,19 @@ Then(
           return null;
         }
 
+
         const normalizedAmount = displayedAmount
           .replace(expectedCurrencyDisplay, '')
           .replace(/USD/gi, '')
           .replace(/[,\s]/g, '');
+
 
         if (
           !/^\d+(?:\.\d+)?$/.test(normalizedAmount)
         ) {
           return null;
         }
+
 
         return Number(normalizedAmount);
       },
@@ -518,6 +603,7 @@ Then(
           'Saved USD display and opportunity amount should match Excel'
       }
     ).toBe(expectedAmount);
+
 
     logger.info(
       'Opportunity created with the expected USD display and amount',
@@ -532,6 +618,7 @@ Then(
     );
   }
 );
+
 
 // --------------------------------------------------
 // Create opportunity with Type
@@ -573,15 +660,12 @@ When(
     await opportunitiesPage.saveOpportunity();
 
 
-    await page.waitForURL(
-      /#\/opportunities\/record\/[^/?#]+(?:[/?#]|$)/
-    );
+    await page.waitForURL(OPPORTUNITY_RECORD_URL);
 
 
     const opportunityRecordUrl = page.url();
 
 
-    // Register immediately so later failures still allow cleanup.
     opportunityCleanup.register(
       opportunityRecordUrl
     );
@@ -602,6 +686,7 @@ When(
     );
   }
 );
+
 
 Then(
   'the opportunity should be created with the selected type from Excel',
@@ -645,6 +730,7 @@ Then(
   }
 );
 
+
 // --------------------------------------------------
 // Create opportunity with Lead Source
 // --------------------------------------------------
@@ -686,15 +772,12 @@ When(
     await opportunitiesPage.saveOpportunity();
 
 
-    await page.waitForURL(
-      /#\/opportunities\/record\/[^/?#]+(?:[/?#]|$)/
-    );
+    await page.waitForURL(OPPORTUNITY_RECORD_URL);
 
 
     const opportunityRecordUrl = page.url();
 
 
-    // Register immediately so later failures still allow cleanup.
     opportunityCleanup.register(
       opportunityRecordUrl
     );
@@ -715,6 +798,7 @@ When(
     );
   }
 );
+
 
 Then(
   'the opportunity should be created with the selected lead source from Excel',
@@ -762,6 +846,8 @@ Then(
     );
   }
 );
+
+
 // --------------------------------------------------
 // Create opportunity with Description
 // --------------------------------------------------
@@ -803,15 +889,12 @@ When(
     await opportunitiesPage.saveOpportunity();
 
 
-    await page.waitForURL(
-      /#\/opportunities\/record\/[^/?#]+(?:[/?#]|$)/
-    );
+    await page.waitForURL(OPPORTUNITY_RECORD_URL);
 
 
     const opportunityRecordUrl = page.url();
 
 
-    // Register immediately so later failures still allow cleanup.
     opportunityCleanup.register(
       opportunityRecordUrl
     );
@@ -832,6 +915,7 @@ When(
   }
 );
 
+
 Then(
   'the opportunity should be created with the entered description from Excel',
   async ({
@@ -850,9 +934,25 @@ Then(
     );
 
 
+    const expectedDescription =
+      opportunity.description;
+
+
+    if (
+      typeof expectedDescription !== 'string' ||
+      expectedDescription.trim() === ''
+    ) {
+      throw new Error(
+        'Description is missing in Excel for scenario ' +
+        `"${opportunity.scenario}".`
+      );
+    }
+
+
     const descriptionDetail =
-      opportunitiesPage
-        .getOpportunityDescriptionDetail();
+      opportunitiesPage.getOpportunityDescriptionDetail(
+        expectedDescription
+      );
 
 
     await expect(
@@ -863,7 +963,7 @@ Then(
     await expect(
       descriptionDetail
     ).toHaveText(
-      opportunity.description
+      expectedDescription
     );
 
 
@@ -877,6 +977,7 @@ Then(
     );
   }
 );
+
 
 // --------------------------------------------------
 // Delete opportunity
@@ -913,15 +1014,12 @@ When(
     await opportunitiesPage.saveOpportunity();
 
 
-    await page.waitForURL(
-      /#\/opportunities\/record\/[^/?#]+(?:[/?#]|$)/
-    );
+    await page.waitForURL(OPPORTUNITY_RECORD_URL);
 
 
     const opportunityRecordUrl = page.url();
 
 
-    // Register immediately for fallback cleanup.
     opportunityCleanup.register(
       opportunityRecordUrl
     );
@@ -931,7 +1029,6 @@ When(
       opportunityRecordUrl;
 
 
-    // Wait for the created record before deleting it.
     await opportunitiesPage
       .getOpportunityDetailHeading(
         opportunity.name
@@ -956,7 +1053,6 @@ When(
     );
 
 
-    // Prevent teardown from deleting it a second time.
     opportunityCleanup.unregister(
       opportunityRecordUrl
     );
@@ -972,6 +1068,8 @@ When(
     );
   }
 );
+
+
 Then(
   'the deleted opportunity should be inaccessible with message {string}',
   async ({
@@ -993,7 +1091,6 @@ Then(
     }
 
 
-    // Verify the deletion returned to the opportunity list.
     await expect(page).toHaveURL(
       /#\/opportunities\/?(?:\?.*)?$/
     );
@@ -1004,7 +1101,6 @@ Then(
     ).toBeVisible();
 
 
-    // Reopen the exact opportunity created by this scenario.
     await page.goto(
       opportunityRecordUrl
     );
@@ -1035,98 +1131,11 @@ Then(
   }
 );
 
+
 // --------------------------------------------------
 // Update opportunity amount
 // --------------------------------------------------
 
-
-Given(
-  'a new opportunity exists for updating its amount {string}',
-  async ({
-    page,
-    accountsPage,
-    opportunitiesPage,
-    opportunityTestData,
-    opportunityCleanup,
-    logger
-  }, scenarioKey) => {
-    const opportunity =
-      getOpportunityDataByScenario(
-        scenarioKey
-      );
-
-    opportunityTestData.opportunity =
-      opportunity;
-
-    opportunityTestData.accountRecordUrl = null;
-
-    opportunityTestData.opportunityRecordUrl = null;
-
-
-    // Create the prerequisite account.
-    const accountRecordUrl =
-      await accountsPage.createAccount({
-        name: opportunity.accountName
-      });
-
-
-    // Register immediately for fallback cleanup.
-    opportunityCleanup.registerAccount(
-      accountRecordUrl
-    );
-
-    opportunityTestData.accountRecordUrl =
-      accountRecordUrl;
-
-
-    await accountsPage.waitForAccountDetailPage();
-
-
-    // Create the opportunity with the original amount.
-    await opportunitiesPage
-      .openCreateOpportunityPage();
-
-    await opportunitiesPage
-      .enterMandatoryOpportunityDetails(
-        opportunity
-      );
-
-    await opportunitiesPage.saveOpportunity();
-
-
-    await page.waitForURL(
-      /#\/opportunities\/record\/[^/?#]+(?:[/?#]|$)/
-    );
-
-    const opportunityRecordUrl = page.url();
-
-
-    opportunityCleanup.register(
-      opportunityRecordUrl
-    );
-
-    opportunityTestData.opportunityRecordUrl =
-      opportunityRecordUrl;
-
-
-    await opportunitiesPage
-      .waitForOpportunityDetailPage(
-        opportunity.name
-      );
-
-
-    logger.info(
-      'Created opportunity for amount update',
-      {
-        scenario: opportunity.scenario,
-        opportunityName: opportunity.name,
-        originalAmount: opportunity.amount,
-        accountRecordUrl,
-        opportunityRecordUrl
-      }
-    );
-  }
-);
 
 When(
   'the user updates the opportunity amount from Excel and saves the changes',
@@ -1140,6 +1149,7 @@ When(
       opportunityRecordUrl
     } = opportunityTestData;
 
+
     if (!opportunity || !opportunityRecordUrl) {
       throw new Error(
         'Amount update requires an opportunity ' +
@@ -1151,9 +1161,11 @@ When(
     await opportunitiesPage
       .openOpportunityForEditing();
 
+
     await opportunitiesPage.enterOpportunityAmount(
       opportunity.updatedAmount
     );
+
 
     await opportunitiesPage.saveOpportunityChanges(
       opportunity.name
@@ -1173,6 +1185,7 @@ When(
   }
 );
 
+
 Then(
   'the opportunity should display the updated amount',
   async ({
@@ -1186,6 +1199,7 @@ Then(
       opportunityRecordUrl
     } = opportunityTestData;
 
+
     if (!opportunity || !opportunityRecordUrl) {
       throw new Error(
         'Opportunity data or record URL is missing.'
@@ -1193,13 +1207,11 @@ Then(
     }
 
 
-    // Confirm that editing did not create another record.
     await expect(page).toHaveURL(
       opportunityRecordUrl
     );
 
 
-    // Reload to verify the persisted value.
     await opportunitiesPage
       .reloadOpportunityDetailPage(
         opportunity.name
@@ -1210,11 +1222,13 @@ Then(
       opportunityRecordUrl
     );
 
+
     await expect(
       opportunitiesPage.getOpportunityDetailHeading(
         opportunity.name
       )
     ).toBeVisible();
+
 
     await expect(
       opportunitiesPage.getOpportunityAmountDetail()
@@ -1241,6 +1255,238 @@ Then(
         scenario: opportunity.scenario,
         opportunityName: opportunity.name,
         expectedAmount: opportunity.updatedAmount,
+        opportunityRecordUrl
+      }
+    );
+  }
+);
+
+
+// --------------------------------------------------
+// Shared setup for opportunity update scenarios
+// --------------------------------------------------
+
+
+Given(
+  'a new opportunity exists for update {string}',
+  async ({
+    page,
+    accountsPage,
+    opportunitiesPage,
+    opportunityTestData,
+    opportunityCleanup,
+    logger
+  }, scenarioKey) => {
+    const opportunity =
+      getOpportunityDataByScenario(
+        scenarioKey
+      );
+
+
+    opportunityTestData.opportunity =
+      opportunity;
+
+
+    opportunityTestData.accountRecordUrl = null;
+
+
+    opportunityTestData.opportunityRecordUrl = null;
+
+
+    const accountRecordUrl =
+      await accountsPage.createAccount({
+        name: opportunity.accountName
+      });
+
+
+    opportunityCleanup.registerAccount(
+      accountRecordUrl
+    );
+
+
+    opportunityTestData.accountRecordUrl =
+      accountRecordUrl;
+
+
+    await accountsPage.waitForAccountDetailPage();
+
+
+    await opportunitiesPage
+      .openCreateOpportunityPage();
+
+
+    await opportunitiesPage
+      .enterMandatoryOpportunityDetails(
+        opportunity
+      );
+
+
+    if (opportunity.description) {
+      await opportunitiesPage
+        .enterOpportunityDescription(
+          opportunity.description
+        );
+    }
+
+
+    await opportunitiesPage.saveOpportunity();
+
+
+    await page.waitForURL(OPPORTUNITY_RECORD_URL);
+
+
+    const opportunityRecordUrl = page.url();
+
+
+    opportunityCleanup.register(
+      opportunityRecordUrl
+    );
+
+
+    opportunityTestData.opportunityRecordUrl =
+      opportunityRecordUrl;
+
+
+    await opportunitiesPage
+      .waitForOpportunityDetailPage(
+        opportunity.name
+      );
+
+
+    logger.info(
+      'Created opportunity for update',
+      {
+        scenario: opportunity.scenario,
+        opportunityName: opportunity.name,
+        accountRecordUrl,
+        opportunityRecordUrl
+      }
+    );
+  }
+);
+
+
+// --------------------------------------------------
+// Update opportunity description
+// --------------------------------------------------
+
+
+When(
+  'the user updates the opportunity description from Excel and saves the changes',
+  async ({
+    opportunitiesPage,
+    opportunityTestData,
+    logger
+  }) => {
+    const {
+      opportunity,
+      opportunityRecordUrl
+    } = opportunityTestData;
+
+
+    if (!opportunity || !opportunityRecordUrl) {
+      throw new Error(
+        'Description update requires an opportunity ' +
+        'created by the Given step.'
+      );
+    }
+
+
+    await opportunitiesPage
+      .openOpportunityForEditing();
+
+
+    await opportunitiesPage
+      .enterOpportunityDescription(
+        opportunity.updatedDescription
+      );
+
+
+    await opportunitiesPage
+      .saveOpportunityChanges(
+        opportunity.name
+      );
+
+
+    logger.info(
+      'Saved updated opportunity description',
+      {
+        scenario: opportunity.scenario,
+        opportunityName: opportunity.name,
+        opportunityRecordUrl
+      }
+    );
+  }
+);
+
+
+Then(
+  'the opportunity should display the updated description',
+  async ({
+    page,
+    opportunitiesPage,
+    opportunityTestData,
+    logger
+  }) => {
+    const {
+      opportunity,
+      opportunityRecordUrl
+    } = opportunityTestData;
+
+
+    if (!opportunity || !opportunityRecordUrl) {
+      throw new Error(
+        'Opportunity data or record URL is missing.'
+      );
+    }
+
+
+    await expect(page).toHaveURL(
+      opportunityRecordUrl
+    );
+
+
+    await opportunitiesPage
+      .reloadOpportunityDetailPage(
+        opportunity.name
+      );
+
+
+    await expect(page).toHaveURL(
+      opportunityRecordUrl
+    );
+
+
+    await expect(
+      opportunitiesPage.getOpportunityDetailHeading(
+        opportunity.name
+      )
+    ).toBeVisible();
+
+
+    const descriptionDetail =
+      opportunitiesPage.getOpportunityDescriptionDetail(
+        opportunity.updatedDescription
+      );
+
+
+    await expect(
+      descriptionDetail
+    ).toBeVisible();
+
+
+    await expect(
+      descriptionDetail
+    ).toHaveText(
+      opportunity.updatedDescription
+    );
+
+
+    logger.info(
+      'Persisted opportunity description verified',
+      {
+        scenario: opportunity.scenario,
+        opportunityName: opportunity.name,
         opportunityRecordUrl
       }
     );
