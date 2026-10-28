@@ -96,8 +96,15 @@ Feature: Opportunities management
     Given a new account is created and the Create Opportunity page is opened for "delete_opportunity"
     When the user creates the opportunity and deletes it with confirmation
     Then the deleted opportunity should be inaccessible with message "You are not authorized to view this page. Please contact your system administrator."
+
   @opportunities @Positive @UpdateOpportunityAmount
   Scenario: Update the amount of an existing opportunity
-    Given a new opportunity exists for updating its amount "update_opportunity_amount"
+    Given a new opportunity exists for update "update_opportunity_amount"
     When the user updates the opportunity amount from Excel and saves the changes
     Then the opportunity should display the updated amount
+
+      @opportunities @Positive @UpdateOpportunityDescription
+  Scenario: Update the description of an existing opportunity
+    Given a new opportunity exists for update "update_opportunity_description"
+    When the user updates the opportunity description from Excel and saves the changes
+    Then the opportunity should display the updated description

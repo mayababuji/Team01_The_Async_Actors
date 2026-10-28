@@ -95,6 +95,7 @@ const POSITIVE_OPPORTUNITY_SCENARIOS = new Set([
   'create_opportunity_with_description',
   'delete_opportunity',
   'update_opportunity_amount',
+  'update_opportunity_description',
   ...OPPORTUNITY_TYPE_SCENARIOS,
   ...OPPORTUNITY_LEAD_SOURCE_SCENARIOS
 ]);
@@ -197,7 +198,8 @@ const OPPORTUNITY_COLUMNS = {
   type: 'OpportunityType',
   leadSource: 'LeadSource',
   description: 'Description',
-  updatedAmount: 'UpdatedAmount'
+  updatedAmount: 'UpdatedAmount',
+updatedDescription: 'UpdatedDescription'
 };
 
 
@@ -658,6 +660,27 @@ if (
   ) {
     throw new Error(
       `${rowLabel}: OpportunityAmount and UpdatedAmount ` +
+      'must differ.'
+    );
+  }
+}
+// Validate Description values only for the description-update scenario.
+if (
+  opportunityRow.scenario ===
+  'update_opportunity_description'
+) {
+  requireFields(
+    opportunityRow,
+    ['description', 'updatedDescription'],
+    rowLabel
+  );
+
+  if (
+    opportunityRow.description ===
+    opportunityRow.updatedDescription
+  ) {
+    throw new Error(
+      `${rowLabel}: Description and UpdatedDescription ` +
       'must differ.'
     );
   }
