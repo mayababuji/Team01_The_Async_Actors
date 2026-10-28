@@ -833,7 +833,22 @@ Then(
     ).toHaveText(
       opportunity.leadSource
     );
+// console.log(
+//   'Lead source ARIA snapshot:\n',
+//   await leadSourceDetail.ariaSnapshot()
+// );
 
+// console.log(
+//   'Lead source HTML:\n',
+//   await leadSourceDetail.evaluate(
+//     element => element.outerHTML
+//   )
+// );
+
+// console.log(
+//   'Lead source inner text:\n',
+//   await leadSourceDetail.innerText()
+// );
 
     logger.info(
       'Saved opportunity lead source verified',

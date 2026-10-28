@@ -6,6 +6,7 @@ import { readAccountImportCsv } from '../utils/csv-util.js';
 import { getAccountDataByScenario } from '../utils/excel-util.js';
 
 
+
 const ACCOUNT_RECORD_URL =
   /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/;
 
@@ -18,10 +19,15 @@ const ACCOUNT_IMPORT_FILE = path.resolve(
   'test-data',
   'AccountsImportNew.csv'
 );
+
+
 const ACCOUNT_SAVED_URL =
   /#\/accounts\/edit\?.*return_action=DetailView/;
 
+
+// --------------------------------------------------
 // Background
+// --------------------------------------------------
 
 
 Given(
@@ -38,7 +44,9 @@ Given(
 );
 
 
+// --------------------------------------------------
 // Accounts navigation
+// --------------------------------------------------
 
 
 When(
@@ -135,7 +143,9 @@ Then(
 );
 
 
+// --------------------------------------------------
 // Required Name validation
+// --------------------------------------------------
 
 
 Given(
@@ -169,7 +179,9 @@ Then(
 );
 
 
+// --------------------------------------------------
 // Create account with mandatory data
+// --------------------------------------------------
 
 
 When(
@@ -207,6 +219,7 @@ When(
   }
 );
 
+
 Then(
   'the user should be navigated to the newly created account detail page',
   async ({ page, accountsPage, logger }) => {
@@ -236,7 +249,9 @@ Then(
 );
 
 
+// --------------------------------------------------
 // Create account with complete overview information
+// --------------------------------------------------
 
 
 When(
@@ -338,7 +353,9 @@ Then(
 );
 
 
+// --------------------------------------------------
 // Create account with primary email
+// --------------------------------------------------
 
 
 When(
@@ -372,6 +389,7 @@ When(
     logger.info('Account registered for cleanup', {
       scenario: account.scenario,
       accountName: account.name,
+      email: account.email,
       recordUrl
     });
   }
@@ -400,7 +418,6 @@ Then(
 
 
     await accountsPage.openAccountEditing();
-
 
     await expect(
       accountsPage.emailInput
@@ -437,7 +454,9 @@ Then(
 );
 
 
+// --------------------------------------------------
 // Invalid email validation
+// --------------------------------------------------
 
 
 When(
@@ -496,7 +515,9 @@ Then(
 );
 
 
+// --------------------------------------------------
 // Cancel without entered data
+// --------------------------------------------------
 
 
 When(
@@ -532,7 +553,9 @@ Then(
 );
 
 
+// --------------------------------------------------
 // Unsaved account data
+// --------------------------------------------------
 
 
 Given(
@@ -685,7 +708,9 @@ Then(
 );
 
 
+// --------------------------------------------------
 // Shared View Accounts setup
+// --------------------------------------------------
 
 
 Given(
@@ -699,7 +724,9 @@ Given(
 );
 
 
+// --------------------------------------------------
 // Search prerequisite and cleanup registration
+// --------------------------------------------------
 
 
 Given(
@@ -738,7 +765,9 @@ Given(
 );
 
 
+// --------------------------------------------------
 // Search by full account name
+// --------------------------------------------------
 
 
 When(
@@ -786,7 +815,9 @@ Then(
 );
 
 
+// --------------------------------------------------
 // Search by partial account name
+// --------------------------------------------------
 
 
 When(
@@ -829,7 +860,9 @@ When(
 );
 
 
+// --------------------------------------------------
 // Search for a non-existing account
+// --------------------------------------------------
 
 
 When(
@@ -882,7 +915,9 @@ Then(
 );
 
 
+// --------------------------------------------------
 // Open account from the list
+// --------------------------------------------------
 
 
 Given(
@@ -991,7 +1026,9 @@ Then(
 );
 
 
+// --------------------------------------------------
 // Recently Viewed
+// --------------------------------------------------
 
 
 Given(
@@ -1024,8 +1061,7 @@ Given(
       'Created and opened account for Recently Viewed test',
       {
         scenario: account.scenario,
-        accountName: account.name,
-        recordUrl
+        accountName: account.name
       }
     );
   }
@@ -1078,7 +1114,9 @@ Then(
 );
 
 
+// --------------------------------------------------
 // Sort accounts by name
+// --------------------------------------------------
 
 
 Given(
@@ -1138,7 +1176,9 @@ Then(
 );
 
 
+// --------------------------------------------------
 // Update account website
+// --------------------------------------------------
 
 
 Given(
@@ -1237,7 +1277,9 @@ Then(
 );
 
 
+// --------------------------------------------------
 // Update account office phone number
+// --------------------------------------------------
 
 
 Given(
@@ -1335,7 +1377,9 @@ Then(
 );
 
 
+// --------------------------------------------------
 // Cancel changes while editing an account
+// --------------------------------------------------
 
 
 Given(
@@ -1348,25 +1392,29 @@ Given(
   }, scenarioKey) => {
     const account = getAccountDataByScenario(scenarioKey);
 
+
     accountListTestData.account = account;
     accountListTestData.recordUrl = null;
 
-    // Save both the Name and original Website.
+
     const recordUrl =
       await accountsPage.createAccountWithWebsite(account);
 
-    // Register before subsequent UI actions.
+
     accountCleanup.register(recordUrl);
     accountListTestData.recordUrl = recordUrl;
 
+
     await accountsPage.waitForAccountDetailPage();
+
 
     await accountsPage.openAccountForEditing();
 
-    // Enter the change without saving it.
+
     await accountsPage.enterAccountWebsite(
       account.updatedWebsite
     );
+
 
     logger.info(
       'Created account and entered an unsaved website change',
@@ -1398,6 +1446,7 @@ When(
       );
     }
 
+
     logger.info(
       'Cancelled editing and discarded the unsaved changes',
       {
@@ -1409,6 +1458,7 @@ When(
   }
 );
 
+
 Then(
   'the existing account details should remain unchanged',
   async ({
@@ -1419,22 +1469,27 @@ Then(
   }) => {
     const { account, recordUrl } = accountListTestData;
 
+
     if (!account || !recordUrl) {
       throw new Error(
         'Account data or record URL is missing.'
       );
     }
 
+
     await expect(page).toHaveURL(recordUrl);
+
 
     await accountsPage.openSavedAccountForVerification(
       recordUrl
     );
 
+
     try {
       await expect(
         accountsPage.accountNameInput
       ).toHaveValue(account.name);
+
 
       await expect(
         accountsPage.websiteInput
@@ -1442,6 +1497,7 @@ Then(
     } finally {
       await accountsPage.cancelAccountEditing();
     }
+
 
     logger.info(
       'Original account details verified after cancellation',
@@ -1453,13 +1509,28 @@ Then(
   }
 );
 
+
+// --------------------------------------------------
 // Import Accounts
+// --------------------------------------------------
 
 
 Given(
   'the user is on the Import Accounts page',
   async ({ accountsPage }) => {
     await accountsPage.openImportAccountPage();
+     // Wait until the imported iframe content is ready.
+    await accountsPage.importAccountPageHeading.waitFor({
+      state: 'visible'
+    });
+
+
+    // Temporary diagnostics.
+    console.log(
+      'Import Accounts frame body ARIA snapshot:\n',
+      await accountsPage.importFrameBody.ariaSnapshot()
+    );
+
   }
 );
 
@@ -1765,6 +1836,7 @@ When(
 
 
     await accountsPage.attemptAccountImportNext();
+    
   }
 );
 
@@ -1816,6 +1888,8 @@ Then(
     );
   }
 );
+
+
 // --------------------------------------------------
 // Delete account
 // --------------------------------------------------
@@ -1842,7 +1916,6 @@ Given(
       await accountsPage.createAccount(account);
 
 
-    // Register immediately for fallback cleanup.
     accountCleanup.register(recordUrl);
 
 
@@ -1852,7 +1925,6 @@ Given(
     await accountsPage.waitForAccountDetailPage();
 
 
-    // Establish that the account is searchable before deletion.
     await accountsPage.searchAccountsByName(
       account.name
     );
@@ -1865,7 +1937,6 @@ Given(
       });
 
 
-    // Return to the exact record created by this scenario.
     await page.goto(recordUrl);
 
 
@@ -1882,6 +1953,8 @@ Given(
     );
   }
 );
+
+
 When(
   'the user deletes the account and confirms the deletion',
   async ({
@@ -1909,7 +1982,6 @@ When(
     );
 
 
-    // The scenario already deleted this account.
     accountCleanup.unregister(recordUrl);
 
 
@@ -1923,6 +1995,7 @@ When(
     );
   }
 );
+
 
 Then(
   'the deleted account should no longer appear in search results',
@@ -1966,7 +2039,6 @@ Then(
       );
 
 
-    // Wait for an explicit completed no-results state.
     await expect(
       noResultsMessage
     ).toBeVisible();

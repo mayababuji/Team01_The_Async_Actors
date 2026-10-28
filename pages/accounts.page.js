@@ -1,117 +1,127 @@
 const ACCOUNT_RECORD_URL =
   /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/;
 
+
 export class AccountsPage {
   constructor(page) {
     this.page = page;
+
 
     // --------------------------------------------------
     // Navigation
     // --------------------------------------------------
 
+
     this.accountsModule = page
       .getByText('Accounts', { exact: true })
       .filter({ visible: true });
+
 
     this.createAccountOption = page.getByRole('link', {
       name: /^create account$/i
     });
 
+
     this.importAccountsOption = page.getByRole('link', {
       name: /^import accounts$/i
     });
+
 
     this.viewAccountsOption = page.getByRole('link', {
       name: /^view accounts$/i
     });
 
+
     // --------------------------------------------------
     // Page headings and panels
     // --------------------------------------------------
+
 
     this.createAccountPageHeading = page.getByText('Create', {
       exact: true
     });
 
+
     this.viewAccountPageHeading = page.getByText('ACCOUNTS', {
       exact: true
     });
+
 
     this.overviewPanel = page.getByRole('tabpanel', {
       name: /^overview$/i
     });
 
+
     // --------------------------------------------------
     // Form buttons
     // --------------------------------------------------
+
 
     this.saveButton = page.getByRole('button', {
       name: /^save$/i
     });
 
+
     this.cancelCreateAccountButton = page.getByRole('button', {
       name: /^cancel$/i
     });
+
 
     this.editAccountButton = page.getByRole('button', {
       name: /^edit$/i
     });
 
+
     // --------------------------------------------------
     // Validation
     // --------------------------------------------------
+
 
     this.nameValidationMessage = page.getByText(
       'Missing required field: Name',
       { exact: true }
     );
 
+
     // --------------------------------------------------
     // Overview inputs
     // --------------------------------------------------
 
-    // this.accountNameInput = page
-    //   .locator('scrm-field.field-name-name')
-    //   .getByRole('textbox');
 
-//     this.accountNameInput = page.getByRole('textbox', {
-//   name: 'Name',
-//   exact: true
-// });
-this.accountNameInput = page.getByRole('textbox').nth(1);
+    this.accountNameInput = page.getByRole('textbox').nth(1);
 
-    // this.websiteInput = page
-    //   .locator('scrm-field.field-name-website')
-    //   .getByRole('textbox');
-this.websiteInput = page.getByRole('textbox').nth(2);
-    // this.officePhoneInput = page
-    //   .locator(
-    //     'scrm-dynamic-field.dynamic-field-name-phone_office'
-    //   )
-    //   .getByRole('textbox');
-this.officePhoneInput = page.getByRole('textbox').nth(3);
+
+    this.websiteInput = page.getByRole('textbox').nth(2);
+
+
+    this.officePhoneInput = page.getByRole('textbox').nth(3);
+
+
     this.emailInput = page
       .locator('scrm-dynamic-field.dynamic-field-type-email')
       .getByRole('textbox');
 
-   this.primaryEmailControl = page
-  .locator(
-    'scrm-dynamic-field.dynamic-field-name-primary_address'
-  )
-  .getByRole('checkbox', {
-    includeHidden: true
-  });
+
+    this.primaryEmailControl = page
+      .locator(
+        'scrm-dynamic-field.dynamic-field-name-primary_address'
+      )
+      .getByRole('checkbox', {
+        includeHidden: true
+      });
+
 
     this.officePhoneDetail = page
       .locator(
         'scrm-dynamic-field.dynamic-field-name-phone_office'
       )
       .locator('a[href^="tel:"]');
-     
+
 
     // --------------------------------------------------
     // Address inputs
     // --------------------------------------------------
+
 
     const addressFields = {
       billingStreetInput: 'billing_address_street',
@@ -120,6 +130,7 @@ this.officePhoneInput = page.getByRole('textbox').nth(3);
       billingStateInput: 'billing_address_state',
       billingCountryInput: 'billing_address_country',
 
+
       shippingStreetInput: 'shipping_address_street',
       shippingPostalCodeInput: 'shipping_address_postalcode',
       shippingCityInput: 'shipping_address_city',
@@ -127,7 +138,10 @@ this.officePhoneInput = page.getByRole('textbox').nth(3);
       shippingCountryInput: 'shipping_address_country'
     };
 
-    for (const [property, fieldName] of Object.entries(addressFields)) {
+
+    for (const [property, fieldName] of Object.entries(
+      addressFields
+    )) {
       this[property] = page
         .locator(
           `scrm-dynamic-field.dynamic-field-name-${fieldName}`
@@ -135,42 +149,54 @@ this.officePhoneInput = page.getByRole('textbox').nth(3);
         .getByRole('textbox');
     }
 
+
     // --------------------------------------------------
     // Unsaved-changes popup
-    // Existing selectors preserved pending label verification.
     // --------------------------------------------------
+
 
     this.confirmLeaveAccountButton = page
       .locator('button.modal-button')
       .filter({ hasText: /cancel/i });
 
+
     this.dismissCancellationButton = page
       .locator('button.modal-button')
       .filter({ hasText: /cancel/i });
 
-this.discardUnsavedChangesButton = page.getByRole(
-  'button',
-  {
-    name: /^proceed$/i
-  }
-);
+
+    this.discardUnsavedChangesButton = page.getByRole(
+      'button',
+      {
+        name: /^proceed$/i
+      }
+    );
+
 
     // --------------------------------------------------
     // Global search
     // --------------------------------------------------
+
 
     this.accountSearchNameInput = page.getByPlaceholder(
       'Search...',
       { exact: true }
     );
 
+
     this.searchResultsFrame = page.frameLocator(
       'scrm-classic-view-ui iframe'
     );
 
+
+    this.accountSearchResultsTable = this.searchResultsFrame
+      .locator('.unified-search-table-wrapper');
+
+
     // --------------------------------------------------
     // Recently Viewed
     // --------------------------------------------------
+
 
     this.accountsDropdown = page
       .locator('div.dropdown-menu.submenu')
@@ -181,21 +207,27 @@ this.discardUnsavedChangesButton = page.getByRole(
       })
       .filter({ visible: true });
 
+
     this.accountsRecentlyViewedSection = page
       .locator('scrm-sub-menu-recently-viewed')
       .within(this.accountsDropdown);
+
 
     this.accountsRecentlyViewedTrigger = page
       .locator('scrm-label[labelkey="LBL_LAST_VIEWED"]')
       .within(this.accountsRecentlyViewedSection);
 
+
     this.accountsRecentlyViewedPanel = page
       .locator('ul.dropdown-menu.submenu')
       .within(this.accountsRecentlyViewedSection);
 
+
     // --------------------------------------------------
     // Record deletion
     // --------------------------------------------------
+
+
     this.recordHeader = page.locator(
       'scrm-base-record-header'
     );
@@ -212,24 +244,29 @@ this.discardUnsavedChangesButton = page.getByRole(
       .locator('scrm-dropdown-button [ngbdropdownmenu]')
       .within(this.recordHeader);
 
+
     this.deleteAccountAction = page.getByText('Delete', {
       exact: true
     });
 
+
     this.confirmDeleteAccountButton = page.getByRole('button', {
       name: /^proceed$/i
     });
+
 
     this.deleteAccountConfirmationMessage = page.getByText(
       'Are you sure you want to delete this record?',
       { exact: true }
     );
 
+
     // --------------------------------------------------
     // Accounts list and sorting
     // --------------------------------------------------
 
-      this.accountsListTable = page.getByRole('table');
+
+    this.accountsListTable = page.getByRole('table');
 
 
     this.accountNameColumnHeader = page
@@ -251,7 +288,8 @@ this.discardUnsavedChangesButton = page.getByRole(
       .locator('svg-icon')
       .within(this.accountNameSortButton);
 
-       // --------------------------------------------------
+
+    // --------------------------------------------------
     // Import Accounts iframe
     // --------------------------------------------------
 
@@ -262,11 +300,6 @@ this.discardUnsavedChangesButton = page.getByRole(
 
 
     this.importFrameBody = this.importFrame.locator('body');
-
-
-    // --------------------------------------------------
-    // Import Step 1: Upload Import File
-    // --------------------------------------------------
 
 
     this.importAccountPageHeading = page
@@ -283,15 +316,9 @@ this.discardUnsavedChangesButton = page.getByRole(
       .within(this.importFrameBody);
 
 
-    // this.accountImportFileInput = page
-    //   .locator('input[type="file"]')
-    //   .within(this.importFrameBody);
-
-      // File input requires a structural selector in this import form.
-  // eslint-disable-next-line playwright/no-raw-locators
+    // File input requires a structural selector in this import form.
     this.accountImportFileInput = this.importFrame
-
-  .locator('input[type="file"]');
+      .locator('input[type="file"]');
 
 
     this.accountImportNextButton = page
@@ -301,13 +328,19 @@ this.discardUnsavedChangesButton = page.getByRole(
       .within(this.importFrameBody);
 
 
-    this.accountImportMissingFileMessage = page
-      .locator('div.required.validation-message')
-      .filter({
-        hasText:
-          /^missing required fields:\s*select a file to upload\.$/i
-      })
-      .within(this.importFrameBody);
+    // this.accountImportMissingFileMessage = page
+    //   .locator('div.required.validation-message')
+    //   .filter({
+    //     hasText:
+    //       /^missing required fields:\s*select a file to upload\.$/i
+    //   })
+    //   .within(this.importFrameBody);
+
+    this.accountImportMissingFileMessage =
+  this.importFrameBody.getByText(
+    'Missing required fields: Select a file to upload.',
+    { exact: true }
+  );
 
 
     this.importNewRecordsOnlyOption = page
@@ -315,9 +348,6 @@ this.discardUnsavedChangesButton = page.getByRole(
         exact: true
       })
       .within(this.importFrameBody);
-       // --------------------------------------------------
-    // Import Step 2: Confirm Import File Properties
-    // --------------------------------------------------
 
 
     this.importFilePropertiesHeading = page
@@ -325,16 +355,14 @@ this.discardUnsavedChangesButton = page.getByRole(
         name: /^step 2:\s*confirm import file properties$/i
       })
       .within(this.importFrameBody);
-    // Aliases retain compatibility with existing step definitions.
+
+
     this.accountImportConfigurationHeading =
       this.importFilePropertiesHeading;
 
+
     this.importFilePropertiesNextButton =
       this.accountImportNextButton;
-
-        // --------------------------------------------------
-    // Import Step 3: Confirm Field Mappings
-    // --------------------------------------------------
 
 
     this.importFieldMappingsHeading = page
@@ -346,11 +374,6 @@ this.discardUnsavedChangesButton = page.getByRole(
 
     this.importFieldMappingsNextButton =
       this.accountImportNextButton;
-
-
-    // --------------------------------------------------
-    // Import Step 4: Check for Possible Duplicates
-    // --------------------------------------------------
 
 
     this.importDuplicatesHeading = page
@@ -365,11 +388,6 @@ this.discardUnsavedChangesButton = page.getByRole(
         name: /^import now$/i
       })
       .within(this.importFrameBody);
-
-
-    // --------------------------------------------------
-    // Import Step 5: View Import Results
-    // --------------------------------------------------
 
 
     this.importResultsHeading = page
@@ -403,13 +421,16 @@ this.discardUnsavedChangesButton = page.getByRole(
       .within(this.importResultsPanel);
   }
 
+
   // --------------------------------------------------
   // Navigation
   // --------------------------------------------------
 
+
   async hoverAccountsModule() {
     await this.accountsModule.hover();
   }
+
 
   getDropdownOption(optionName) {
     const options = {
@@ -418,7 +439,9 @@ this.discardUnsavedChangesButton = page.getByRole(
       'View Accounts': this.viewAccountsOption
     };
 
+
     const option = options[optionName];
+
 
     if (!option) {
       throw new Error(
@@ -426,87 +449,92 @@ this.discardUnsavedChangesButton = page.getByRole(
       );
     }
 
+
     return option;
   }
 
-  async clickDropdownOption(optionName) {
-    await this.getDropdownOption(optionName).click();
-  }
 
   async openCreateAccountPage() {
     await this.hoverAccountsModule();
     await this.createAccountOption.click();
   }
 
+
   async openImportAccountPage() {
     await this.hoverAccountsModule();
     await this.importAccountsOption.click();
   }
 
+
   async openViewAccountPage() {
     await this.hoverAccountsModule();
     await this.viewAccountsOption.click();
 
+
     await this.viewAccountPageHeading.waitFor({
       state: 'visible'
     });
+
 
     const viewport = await this.page.evaluate(() => ({
       width: window.innerWidth,
       height: window.innerHeight
     }));
 
+
     await this.page.mouse.move(
       viewport.width - 20,
       viewport.height - 20
     );
+
 
     await this.accountsDropdown.waitFor({
       state: 'hidden'
     });
   }
 
+
   // --------------------------------------------------
   // Account creation and editing
   // --------------------------------------------------
 
-  async enterAccountName(name) {
-    // Temporary diagnostic: inspect the original field container.
-  // eslint-disable-next-line playwright/no-raw-locators
-  // const nameField = this.page.locator('scrm-field.field-name-name');
 
-  // console.log(
-  //   'Account Name field ARIA snapshot:\n',
-  //   await nameField.ariaSnapshot()
-  // );
+  async enterAccountName(name) {
     await this.accountNameInput.fill(name);
   }
+
 
   async enterAccountWebsite(website) {
     await this.websiteInput.fill(website);
   }
 
+
   async enterAccountOfficePhone(phone) {
     await this.officePhoneInput.fill(String(phone));
   }
+
 
   async clickSaveOnCreateAccountPage() {
     await this.saveButton.click();
   }
 
+
   async clickCancelOnCreateAccountPage() {
     await this.cancelCreateAccountButton.click();
   }
 
+
   async openAccountForEditing() {
     await this.editAccountButton.click();
   }
+
 
   getAccountDetailName(expectedName) {
     return this.overviewPanel.getByText(expectedName, {
       exact: true
     });
   }
+
 
   async enterCompleteOverviewInformation(account) {
     const fields = {
@@ -515,11 +543,13 @@ this.discardUnsavedChangesButton = page.getByRole(
       phone: this.officePhoneInput,
       email: this.emailInput,
 
+
       billingStreet: this.billingStreetInput,
       billingPostalCode: this.billingPostalCodeInput,
       billingCity: this.billingCityInput,
       billingState: this.billingStateInput,
       billingCountry: this.billingCountryInput,
+
 
       shippingStreet: this.shippingStreetInput,
       shippingPostalCode: this.shippingPostalCodeInput,
@@ -528,8 +558,10 @@ this.discardUnsavedChangesButton = page.getByRole(
       shippingCountry: this.shippingCountryInput
     };
 
+
     for (const [fieldName, input] of Object.entries(fields)) {
       const value = account[fieldName];
+
 
       if (value === undefined || value === null) {
         throw new Error(
@@ -537,9 +569,11 @@ this.discardUnsavedChangesButton = page.getByRole(
         );
       }
 
+
       await input.fill(String(value));
     }
   }
+
 
   async enterAccountWithPrimaryEmail(account) {
     await this.enterAccountName(account.name);
@@ -547,70 +581,63 @@ this.discardUnsavedChangesButton = page.getByRole(
     await this.primaryEmailControl.setChecked(true);
   }
 
+
   async enterAccountWithInvalidEmail(account) {
     await this.enterAccountName(account.name);
     await this.emailInput.fill(account.email);
   }
+
 
   async enterUnsavedAccountData(account) {
     await this.enterAccountName(account.name);
     await this.emailInput.fill(account.email);
   }
 
+
   async waitForAccountDetailPage() {
     await this.overviewPanel.waitFor({
       state: 'visible'
     });
+
 
     await this.editAccountButton.waitFor({
       state: 'visible'
     });
   }
 
+
   async saveAccountChanges() {
     await this.saveButton.click();
     await this.waitForAccountDetailPage();
   }
+
 
   async reloadAccountDetailPage() {
     await this.page.reload();
     await this.waitForAccountDetailPage();
   }
 
+
   async cancelAccountEditing() {
     await this.cancelCreateAccountButton.click();
+
 
     await this.confirmLeaveAccountButton
       .or(this.editAccountButton)
       .first()
       .waitFor({ state: 'visible' });
 
+
     if (await this.confirmLeaveAccountButton.isVisible()) {
       await this.confirmLeaveAccountButton.click();
     }
 
-    await this.waitForAccountDetailPage();
-  }
-    async cancelAccountEditingAndDiscardChanges() {
-    await this.clickCancelOnCreateAccountPage();
-
-
-    await this.discardUnsavedChangesButton.waitFor({
-      state: 'visible'
-    });
-
-
-    await this.discardUnsavedChangesButton.click();
-
-
-    await this.discardUnsavedChangesButton.waitFor({
-      state: 'hidden'
-    });
-
 
     await this.waitForAccountDetailPage();
   }
-    // --------------------------------------------------
+
+
+  // --------------------------------------------------
   // Account creation helpers
   // --------------------------------------------------
 
@@ -663,18 +690,10 @@ this.discardUnsavedChangesButton = page.getByRole(
   }
 
 
-  async getImportSummaryText() {
-    await this.importResultsSummary.waitFor({
-      state: 'visible'
-    });
-
-
-    return await this.importResultsSummary.innerText();
-  }
-
   // --------------------------------------------------
   // Validation and unsaved-changes popup
   // --------------------------------------------------
+
 
   getEmailValidationMessage(expectedMessage) {
     return this.page.getByText(expectedMessage, {
@@ -682,82 +701,80 @@ this.discardUnsavedChangesButton = page.getByRole(
     });
   }
 
+
   getUnsavedChangesMessage(expectedMessage) {
     return this.page.getByText(expectedMessage, {
       exact: true
     });
   }
 
+
   async confirmLeavingAccountCreation() {
     await this.confirmLeaveAccountButton.click();
   }
+
 
   async dismissCancellationPopup() {
     await this.dismissCancellationButton.click();
   }
 
-async openSavedAccountForVerification(recordUrl) {
-  await this.page.goto(recordUrl);
 
-  await this.waitForAccountDetailPage();
+  async openSavedAccountForVerification(recordUrl) {
+    await this.page.goto(recordUrl);
 
-  await this.openAccountForEditing();
 
-  try {
+    await this.waitForAccountDetailPage();
+
+
+    await this.openAccountForEditing();
+
+
     await this.accountNameInput.waitFor({
       state: 'visible'
     });
 
+
     await this.websiteInput.waitFor({
       state: 'visible'
     });
-  } catch (error) {
-    console.log('Verification URL:', this.page.url());
-
-    console.log(
-      'Record header HTML:',
-      await this.recordHeader.innerHTML()
-    );
-
-    console.log(
-      'Textbox HTML:',
-      await this.page.getByRole('textbox').evaluateAll(
-        inputs => inputs.map(input => input.outerHTML)
-      )
-    );
-
-    throw error;
   }
-}
-async createAccountWithWebsite(account) {
-  await this.openCreateAccountPage();
 
-  await this.enterAccountName(account.name);
 
-  await this.enterAccountWebsite(account.website);
+  async createAccountWithWebsite(account) {
+    await this.openCreateAccountPage();
 
-  await this.clickSaveOnCreateAccountPage();
 
-  return await this.waitForAccountRecordPage();
-}
+    await this.enterAccountName(account.name);
+
+
+    await this.enterAccountWebsite(account.website);
+
+
+    await this.clickSaveOnCreateAccountPage();
+
+
+    return await this.waitForAccountRecordPage();
+  }
+
 
   // --------------------------------------------------
   // Search
   // --------------------------------------------------
+
 
   async searchAccountsByName(accountName) {
     await this.accountSearchNameInput.fill(accountName);
     await this.accountSearchNameInput.press('Enter');
   }
 
+
   getAccountSearchResult(accountName) {
-    return this.searchResultsFrame
-      .locator('.unified-search-table-wrapper')
-      .getByRole('link', {
-        name: accountName,
-        exact: true
-      });
+    return this.accountSearchResultsTable.getByRole('link', {
+      name: accountName,
+      exact: true
+    });
   }
+
 
   getAccountSearchNoResultsMessage(expectedMessage) {
     return this.searchResultsFrame.getByText(expectedMessage, {
@@ -765,9 +782,11 @@ async createAccountWithWebsite(account) {
     });
   }
 
+
   // --------------------------------------------------
   // Accounts list
   // --------------------------------------------------
+
 
   getAccountListLink(accountName) {
     return this.page.getByRole('link', {
@@ -776,18 +795,22 @@ async createAccountWithWebsite(account) {
     });
   }
 
+
   async openAccountFromList(accountName) {
     await this.getAccountListLink(accountName).click();
   }
+
 
   // --------------------------------------------------
   // Recently Viewed
   // --------------------------------------------------
 
+
   async openAccountsRecentlyViewed() {
     await this.hoverAccountsModule();
     await this.accountsRecentlyViewedTrigger.click();
   }
+
 
   getRecentlyViewedAccount(accountName) {
     return this.accountsRecentlyViewedPanel.getByText(
@@ -796,23 +819,16 @@ async createAccountWithWebsite(account) {
     );
   }
 
-  // --------------------------------------------------
-  // Test-data setup
-  // --------------------------------------------------
-
-  async createAccountForListTest(account) {
-    await this.openCreateAccountPage();
-    await this.enterAccountName(account.name);
-    await this.clickSaveOnCreateAccountPage();
-  }
 
   // --------------------------------------------------
   // Test-data cleanup
   // --------------------------------------------------
 
+
   async deleteAccountByUrl(recordUrl) {
     const target = new URL(recordUrl);
     const current = new URL(this.page.url());
+
 
     if (target.origin !== current.origin) {
       throw new Error(
@@ -820,10 +836,13 @@ async createAccountWithWebsite(account) {
       );
     }
 
+
     const recordPattern =
       /^#\/accounts\/record\/([^/?#]+)(?:[/?#]|$)/;
 
+
     const targetMatch = target.hash.match(recordPattern);
+
 
     if (!targetMatch) {
       throw new Error(
@@ -831,19 +850,24 @@ async createAccountWithWebsite(account) {
       );
     }
 
+
     const recordId = targetMatch[1];
     const currentMatch = current.hash.match(recordPattern);
+
 
     const isTargetRecord =
       current.origin === target.origin &&
       currentMatch?.[1] === recordId;
 
+
     if (!isTargetRecord) {
       await this.page.goto(recordUrl);
     }
 
+
     await this.page.waitForURL(url => {
       const match = url.hash.match(recordPattern);
+
 
       return (
         url.origin === target.origin &&
@@ -851,70 +875,59 @@ async createAccountWithWebsite(account) {
       );
     });
 
+
     await this.overviewPanel.waitFor({
       state: 'visible'
     });
+
 
     await this.recordActionsButton.waitFor({
       state: 'visible'
     });
 
-    try {
-      const expanded =
-        await this.recordActionsButton.getAttribute(
-          'aria-expanded'
-        );
 
-      if (expanded !== 'true') {
-        await this.recordActionsButton.click();
-      }
+    const expanded =
+      await this.recordActionsButton.getAttribute(
+        'aria-expanded'
+      );
 
-      await this.recordActionsMenu.waitFor({
-        state: 'visible'
-      });
 
-      await this.deleteAccountAction.click();
-    } catch (error) {
-      try {
-        console.log(
-          'Actions state at cleanup failure:',
-          await this.recordActionsButton.getAttribute(
-            'aria-expanded'
-          )
-        );
-
-        console.log(
-          'Record header HTML at cleanup failure:',
-          await this.recordHeader.innerHTML()
-        );
-      } catch (diagnosticError) {
-        console.error(
-          'Could not capture cleanup diagnostics:',
-          diagnosticError
-        );
-      }
-
-      throw error;
+    if (expanded !== 'true') {
+      await this.recordActionsButton.click();
     }
+
+
+    await this.recordActionsMenu.waitFor({
+      state: 'visible'
+    });
+
+
+    await this.deleteAccountAction.click();
+
 
     await this.deleteAccountConfirmationMessage.waitFor({
       state: 'visible'
     });
 
+
     await this.confirmDeleteAccountButton.click();
+
 
     await this.deleteAccountConfirmationMessage.waitFor({
       state: 'hidden'
     });
 
+
     await this.page.waitForURL(
       /#\/accounts\/?(?:\?.*)?$/
     );
+
 
     await this.viewAccountPageHeading.waitFor({
       state: 'visible'
     });
   }
+
 
   // --------------------------------------------------
   // Sorting
@@ -997,25 +1010,33 @@ async createAccountWithWebsite(account) {
     await this.clickAccountNameSortButton();
     await this.waitForNameSortNotDescending();
   }
+
+
   // --------------------------------------------------
   // Import: template and file selection
   // --------------------------------------------------
 
+
   async downloadAccountImportTemplate() {
     const downloadPromise = this.page.waitForEvent('download');
 
+
     await this.accountImportTemplateLink.click();
+
 
     return await downloadPromise;
   }
+
 
   async selectAccountImportFile(filePath) {
     await this.accountImportFileInput.setInputFiles(filePath);
   }
 
+
   async clearAccountImportFile() {
     await this.accountImportFileInput.setInputFiles([]);
   }
+
 
   async getSelectedAccountImportFileName() {
     return await this.accountImportFileInput.evaluate(
@@ -1023,52 +1044,49 @@ async createAccountWithWebsite(account) {
     );
   }
 
-  async isAccountImportFileSelected() {
-    const filename =
-      await this.getSelectedAccountImportFileName();
-
-    return filename !== null;
-  }
 
   // --------------------------------------------------
   // Import: wizard navigation
   // --------------------------------------------------
 
+
   async clickAccountImportNextButton() {
     await this.accountImportNextButton.click();
   }
 
-  async waitForAccountImportConfigurationStep() {
-    await this.accountImportConfigurationHeading.waitFor({
-      state: 'visible'
-    });
-  }
 
   async confirmImportFileProperties() {
     await this.importFilePropertiesHeading.waitFor({
       state: 'visible'
     });
 
+
     await this.importFilePropertiesNextButton.click();
   }
+
 
   async confirmAccountFieldMappings() {
     await this.importFieldMappingsHeading.waitFor({
       state: 'visible'
     });
 
+
     await this.importFieldMappingsNextButton.click();
   }
+
 
   async importNewRecordsOnly() {
     await this.importDuplicatesHeading.waitFor({
       state: 'visible'
     });
 
+
     await this.importNowButton.click();
+
 
     await this.waitForImportResults();
   }
+
 
   async waitForImportResults() {
     await this.importResultsHeading.waitFor({
@@ -1076,19 +1094,23 @@ async createAccountWithWebsite(account) {
     });
   }
 
+
   async attemptAccountImportNext() {
     await this.accountImportNextButton.waitFor({
       state: 'visible'
     });
+
 
     if (await this.accountImportNextButton.isEnabled()) {
       await this.accountImportNextButton.click();
     }
   }
 
+
   // --------------------------------------------------
-  // Import: result locators and cleanup
+  // Import: result locators
   // --------------------------------------------------
+
 
   getImportedAccountRow(accountName) {
     return this.importResultsPanel
@@ -1100,14 +1122,11 @@ async createAccountWithWebsite(account) {
       });
   }
 
+
   getImportedAccountField(accountName, value) {
     return this.getImportedAccountRow(accountName)
       .getByText(value, {
         exact: true
       });
-  }
-
-  async undoImportedAccounts() {
-    await this.undoImportButton.click();
   }
 }
