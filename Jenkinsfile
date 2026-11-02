@@ -1,6 +1,7 @@
 pipeline {
     agent any
 
+
     parameters {
         choice(
             name: 'TEST_ENV',
@@ -9,9 +10,11 @@ pipeline {
         )
     }
 
+
     tools {
         nodejs 'NodeJS-20'
     }
+
 
     environment {
         CI = 'true'
@@ -19,10 +22,12 @@ pipeline {
         PLAYWRIGHT_BROWSERS_PATH = "${WORKSPACE}/.playwright-browsers"
     }
 
+
     options {
         timestamps()
         disableConcurrentBuilds()
     }
+
 
     stages {
         stage('Set environment') {
@@ -34,25 +39,30 @@ pipeline {
                         prod : 'https://suite8demo.suiteondemand.com'
                     ]
 
+
                     if (!urls.containsKey(params.TEST_ENV)) {
                         error(
                             "Unsupported TEST_ENV: ${params.TEST_ENV}"
                         )
                     }
 
+
                     env.BASE_URL = urls[params.TEST_ENV]
                 }
+
 
                 echo "Running tests against environment: ${params.TEST_ENV}"
                 echo "Base URL: ${env.BASE_URL}"
             }
         }
 
+
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
+
 
         stage('Clean previous test artifacts') {
             steps {
@@ -62,12 +72,15 @@ pipeline {
                         allure-report \
                         playwright-report \
                         test-results \
-                        tests/generated
+                        tests/generated \
+                        beacon-report
+
 
                     mkdir -p allure-results
                 '''
             }
         }
+
 
         stage('Environment') {
             steps {
@@ -81,11 +94,13 @@ pipeline {
             }
         }
 
+
         stage('Install dependencies') {
             steps {
                 sh 'npm ci'
             }
         }
+
 
         stage('Install Playwright browsers') {
             steps {
@@ -97,6 +112,7 @@ pipeline {
                 '''
             }
         }
+
 
         stage('Generate BDD tests') {
             steps {
@@ -110,11 +126,13 @@ pipeline {
                     sh '''
                         set +x
 
+
                         npx bddgen
                     '''
                 }
             }
         }
+
 
         stage('Run all BDD tests') {
             steps {
@@ -127,6 +145,7 @@ pipeline {
                 ]) {
                     sh '''
                         set +x
+
 
                         npx playwright test \
                             --shuffle \
@@ -142,22 +161,26 @@ pipeline {
         }
     }
 
+
     post {
         always {
-            // Archive first so Allure publication errors do not
+            // Archive first so report publication errors do not
             // prevent preservation of existing test artifacts.
             archiveArtifacts(
-                artifacts: 'playwright-report/**,test-results/**,allure-results/**',
+                artifacts: 'playwright-report/**,test-results/**,allure-results/**,beacon-report/**',
                 allowEmptyArchive: true,
                 fingerprint: true
             )
+
 
             script {
                 def perfettoGzipExists =
                     fileExists('test-results/perfetto.json.gz')
 
+
                 def perfettoJsonExists =
                     fileExists('test-results/perfetto.json')
+
 
                 if (perfettoGzipExists || perfettoJsonExists) {
                     echo(
@@ -175,31 +198,39 @@ pipeline {
                 }
             }
 
+
             script {
                 def nodeVersion = sh(
                     script: 'node --version',
                     returnStdout: true
                 ).trim()
 
+
                 def osName = sh(
                     script: 'uname -s',
                     returnStdout: true
                 ).trim()
 
+
                 def headlessValue =
                     env.HEADLESS ?: 'true'
+
 
                 def ciValue =
                     env.CI ?: 'true'
 
+
                 def testEnvValue =
                     env.TEST_ENV ?: params.TEST_ENV ?: 'unknown'
+
 
                 def baseUrlValue =
                     env.BASE_URL ?: 'unknown'
 
+
                 sh """
                     mkdir -p allure-results
+
 
                     cat > allure-results/environment.properties << 'EOF'
 Test Environment=${testEnvValue}
@@ -212,6 +243,7 @@ CI=${ciValue}
 EOF
                 """
 
+
                 // Archive the environment file created after
                 // the initial artifact archival.
                 archiveArtifacts(
@@ -220,8 +252,10 @@ EOF
                     fingerprint: true
                 )
 
+
                 def allureResultsExist =
                     fileExists('allure-results')
+
 
                 def allureTestResultsExist =
                     allureResultsExist && (
@@ -236,6 +270,7 @@ EOF
                             returnStatus: true
                         ) == 0
                     )
+
 
                 if (allureTestResultsExist) {
                     allure([
@@ -252,6 +287,7 @@ EOF
                 }
             }
 
+
             publishHTML([
                 allowMissing: true,
                 alwaysLinkToLastBuild: true,
@@ -261,7 +297,33 @@ EOF
                 reportName: 'Playwright HTML Report',
                 reportTitles: 'Playwright Test Results'
             ])
+
+
+            script {
+                def beaconIndexExists =
+                    fileExists('beacon-report/index.html')
+
+
+                if (beaconIndexExists) {
+                    publishHTML([
+                        allowMissing: true,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: 'beacon-report',
+                        reportFiles: 'index.html',
+                        reportName: 'Beacon Test Report',
+                        reportTitles: 'Beacon Test Results'
+                    ])
+                } else {
+                    echo(
+                        'No Beacon HTML report was found. Confirm that ' +
+                        'playwright.config.js includes beacon-reporter ' +
+                        'with outputFolder set to beacon-report.'
+                    )
+                }
+            }
         }
+
 
         success {
             echo(
@@ -269,12 +331,14 @@ EOF
             )
         }
 
+
         failure {
             echo(
                 'The pipeline failed. Check the stage logs and ' +
                 "test reports for ${params.TEST_ENV}."
             )
         }
+
 
         cleanup {
             cleanWs(

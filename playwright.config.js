@@ -91,28 +91,61 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
  workers: process.env.CI ? 4 : 4,
 
-  reporter: [
-    ['list'],
-    [
-      'html',
-      {
-        outputFolder: 'playwright-report',
-        open: 'never'
-      }
-    ],
-    [
-      'allure-playwright',
-      {
-        resultsDir: 'allure-results'
-      }
-    ],
-    [
-      'perfetto',
-      {
-        outputFile: 'test-results/perfetto.json.gz'
-      }
-    ]
+reporter: [
+  [
+    'beacon-reporter',
+    {
+      outputFolder: 'beacon-report',
+      title: 'SuiteCRM Automation Suite',
+      dashboard: {
+        cards: [
+          'outcomes',
+          'trend',
+          'slowest',
+          'failing',
+          'categories'
+        ]
+      },
+      environment: {
+        app: 'SuiteCRM Demo',
+        env: environment
+      },
+      links: {
+        issue:'https://github.com/mayababuji/Team01_The_Async_Actors/issues/{}'
+      },
+      categories: [
+        {
+          name: 'Application unavailable',
+          messageRegex: 'ECONNREFUSED.*'
+        },
+        {
+          name: 'Authentication failure',
+          messageRegex: 'Storage state|Unauthorized|login'
+        }
+      ]
+    }
   ],
+  ['list'],
+  [
+    'html',
+    {
+      outputFolder: 'playwright-report',
+      open: 'never'
+    }
+  ],
+  [
+    'allure-playwright',
+    {
+      resultsDir: 'allure-results'
+    }
+  ],
+  [
+    'perfetto',
+    {
+      outputFile: 'test-results/perfetto.json.gz'
+    }
+  ]
+],
   
 
   use: {
