@@ -1,15 +1,18 @@
 name: Playwright Tests
 
+
 on:
   push:
     branches:
       - main
       - master
 
+
   pull_request:
     branches:
       - main
       - master
+
 
   workflow_dispatch:
     inputs:
@@ -23,20 +26,24 @@ on:
           - qa
           - prod
 
+
 permissions:
   contents: read
   pages: write
   id-token: write
 
+
 concurrency:
   group: github-pages
   cancel-in-progress: false
+
 
 jobs:
   test:
     name: Playwright BDD Tests
     timeout-minutes: 160
     runs-on: ubuntu-latest
+
 
     env:
       CI: true
@@ -45,9 +52,11 @@ jobs:
       LOGIN_USERNAME: ${{ secrets.LOGIN_USERNAME }}
       LOGIN_PASSWORD: ${{ secrets.LOGIN_PASSWORD }}
 
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
 
       - name: Clean previous test artifacts
         shell: bash
@@ -58,7 +67,9 @@ jobs:
             playwright-report \
             test-results \
             tests/generated \
-            github-pages-report
+            github-pages-report \
+            beacon-report
+
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -66,20 +77,25 @@ jobs:
           node-version: 20
           cache: npm
 
+
       - name: Set up Java for Allure
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
+
 
       - name: Install dependencies
         run: npm ci
 
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium firefox webkit
+
 
       - name: Check required secrets
         shell: bash
@@ -89,15 +105,19 @@ jobs:
             exit 1
           fi
 
+
           if [ -z "$LOGIN_PASSWORD" ]; then
             echo "LOGIN_PASSWORD is missing"
             exit 1
           fi
 
+
           echo "Required credentials are available."
+
 
       - name: Generate BDD tests
         run: npx bddgen
+
 
       - name: Run Playwright tests on all three browsers
         id: playwright_tests
@@ -112,13 +132,16 @@ jobs:
             --project=webkit
         continue-on-error: true
 
+
       - name: Add environment details to Allure report
         if: always()
         run: npm run allure:environment
 
+
       - name: Generate Allure HTML report
         if: always()
         run: npm run allure:generate
+
 
       - name: Upload Playwright report artifact
         if: always()
@@ -129,6 +152,7 @@ jobs:
           retention-days: 30
           if-no-files-found: warn
 
+
       - name: Upload test results artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -138,14 +162,16 @@ jobs:
           retention-days: 30
           if-no-files-found: warn
 
+
       - name: Upload Perfetto timeline artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-            name: perfetto-timeline
-            path: test-results/perfetto.json*
-            retention-days: 30
-            if-no-files-found: warn
+          name: perfetto-timeline
+          path: test-results/perfetto.json*
+          retention-days: 30
+          if-no-files-found: warn
+
 
       - name: Upload Allure results artifact
         if: always()
@@ -156,6 +182,7 @@ jobs:
           retention-days: 30
           if-no-files-found: warn
 
+
       - name: Upload Allure HTML report artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -165,35 +192,74 @@ jobs:
           retention-days: 30
           if-no-files-found: warn
 
-      - name: Prepare GitHub Pages Allure report
+
+      - name: Upload Beacon report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: beacon-report
+          path: beacon-report/
+          retention-days: 30
+          if-no-files-found: warn
+
+
+      - name: Prepare GitHub Pages reports
         if: always()
         shell: bash
         run: |
-          mkdir -p github-pages-report
+          mkdir -p github-pages-report/allure
+          mkdir -p github-pages-report/beacon
+
 
           if [ -f allure-report/index.html ]; then
-            cp -R allure-report/. github-pages-report/
-          else
-            cat > github-pages-report/index.html << 'EOF'
+            cp -R allure-report/. github-pages-report/allure/
+          fi
+
+
+          if [ -f beacon-report/index.html ]; then
+            cp -R beacon-report/. github-pages-report/beacon/
+          fi
+
+
+          cat > github-pages-report/index.html << 'EOF'
           <!doctype html>
           <html lang="en">
             <head>
               <meta charset="utf-8">
-              <title>Allure Report</title>
+              <title>Test Reports</title>
+              <style>
+                body {
+                  font-family: sans-serif;
+                  padding: 2rem;
+                }
+
+
+                li {
+                  margin: 0.5rem 0;
+                }
+              </style>
             </head>
             <body>
-              <h1>Allure report was not generated</h1>
-              <p>Check the workflow logs and downloaded artifacts for details.</p>
+              <h1>Test Reports</h1>
+              <ul>
+                <li>
+                  <a href="./allure/">Allure Report</a>
+                </li>
+                <li>
+                  <a href="./beacon/">Beacon Report</a>
+                </li>
+              </ul>
             </body>
           </html>
           EOF
-          fi
+
 
       - name: Upload GitHub Pages artifact
         if: always()
         uses: actions/upload-pages-artifact@v4
         with:
           path: github-pages-report
+
 
       - name: Fail workflow if Playwright tests failed
         if: steps.playwright_tests.outcome == 'failure'
@@ -202,8 +268,9 @@ jobs:
           echo "One or more Playwright tests failed."
           exit 1
 
+
   deploy:
-    name: Deploy Allure Report to GitHub Pages
+    name: Deploy Test Reports to GitHub Pages
     needs: test
     if: >
       always() &&
@@ -211,11 +278,13 @@ jobs:
       github.event_name != 'pull_request'
     runs-on: ubuntu-latest
 
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
+
     steps:
-      - name: Deploy Allure report to GitHub Pages
+      - name: Deploy Test Reports to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

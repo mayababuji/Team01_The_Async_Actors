@@ -6,8 +6,8 @@
   "scripts": {
     "clean:reports": "rimraf allure-results allure-report playwright-report test-results tests/generated",
     "bddgen": "bddgen",
-     "lint": "eslint .",
-  "lint:fix": "eslint . --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "allure:environment": "node scripts/create-allure-environment.js",
     "test:all": "npm run clean:reports && npm run bddgen && npm run allure:environment && playwright test",
     "test:local": "cross-env TEST_ENV=local npm run test:all",
@@ -30,6 +30,7 @@
     "@playwright/test": "1.64",
     "allure-commandline": "^2.46.1",
     "allure-playwright": "^3.13.0",
+    "beacon-reporter": "^0.1.2",
     "cross-env": "^10.1.0",
     "dotenv": "^18.0.6",
     "eslint": "^10.13.0",
