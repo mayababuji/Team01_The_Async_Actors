@@ -97,13 +97,15 @@ reporter: [
     {
       outputFolder: 'beacon-report',
       title: 'SuiteCRM Automation Suite',
+      history: true,
       dashboard: {
         cards: [
           'outcomes',
           'trend',
           'slowest',
           'failing',
-          'categories'
+          'categories',
+          'suites', 'tags', 'files'
         ]
       },
       environment: {
