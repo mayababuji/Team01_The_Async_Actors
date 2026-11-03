@@ -1,0 +1,4 @@
+2026-11-03 19:38:26 info: Test started {"environment":"local","browser":"webkit","retry":0,"testTitle":"Create an account with complete overview information"}
+2026-11-03 19:38:27 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"webkit","retry":0,"testTitle":"Create an account with complete overview information"}
+2026-11-03 19:38:36 info: Creating account with complete overview data {"environment":"local","browser":"webkit","retry":0,"testTitle":"Create an account with complete overview information","scenario":"create_account_complete_overview","accountName":"Numpy Complete Overview Account"}
+2026-11-03 19:39:28 info: Test finished {"environment":"local","browser":"webkit","retry":0,"testTitle":"Create an account with complete overview information","status":"failed","expectedStatus":"passed"}

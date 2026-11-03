@@ -1,0 +1,1 @@
+[{"values":["Environment=local"],"name":"Test"},{"values":["URL=https://suite8demo.suiteondemand.com"],"name":"Base"},{"values":["Projects=chromium, firefox, webkit"],"name":"Browser"},{"values":["Version=v20.20.2"],"name":"Node"},{"values":["System=linux"],"name":"Operating"},{"values":["Mode=true"],"name":"Headless"},{"values":["true"],"name":"CI"}]

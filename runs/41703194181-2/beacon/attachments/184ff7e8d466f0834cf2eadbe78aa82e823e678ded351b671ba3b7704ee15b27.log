@@ -1,0 +1,7 @@
+{"browser":"chromium","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Proceed with a valid account import file","timestamp":"2026-11-03T19:36:34.173Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Proceed with a valid account import file","timestamp":"2026-11-03T19:36:34.731Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Opening Import Accounts page and selecting valid import file","retry":0,"testTitle":"Proceed with a valid account import file","timestamp":"2026-11-03T19:36:37.084Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Valid account import file selected","retry":0,"testTitle":"Proceed with a valid account import file","timestamp":"2026-11-03T19:36:41.730Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Clicking Next on the Import Accounts page","retry":0,"testTitle":"Proceed with a valid account import file","timestamp":"2026-11-03T19:36:41.733Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Next account import configuration step displayed","retry":0,"testTitle":"Proceed with a valid account import file","timestamp":"2026-11-03T19:36:42.288Z"}
+{"browser":"chromium","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"passed","testTitle":"Proceed with a valid account import file","timestamp":"2026-11-03T19:36:42.397Z"}

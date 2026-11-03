@@ -1,0 +1,5 @@
+2026-11-03 19:38:08 info: Test started {"environment":"local","browser":"webkit","retry":0,"testTitle":"Verify Import Opportunities page navigation"}
+2026-11-03 19:38:09 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"webkit","retry":0,"testTitle":"Verify Import Opportunities page navigation"}
+2026-11-03 19:38:18 info: Clicked Import Opportunities {"environment":"local","browser":"webkit","retry":0,"testTitle":"Verify Import Opportunities page navigation"}
+2026-11-03 19:38:22 info: Import Opportunities page verified {"environment":"local","browser":"webkit","retry":0,"testTitle":"Verify Import Opportunities page navigation"}
+2026-11-03 19:38:22 info: Test finished {"environment":"local","browser":"webkit","retry":0,"testTitle":"Verify Import Opportunities page navigation","status":"passed","expectedStatus":"passed"}

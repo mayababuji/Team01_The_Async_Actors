@@ -1,0 +1,5 @@
+2026-11-03 19:42:21 info: Test started {"environment":"local","browser":"chromium","retry":0,"testTitle":"Update the description of an existing opportunity"}
+2026-11-03 19:42:22 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"chromium","retry":0,"testTitle":"Update the description of an existing opportunity"}
+2026-11-03 19:42:37 info: Deleting test-created account {"environment":"local","browser":"chromium","retry":0,"testTitle":"Update the description of an existing opportunity","recordUrl":"https://suite8demo.suiteondemand.com/#/accounts/record/22278f0b-624b-438d-852d-9d425249b19d"}
+2026-11-03 19:42:41 info: Test-created account deleted {"environment":"local","browser":"chromium","retry":0,"testTitle":"Update the description of an existing opportunity","recordUrl":"https://suite8demo.suiteondemand.com/#/accounts/record/22278f0b-624b-438d-852d-9d425249b19d"}
+2026-11-03 19:42:43 info: Test finished {"environment":"local","browser":"chromium","retry":0,"testTitle":"Update the description of an existing opportunity","status":"failed","expectedStatus":"passed"}

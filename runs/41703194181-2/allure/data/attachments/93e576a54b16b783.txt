@@ -1,0 +1,5 @@
+2026-11-03 19:45:36 info: Test started {"environment":"local","browser":"chromium","retry":1,"testTitle":"Open an account from the Accounts list"}
+2026-11-03 19:45:36 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"chromium","retry":1,"testTitle":"Open an account from the Accounts list"}
+2026-11-03 19:46:06 info: Deleting test-created account {"environment":"local","browser":"chromium","retry":1,"testTitle":"Open an account from the Accounts list","recordUrl":"https://suite8demo.suiteondemand.com/#/accounts/record/09e373aa-cb1e-4306-b941-4b49e3937a10"}
+2026-11-03 19:46:09 info: Test-created account deleted {"environment":"local","browser":"chromium","retry":1,"testTitle":"Open an account from the Accounts list","recordUrl":"https://suite8demo.suiteondemand.com/#/accounts/record/09e373aa-cb1e-4306-b941-4b49e3937a10"}
+2026-11-03 19:46:10 info: Test finished {"environment":"local","browser":"chromium","retry":1,"testTitle":"Open an account from the Accounts list","status":"failed","expectedStatus":"passed"}

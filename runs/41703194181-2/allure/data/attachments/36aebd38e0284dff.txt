@@ -1,0 +1,4 @@
+2026-11-03 19:31:14 info: Test started {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify View Accounts page navigation"}
+2026-11-03 19:31:18 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify View Accounts page navigation"}
+2026-11-03 19:31:28 info: View Accounts page displayed {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify View Accounts page navigation"}
+2026-11-03 19:31:28 info: Test finished {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify View Accounts page navigation","status":"passed","expectedStatus":"passed"}

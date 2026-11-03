@@ -1,0 +1,10 @@
+2026-11-03 19:43:30 info: Test started {"environment":"local","browser":"chromium","retry":0,"testTitle":"Verify required field validation on Create Opportunity page"}
+2026-11-03 19:43:31 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"chromium","retry":0,"testTitle":"Verify required field validation on Create Opportunity page"}
+2026-11-03 19:43:37 info: Opened Create Opportunity page {"environment":"local","browser":"chromium","retry":0,"testTitle":"Verify required field validation on Create Opportunity page"}
+2026-11-03 19:43:37 info: Clicked Save without entering opportunity details {"environment":"local","browser":"chromium","retry":0,"testTitle":"Verify required field validation on Create Opportunity page"}
+2026-11-03 19:43:38 info: Required-field validation message verified {"environment":"local","browser":"chromium","retry":0,"testTitle":"Verify required field validation on Create Opportunity page","fieldName":"Opportunity Name"}
+2026-11-03 19:43:38 info: Required-field validation message verified {"environment":"local","browser":"chromium","retry":0,"testTitle":"Verify required field validation on Create Opportunity page","fieldName":"Account Name"}
+2026-11-03 19:43:38 info: Required-field validation message verified {"environment":"local","browser":"chromium","retry":0,"testTitle":"Verify required field validation on Create Opportunity page","fieldName":"Opportunity Amount"}
+2026-11-03 19:43:38 info: Required-field validation message verified {"environment":"local","browser":"chromium","retry":0,"testTitle":"Verify required field validation on Create Opportunity page","fieldName":"Sales Stage"}
+2026-11-03 19:43:38 info: Required-field validation message verified {"environment":"local","browser":"chromium","retry":0,"testTitle":"Verify required field validation on Create Opportunity page","fieldName":"Expected Close Date"}
+2026-11-03 19:43:39 info: Test finished {"environment":"local","browser":"chromium","retry":0,"testTitle":"Verify required field validation on Create Opportunity page","status":"passed","expectedStatus":"passed"}

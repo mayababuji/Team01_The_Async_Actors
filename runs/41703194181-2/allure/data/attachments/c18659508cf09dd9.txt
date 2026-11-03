@@ -1,0 +1,48 @@
+2026-11-03 19:35:33 info: Test started {"environment":"local","browser":"firefox","retry":0,"testTitle":"Download the account import template"}
+2026-11-03 19:35:36 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"firefox","retry":0,"testTitle":"Download the account import template"}
+Import Accounts frame body ARIA snapshot:
+ - 'heading "Step 1: Upload Import File" [level=2]'
+- text: Select a file on your computer that contains the data that you would like to import, or download the template to get a head start on creating the import file.
+- table:
+  - rowgroup:
+    - 'row "Download Import File Template Information Select file: Information This can only be alphanumeric characters, plus ''.'' , ''-'' and ''_'' What would you like to do with the imported data? Create new records only Information Create new records and update existing records Information"':
+      - 'cell "Download Import File Template Information Select file: Information This can only be alphanumeric characters, plus ''.'' , ''-'' and ''_'' What would you like to do with the imported data? Create new records only Information Create new records and update existing records Information"':
+        - table:
+          - rowgroup:
+            - row "Download Import File Template Information":
+              - cell "Download Import File Template Information":
+                - link "Download Import File Template":
+                  - /url: "javascript: void(0);"
+                - img "Information"
+            - row:
+              - cell
+            - 'row "Select file: Information This can only be alphanumeric characters, plus ''.'' , ''-'' and ''_''"':
+              - 'cell "Select file: Information This can only be alphanumeric characters, plus ''.'' , ''-'' and ''_''"':
+                - text: "Select file:"
+                - button "Select file:"
+                - img "Information"
+                - text: This can only be alphanumeric characters, plus '.' , '-' and '_'
+            - row:
+              - cell
+            - row:
+              - cell
+            - row "What would you like to do with the imported data?":
+              - cell "What would you like to do with the imported data?":
+                - heading "What would you like to do with the imported data?" [level=3]
+            - row "Create new records only Information":
+              - cell "Create new records only Information":
+                - radio [checked]
+                - text: Create new records only
+                - img "Information"
+            - row "Create new records and update existing records Information":
+              - cell "Create new records and update existing records Information":
+                - radio
+                - text: Create new records and update existing records
+                - img "Information"
+        - table
+- table:
+  - rowgroup:
+    - row "Next >":
+      - cell "Next >":
+        - button "Next >"
+2026-11-03 19:35:45 info: Test finished {"environment":"local","browser":"firefox","retry":0,"testTitle":"Download the account import template","status":"passed","expectedStatus":"passed"}

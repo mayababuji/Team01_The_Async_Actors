@@ -1,0 +1,4 @@
+{"browser":"firefox","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Verify Create Account page navigation","timestamp":"2026-11-03T19:29:18.512Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Verify Create Account page navigation","timestamp":"2026-11-03T19:29:20.750Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"Create Account page displayed","retry":0,"testTitle":"Verify Create Account page navigation","timestamp":"2026-11-03T19:29:30.745Z"}
+{"browser":"firefox","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"passed","testTitle":"Verify Create Account page navigation","timestamp":"2026-11-03T19:29:31.066Z"}

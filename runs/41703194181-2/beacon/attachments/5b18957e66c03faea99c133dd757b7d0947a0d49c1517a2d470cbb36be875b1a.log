@@ -1,0 +1,5 @@
+{"browser":"chromium","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Verify Opportunities module navigation","timestamp":"2026-11-03T19:30:28.725Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Verify Opportunities module navigation","timestamp":"2026-11-03T19:30:28.815Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Hovered over Opportunities module","retry":0,"testTitle":"Verify Opportunities module navigation","timestamp":"2026-11-03T19:30:34.571Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"All Opportunities dropdown options are visible","options":["Create Opportunity","Import Opportunities","View Opportunities"],"retry":0,"testTitle":"Verify Opportunities module navigation","timestamp":"2026-11-03T19:30:34.841Z"}
+{"browser":"chromium","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"passed","testTitle":"Verify Opportunities module navigation","timestamp":"2026-11-03T19:30:35.213Z"}
