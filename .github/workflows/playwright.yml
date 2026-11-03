@@ -1,18 +1,15 @@
 name: Playwright Tests
 
-
 on:
   push:
     branches:
       - main
       - master
 
-
   pull_request:
     branches:
       - main
       - master
-
 
   workflow_dispatch:
     inputs:
@@ -26,17 +23,8 @@ on:
           - qa
           - prod
 
-
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-
-concurrency:
-  group: github-pages
-  cancel-in-progress: false
-
 
 jobs:
   test:
@@ -44,19 +32,16 @@ jobs:
     timeout-minutes: 160
     runs-on: ubuntu-latest
 
-
     env:
-      CI: true
+      CI: "true"
       TEST_ENV: ${{ inputs.test_env || 'local' }}
       BASE_URL: ${{ vars.BASE_URL }}
       LOGIN_USERNAME: ${{ secrets.LOGIN_USERNAME }}
       LOGIN_PASSWORD: ${{ secrets.LOGIN_PASSWORD }}
 
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
 
       - name: Clean previous test artifacts
         shell: bash
@@ -70,13 +55,11 @@ jobs:
             github-pages-report \
             beacon-report
 
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-
 
       - name: Set up Java for Allure
         uses: actions/setup-java@v4
@@ -84,43 +67,38 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
-
-
       - name: Install dependencies
         run: npm ci
-
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium firefox webkit
 
-
-      - name: Check required secrets
+      - name: Check required configuration
         shell: bash
         run: |
-          if [ -z "$LOGIN_USERNAME" ]; then
-            echo "LOGIN_USERNAME is missing"
+          if [ -z "$BASE_URL" ]; then
+            echo "BASE_URL repository variable is missing."
             exit 1
           fi
 
+          if [ -z "$LOGIN_USERNAME" ]; then
+            echo "LOGIN_USERNAME secret is missing."
+            exit 1
+          fi
 
           if [ -z "$LOGIN_PASSWORD" ]; then
-            echo "LOGIN_PASSWORD is missing"
+            echo "LOGIN_PASSWORD secret is missing."
             exit 1
           fi
 
-
-          echo "Required credentials are available."
-
+          echo "Required configuration is available."
 
       - name: Generate BDD tests
         run: npx bddgen
 
-
       - name: Run Playwright tests on all three browsers
         id: playwright_tests
+        continue-on-error: true
         run: |
           npx playwright test \
             --shuffle \
@@ -130,18 +108,14 @@ jobs:
             --project=chromium \
             --project=firefox \
             --project=webkit
-        continue-on-error: true
-
 
       - name: Add environment details to Allure report
         if: always()
         run: npm run allure:environment
 
-
       - name: Generate Allure HTML report
         if: always()
         run: npm run allure:generate
-
 
       - name: Upload Playwright report artifact
         if: always()
@@ -152,7 +126,6 @@ jobs:
           retention-days: 30
           if-no-files-found: warn
 
-
       - name: Upload test results artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -161,7 +134,6 @@ jobs:
           path: test-results/
           retention-days: 30
           if-no-files-found: warn
-
 
       - name: Upload Perfetto timeline artifact
         if: always()
@@ -172,7 +144,6 @@ jobs:
           retention-days: 30
           if-no-files-found: warn
 
-
       - name: Upload Allure results artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -181,7 +152,6 @@ jobs:
           path: allure-results/
           retention-days: 30
           if-no-files-found: warn
-
 
       - name: Upload Allure HTML report artifact
         if: always()
@@ -192,7 +162,6 @@ jobs:
           retention-days: 30
           if-no-files-found: warn
 
-
       - name: Upload Beacon report artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -202,64 +171,76 @@ jobs:
           retention-days: 30
           if-no-files-found: warn
 
-
-      - name: Prepare GitHub Pages reports
+      - name: Prepare current run reports
         if: always()
         shell: bash
+        env:
+          TEST_OUTCOME: ${{ steps.playwright_tests.outcome }}
         run: |
-          mkdir -p github-pages-report/allure
-          mkdir -p github-pages-report/beacon
+          mkdir -p github-pages-report
 
+          for report in allure beacon playwright; do
+            case "$report" in
+              allure) source="allure-report" ;;
+              beacon) source="beacon-report" ;;
+              playwright) source="playwright-report" ;;
+            esac
 
-          if [ -f allure-report/index.html ]; then
-            cp -R allure-report/. github-pages-report/allure/
-          fi
+            mkdir -p "github-pages-report/$report"
 
-
-          if [ -f beacon-report/index.html ]; then
-            cp -R beacon-report/. github-pages-report/beacon/
-          fi
-
-
-          cat > github-pages-report/index.html << 'EOF'
+            if [ -f "$source/index.html" ]; then
+              cp -R "$source/." "github-pages-report/$report/"
+            else
+              cat > "github-pages-report/$report/index.html" <<EOF
           <!doctype html>
           <html lang="en">
             <head>
               <meta charset="utf-8">
-              <title>Test Reports</title>
-              <style>
-                body {
-                  font-family: sans-serif;
-                  padding: 2rem;
-                }
-
-
-                li {
-                  margin: 0.5rem 0;
-                }
-              </style>
+              <title>Report unavailable</title>
             </head>
             <body>
-              <h1>Test Reports</h1>
-              <ul>
-                <li>
-                  <a href="./allure/">Allure Report</a>
-                </li>
-                <li>
-                  <a href="./beacon/">Beacon Report</a>
-                </li>
-              </ul>
+              <h1>$report report was not generated</h1>
+              <p>Check the workflow logs and artifacts.</p>
             </body>
           </html>
           EOF
+            fi
+          done
 
+          python3 <<'PY'
+          import json
+          import os
+          from datetime import datetime, timezone
+          from pathlib import Path
 
-      - name: Upload GitHub Pages artifact
+          metadata = {
+              "run_id": os.environ["GITHUB_RUN_ID"],
+              "run_number": os.environ["GITHUB_RUN_NUMBER"],
+              "attempt": os.environ["GITHUB_RUN_ATTEMPT"],
+              "test_outcome": os.environ.get("TEST_OUTCOME", "unknown"),
+              "environment": os.environ["TEST_ENV"],
+              "commit": os.environ["GITHUB_SHA"],
+              "created_at": datetime.now(timezone.utc).isoformat(),
+              "workflow_url": (
+                  f'{os.environ["GITHUB_SERVER_URL"]}/'
+                  f'{os.environ["GITHUB_REPOSITORY"]}/actions/runs/'
+                  f'{os.environ["GITHUB_RUN_ID"]}'
+              )
+          }
+
+          Path("github-pages-report/metadata.json").write_text(
+              json.dumps(metadata, indent=2)
+          )
+          PY
+
+      - name: Upload current run report bundle
         if: always()
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-artifact@v4
         with:
-          path: github-pages-report
-
+          name: pages-report-bundle
+          path: github-pages-report/
+          retention-days: 30
+          if-no-files-found: error
 
       - name: Fail workflow if Playwright tests failed
         if: steps.playwright_tests.outcome == 'failure'
@@ -268,23 +249,209 @@ jobs:
           echo "One or more Playwright tests failed."
           exit 1
 
-
   deploy:
-    name: Deploy Test Reports to GitHub Pages
+    name: Publish Report History
     needs: test
+
     if: >
       always() &&
       needs.test.result != 'cancelled' &&
-      github.event_name != 'pull_request'
+      github.event_name != 'pull_request' &&
+      (
+        github.ref == 'refs/heads/main' ||
+        github.ref == 'refs/heads/master'
+      )
+
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
+    concurrency:
+      group: github-pages-history
+      cancel-in-progress: false
 
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
-
     steps:
-      - name: Deploy Test Reports to GitHub Pages
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download current run report bundle
+        uses: actions/download-artifact@v4
+        with:
+          name: pages-report-bundle
+          path: current-report
+
+      - name: Restore saved report history
+        shell: bash
+        run: |
+          mkdir -p published-site
+          git init published-site
+          git -C published-site checkout -b gh-pages
+
+          if git ls-remote --exit-code --heads origin gh-pages > /dev/null; then
+            git fetch origin gh-pages
+            git archive FETCH_HEAD | tar -x -C published-site
+
+            # Use the existing history commit as the parent.
+            git -C published-site fetch \
+              "$GITHUB_WORKSPACE" FETCH_HEAD
+
+            git -C published-site reset --mixed FETCH_HEAD
+          fi
+
+      - name: Add current run and rebuild report homepage
+        shell: bash
+        env:
+          JOB_RESULT: ${{ needs.test.result }}
+        run: |
+          RUN_KEY="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+
+          mkdir -p "published-site/runs/$RUN_KEY"
+          cp -R current-report/. "published-site/runs/$RUN_KEY/"
+          touch published-site/.nojekyll
+
+          python3 <<'PY'
+          import html
+          import json
+          import os
+          from pathlib import Path
+
+          site = Path("published-site")
+          key = (
+              f'{os.environ["GITHUB_RUN_ID"]}-'
+              f'{os.environ["GITHUB_RUN_ATTEMPT"]}'
+          )
+
+          current_metadata = site / "runs" / key / "metadata.json"
+          current = json.loads(current_metadata.read_text())
+          current["job_result"] = os.environ["JOB_RESULT"]
+          current_metadata.write_text(json.dumps(current, indent=2))
+
+          runs = []
+
+          for metadata_file in (site / "runs").glob("*/metadata.json"):
+              try:
+                  data = json.loads(metadata_file.read_text())
+                  data["folder"] = metadata_file.parent.name
+                  runs.append(data)
+              except (ValueError, OSError):
+                  continue
+
+          runs.sort(
+              key=lambda run: (
+                  int(run["run_number"]),
+                  int(run["attempt"])
+              ),
+              reverse=True
+          )
+
+          rows = []
+
+          for run in runs:
+              folder = html.escape(run["folder"], quote=True)
+              number = html.escape(str(run["run_number"]))
+              attempt = html.escape(str(run["attempt"]))
+              outcome = html.escape(run.get("test_outcome", "unknown"))
+              job_result = html.escape(run.get("job_result", "unknown"))
+              environment = html.escape(run.get("environment", "unknown"))
+              timestamp = html.escape(run.get("created_at", ""))
+              workflow_url = html.escape(run["workflow_url"], quote=True)
+
+              rows.append(
+                  "<tr>"
+                  f"<td>#{number}, attempt {attempt}</td>"
+                  f"<td>{outcome}</td>"
+                  f"<td>{job_result}</td>"
+                  f"<td>{environment}</td>"
+                  f"<td>{timestamp}</td>"
+                  f'<td><a href="./runs/{folder}/allure/">Allure</a> | '
+                  f'<a href="./runs/{folder}/beacon/">Beacon</a> | '
+                  f'<a href="./runs/{folder}/playwright/">Playwright</a></td>'
+                  f'<td><a href="{workflow_url}">Workflow</a></td>'
+                  "</tr>"
+              )
+
+          page = """<!doctype html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>SuiteCRM Test Report History</title>
+            <style>
+              body { font-family: sans-serif; padding: 2rem; }
+              table { border-collapse: collapse; width: 100%; }
+              th, td {
+                border: 1px solid #ddd;
+                padding: 0.75rem;
+                text-align: left;
+              }
+              th { background: #f2f2f2; }
+              a { color: #2457c5; }
+              .table-wrapper { overflow-x: auto; }
+            </style>
+          </head>
+          <body>
+            <h1>SuiteCRM Test Report History</h1>
+            <p>Reports from passing and failing runs, newest first.</p>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Run</th>
+                    <th>Playwright outcome</th>
+                    <th>Test job result</th>
+                    <th>Environment</th>
+                    <th>Published at (UTC)</th>
+                    <th>Reports</th>
+                    <th>Logs</th>
+                  </tr>
+                </thead>
+                <tbody>
+          """ + "\n".join(rows) + """
+                </tbody>
+              </table>
+            </div>
+          </body>
+          </html>
+          """
+
+          (site / "index.html").write_text(page)
+          PY
+
+      - name: Save report history to gh-pages branch
+        shell: bash
+        run: |
+          git -C published-site config user.name "github-actions[bot]"
+          git -C published-site config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git -C published-site add --all
+
+          if ! git -C published-site diff --cached --quiet; then
+            git -C published-site commit \
+              -m "Add reports for run ${GITHUB_RUN_NUMBER}, attempt ${GITHUB_RUN_ATTEMPT}"
+          fi
+
+          # Push through the checkout repository, which has authentication.
+          COMMIT=$(git -C published-site rev-parse HEAD)
+
+          git fetch ./published-site gh-pages
+          git push origin FETCH_HEAD:refs/heads/gh-pages
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload complete report history
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: published-site
+
+      - name: Deploy report history to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
