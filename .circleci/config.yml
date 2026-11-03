@@ -1,0 +1,155 @@
+version: 2.1
+
+parameters:
+  test_env:
+    type: enum
+    enum:
+      - local
+      - qa
+      - prod
+    default: local
+
+jobs:
+  playwright-bdd-tests:
+    docker:
+      - image: cimg/node:20.19
+
+    resource_class: medium
+    working_directory: ~/project
+
+    environment:
+      CI: "true"
+      TEST_ENV: << pipeline.parameters.test_env >>
+      BASE_URL: "https://suite8demo.suiteondemand.com"
+
+    steps:
+      - checkout
+
+      - run:
+          name: Check environment and available storage
+          command: |
+            node --version
+            npm --version
+            echo "TEST_ENV=$TEST_ENV"
+            echo "BASE_URL=$BASE_URL"
+            df -h .
+
+      - run:
+          name: Check required credentials
+          command: |
+            if [ -z "${LOGIN_USERNAME:-}" ]; then
+              echo "LOGIN_USERNAME is missing."
+              exit 1
+            fi
+
+            if [ -z "${LOGIN_PASSWORD:-}" ]; then
+              echo "LOGIN_PASSWORD is missing."
+              exit 1
+            fi
+
+            echo "Required credentials are available."
+
+      - restore_cache:
+          keys:
+            - npm-v1-{{ checksum "package-lock.json" }}
+
+      - run:
+          name: Install dependencies
+          command: npm ci
+
+      - save_cache:
+          key: npm-v1-{{ checksum "package-lock.json" }}
+          paths:
+            - ~/.npm
+
+      - run:
+          name: Install Java for Allure
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y openjdk-17-jre-headless
+            java -version
+
+      - run:
+          name: Install Playwright browsers and system dependencies
+          command: |
+            npx playwright install --with-deps chromium firefox webkit
+
+      - run:
+          name: Generate BDD tests
+          command: npx bddgen
+
+      - run:
+          name: Run Playwright BDD tests
+          no_output_timeout: 30m
+          command: |
+            npx playwright test \
+              --workers=2 \
+              --project=login-chromium \
+              --project=login-firefox \
+              --project=login-webkit \
+              --project=chromium \
+              --project=firefox \
+              --project=webkit
+
+      - run:
+          name: Add Allure environment details
+          when: always
+          command: npm run allure:environment
+
+      - run:
+          name: Generate Allure HTML report
+          when: always
+          command: npm run allure:generate
+
+      - run:
+          name: Show report availability and storage
+          when: always
+          command: |
+            df -h .
+
+            for directory in \
+              playwright-report \
+              allure-results \
+              allure-report \
+              beacon-report \
+              test-results
+            do
+              if [ -d "$directory" ]; then
+                du -sh "$directory"
+              else
+                echo "$directory was not generated."
+              fi
+            done
+
+            if [ -f test-results/perfetto.json.gz ]; then
+              ls -lh test-results/perfetto.json.gz
+            elif [ -f test-results/perfetto.json ]; then
+              ls -lh test-results/perfetto.json
+            else
+              echo "No Perfetto timeline was generated."
+            fi
+
+      - store_artifacts:
+          path: playwright-report
+          destination: playwright-report
+
+      - store_artifacts:
+          path: allure-results
+          destination: allure-results
+
+      - store_artifacts:
+          path: allure-report
+          destination: allure-report
+
+      - store_artifacts:
+          path: beacon-report
+          destination: beacon-report
+
+      - store_artifacts:
+          path: test-results
+          destination: test-results
+
+workflows:
+  playwright-tests:
+    jobs:
+      - playwright-bdd-tests
