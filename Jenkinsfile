@@ -10,7 +10,6 @@ pipeline {
         )
     }
 
-
     tools {
         nodejs 'NodeJS-26'
     }
