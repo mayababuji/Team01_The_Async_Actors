@@ -27,7 +27,7 @@
   "author": "Team01 The Async Actors",
   "license": "ISC",
   "devDependencies": {
-    "@playwright/test": "1.64",
+    "@playwright/test": "1.65.0",
     "allure-commandline": "^2.46.1",
     "allure-playwright": "^3.13.0",
     "beacon-reporter": "^0.1.2",
