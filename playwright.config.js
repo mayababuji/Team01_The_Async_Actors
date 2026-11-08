@@ -105,7 +105,9 @@ reporter: [
           'slowest',
           'failing',
           'categories',
-          'suites', 'tags', 'files'
+          'suites',
+          'tags',
+          'files'
         ]
       },
       environment: {
@@ -113,7 +115,7 @@ reporter: [
         env: environment
       },
       links: {
-        issue:'https://github.com/mayababuji/Team01_The_Async_Actors/issues/{}'
+        issue: 'https://github.com/mayababuji/Team01_The_Async_Actors/issues/{}'
       },
       categories: [
         {
@@ -127,12 +129,13 @@ reporter: [
       ]
     }
   ],
-  ['list'],
+  ['failures'],
   [
     'html',
     {
       outputFolder: 'playwright-report',
-      open: 'never'
+      open: 'never',
+      onlyFailures: true
     }
   ],
   [
