@@ -1,0 +1,4 @@
+2026-11-09 04:01:31 info: Test started {"environment":"local","browser":"firefox","retry":2,"testTitle":"Create an opportunity with lead source Conference"}
+2026-11-09 04:01:33 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"firefox","retry":2,"testTitle":"Create an opportunity with lead source Conference"}
+2026-11-09 04:01:34 info: Creating prerequisite account for opportunity {"environment":"local","browser":"firefox","retry":2,"testTitle":"Create an opportunity with lead source Conference","scenario":"create_opportunity_lead_source_conference","accountName":"Numpy Conference Account"}
+2026-11-09 04:01:54 info: Test finished {"environment":"local","browser":"firefox","retry":2,"testTitle":"Create an opportunity with lead source Conference","status":"failed","expectedStatus":"passed"}

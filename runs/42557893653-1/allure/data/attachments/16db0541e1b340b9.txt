@@ -1,0 +1,4 @@
+2026-11-09 04:02:20 info: Test started {"environment":"local","browser":"firefox","retry":1,"testTitle":"Create an opportunity with lead source Employee"}
+2026-11-09 04:02:22 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"firefox","retry":1,"testTitle":"Create an opportunity with lead source Employee"}
+2026-11-09 04:02:25 info: Creating prerequisite account for opportunity {"environment":"local","browser":"firefox","retry":1,"testTitle":"Create an opportunity with lead source Employee","scenario":"create_opportunity_lead_source_employee","accountName":"Numpy Employee Account"}
+2026-11-09 04:02:45 info: Test finished {"environment":"local","browser":"firefox","retry":1,"testTitle":"Create an opportunity with lead source Employee","status":"failed","expectedStatus":"passed"}

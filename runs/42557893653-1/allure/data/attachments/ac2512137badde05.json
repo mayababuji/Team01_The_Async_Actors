@@ -1,0 +1,3 @@
+{"browser":"chromium","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Download the account import template","timestamp":"2026-11-09T03:47:00.737Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Download the account import template","timestamp":"2026-11-09T03:47:01.185Z"}
+{"browser":"chromium","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"passed","testTitle":"Download the account import template","timestamp":"2026-11-09T03:47:11.725Z"}

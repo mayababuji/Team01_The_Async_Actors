@@ -1,0 +1,4 @@
+2026-11-09 04:08:05 info: Test started {"environment":"local","browser":"webkit","retry":0,"testTitle":"Create an opportunity with lead source Other"}
+2026-11-09 04:08:06 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"webkit","retry":0,"testTitle":"Create an opportunity with lead source Other"}
+2026-11-09 04:08:08 info: Creating prerequisite account for opportunity {"environment":"local","browser":"webkit","retry":0,"testTitle":"Create an opportunity with lead source Other","scenario":"create_opportunity_lead_source_other","accountName":"Numpy Other Account"}
+2026-11-09 04:08:29 info: Test finished {"environment":"local","browser":"webkit","retry":0,"testTitle":"Create an opportunity with lead source Other","status":"failed","expectedStatus":"passed"}

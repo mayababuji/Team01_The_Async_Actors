@@ -1,0 +1,4 @@
+2026-11-09 03:53:06 info: Test started {"environment":"local","browser":"chromium","retry":0,"testTitle":"Create an account with a primary email address"}
+2026-11-09 03:53:06 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"chromium","retry":0,"testTitle":"Create an account with a primary email address"}
+2026-11-09 03:53:13 info: Creating account with primary email {"environment":"local","browser":"chromium","retry":0,"testTitle":"Create an account with a primary email address","scenario":"create_account_primary_email","accountName":"Numpy Primary Email Account","email":"numpy.primary@example.com"}
+2026-11-09 03:54:02 info: Test finished {"environment":"local","browser":"chromium","retry":0,"testTitle":"Create an account with a primary email address","status":"failed","expectedStatus":"passed"}

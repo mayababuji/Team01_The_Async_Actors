@@ -1,0 +1,3 @@
+2026-11-09 04:02:38 info: Test started {"environment":"local","browser":"chromium","retry":2,"testTitle":"Import new accounts from a valid file"}
+2026-11-09 04:02:38 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"chromium","retry":2,"testTitle":"Import new accounts from a valid file"}
+2026-11-09 04:03:01 info: Test finished {"environment":"local","browser":"chromium","retry":2,"testTitle":"Import new accounts from a valid file","status":"failed","expectedStatus":"passed"}

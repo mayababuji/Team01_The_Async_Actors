@@ -1,0 +1,3 @@
+{"browser":"chromium","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Verify Import Opportunities page navigation","timestamp":"2026-11-09T04:03:12.088Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Verify Import Opportunities page navigation","timestamp":"2026-11-09T04:03:12.334Z"}
+{"browser":"chromium","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"failed","testTitle":"Verify Import Opportunities page navigation","timestamp":"2026-11-09T04:03:35.092Z"}

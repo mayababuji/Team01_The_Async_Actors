@@ -1,0 +1,6 @@
+2026-11-09 03:47:20 info: Test started {"environment":"local","browser":"firefox","retry":0,"testTitle":"Search for a non-existing account"}
+2026-11-09 03:47:24 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"firefox","retry":0,"testTitle":"Search for a non-existing account"}
+2026-11-09 03:47:40 info: View Accounts page opened {"environment":"local","browser":"firefox","retry":0,"testTitle":"Search for a non-existing account"}
+2026-11-09 03:47:40 info: Searching for a non-existing account {"environment":"local","browser":"firefox","retry":0,"testTitle":"Search for a non-existing account","scenario":"search_non_existing_account","accountName":"NoSuchAccount_NUmpy_938472"}
+2026-11-09 03:47:42 info: No-results message verified {"environment":"local","browser":"firefox","retry":0,"testTitle":"Search for a non-existing account","scenario":"search_non_existing_account","accountName":"NoSuchAccount_NUmpy_938472","expectedMessage":"No results matching your search criteria. Try broadening your search."}
+2026-11-09 03:47:42 info: Test finished {"environment":"local","browser":"firefox","retry":0,"testTitle":"Search for a non-existing account","status":"passed","expectedStatus":"passed"}

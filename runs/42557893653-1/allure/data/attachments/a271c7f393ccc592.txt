@@ -1,0 +1,4 @@
+2026-11-09 04:15:00 info: Test started {"environment":"local","browser":"webkit","retry":2,"testTitle":"Create an opportunity with lead source Cold Call"}
+2026-11-09 04:15:00 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"webkit","retry":2,"testTitle":"Create an opportunity with lead source Cold Call"}
+2026-11-09 04:15:02 info: Creating prerequisite account for opportunity {"environment":"local","browser":"webkit","retry":2,"testTitle":"Create an opportunity with lead source Cold Call","scenario":"create_opportunity_lead_source_cold_call","accountName":"Numpy Cold Call Account"}
+2026-11-09 04:15:23 info: Test finished {"environment":"local","browser":"webkit","retry":2,"testTitle":"Create an opportunity with lead source Cold Call","status":"failed","expectedStatus":"passed"}

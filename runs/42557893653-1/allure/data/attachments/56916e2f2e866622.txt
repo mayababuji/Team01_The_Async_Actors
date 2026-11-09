@@ -1,0 +1,4 @@
+2026-11-09 04:07:08 info: Test started {"environment":"local","browser":"webkit","retry":2,"testTitle":"Create an opportunity with a selected currency and amount"}
+2026-11-09 04:07:09 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"webkit","retry":2,"testTitle":"Create an opportunity with a selected currency and amount"}
+2026-11-09 04:07:11 info: Creating prerequisite account for opportunity {"environment":"local","browser":"webkit","retry":2,"testTitle":"Create an opportunity with a selected currency and amount","scenario":"create_opportunity_with_currency","accountName":"Numpy USD Account"}
+2026-11-09 04:07:32 info: Test finished {"environment":"local","browser":"webkit","retry":2,"testTitle":"Create an opportunity with a selected currency and amount","status":"failed","expectedStatus":"passed"}

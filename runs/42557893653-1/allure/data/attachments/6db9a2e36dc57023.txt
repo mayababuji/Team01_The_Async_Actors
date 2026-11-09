@@ -1,0 +1,4 @@
+2026-11-09 04:04:12 info: Test started {"environment":"local","browser":"chromium","retry":0,"testTitle":"Create an opportunity with lead source Campaign"}
+2026-11-09 04:04:12 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"chromium","retry":0,"testTitle":"Create an opportunity with lead source Campaign"}
+2026-11-09 04:04:14 info: Creating prerequisite account for opportunity {"environment":"local","browser":"chromium","retry":0,"testTitle":"Create an opportunity with lead source Campaign","scenario":"create_opportunity_lead_source_campaign","accountName":"Numpy Campaign Account"}
+2026-11-09 04:04:35 info: Test finished {"environment":"local","browser":"chromium","retry":0,"testTitle":"Create an opportunity with lead source Campaign","status":"failed","expectedStatus":"passed"}

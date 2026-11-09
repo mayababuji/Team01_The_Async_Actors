@@ -1,0 +1,8 @@
+2026-11-09 03:44:03 info: Test started {"environment":"local","browser":"login-firefox","retry":0,"testTitle":"User cannot log in with an empty login"}
+2026-11-09 03:44:05 info: Opening Suite8 login page {"environment":"local","browser":"login-firefox","retry":0,"testTitle":"User cannot log in with an empty login"}
+Loading Excel login data once for this worker...
+2026-11-09 03:44:08 info: Submitting negative login data from Excel {"environment":"local","browser":"login-firefox","retry":0,"testTitle":"User cannot log in with an empty login","scenario":"empty_login","username":""}
+2026-11-09 03:44:10 info: Negative login form submitted {"environment":"local","browser":"login-firefox","retry":0,"testTitle":"User cannot log in with an empty login","scenario":"empty_login"}
+2026-11-09 03:44:10 info: Verifying expected login error message {"environment":"local","browser":"login-firefox","retry":0,"testTitle":"User cannot log in with an empty login","scenario":"empty_login","expectedResult":"Missing required field","locatorUsed":"emptyCredentialErrorMessage"}
+2026-11-09 03:44:10 info: Expected login error message was verified {"environment":"local","browser":"login-firefox","retry":0,"testTitle":"User cannot log in with an empty login","scenario":"empty_login","locatorUsed":"emptyCredentialErrorMessage"}
+2026-11-09 03:44:10 info: Test finished {"environment":"local","browser":"login-firefox","retry":0,"testTitle":"User cannot log in with an empty login","status":"passed","expectedStatus":"passed"}

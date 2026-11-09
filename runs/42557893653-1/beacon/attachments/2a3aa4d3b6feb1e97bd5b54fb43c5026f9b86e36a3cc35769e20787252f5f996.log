@@ -1,0 +1,5 @@
+{"browser":"firefox","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Sort accounts by name","timestamp":"2026-11-09T03:50:00.106Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Sort accounts by name","timestamp":"2026-11-09T03:50:01.344Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"Accounts list ready for sorting","retry":0,"testTitle":"Sort accounts by name","timestamp":"2026-11-09T03:50:21.039Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"Toggled Name sorting away from descending","retry":0,"testTitle":"Sort accounts by name","timestamp":"2026-11-09T03:50:21.586Z"}
+{"browser":"firefox","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"passed","testTitle":"Sort accounts by name","timestamp":"2026-11-09T03:50:24.854Z"}
