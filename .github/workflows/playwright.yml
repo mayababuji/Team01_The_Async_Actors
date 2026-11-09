@@ -291,18 +291,17 @@ jobs:
         shell: bash
         run: |
           mkdir -p published-site
-          git init published-site
-          git -C published-site checkout -b gh-pages
+          git init --initial-branch=gh-pages published-site
 
           if git ls-remote --exit-code --heads origin gh-pages > /dev/null; then
-            git fetch origin gh-pages
-            git archive FETCH_HEAD | tar -x -C published-site
+            git fetch origin \
+              refs/heads/gh-pages:refs/remotes/origin/gh-pages
 
-            # Use the existing history commit as the parent.
             git -C published-site fetch \
-              "$GITHUB_WORKSPACE" FETCH_HEAD
+              "$GITHUB_WORKSPACE" \
+              refs/remotes/origin/gh-pages
 
-            git -C published-site reset --mixed FETCH_HEAD
+            git -C published-site checkout -B gh-pages FETCH_HEAD
           fi
 
       - name: Add current run and rebuild report homepage
