@@ -1,0 +1,5 @@
+{"browser":"chromium","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Verify Accounts module navigation","timestamp":"2026-11-10T04:19:11.473Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Verify Accounts module navigation","timestamp":"2026-11-10T04:19:12.122Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Hovering over Accounts module","retry":0,"testTitle":"Verify Accounts module navigation","timestamp":"2026-11-10T04:19:15.010Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"All Accounts dropdown options are visible","options":["Create Account","Import Accounts","View Accounts"],"retry":0,"testTitle":"Verify Accounts module navigation","timestamp":"2026-11-10T04:19:17.952Z"}
+{"browser":"chromium","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"passed","testTitle":"Verify Accounts module navigation","timestamp":"2026-11-10T04:19:18.120Z"}

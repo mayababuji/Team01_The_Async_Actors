@@ -1,0 +1,3 @@
+{"browser":"login-firefox","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Verify password is hidden when user enters password","timestamp":"2026-11-10T04:15:10.205Z"}
+{"browser":"login-firefox","environment":"local","level":"info","message":"Opening Suite8 login page","retry":0,"testTitle":"Verify password is hidden when user enters password","timestamp":"2026-11-10T04:15:13.448Z"}
+{"browser":"login-firefox","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"passed","testTitle":"Verify password is hidden when user enters password","timestamp":"2026-11-10T04:15:20.597Z"}

@@ -1,0 +1,5 @@
+{"browser":"firefox","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Verify Accounts module navigation","timestamp":"2026-11-10T04:21:14.416Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Verify Accounts module navigation","timestamp":"2026-11-10T04:21:19.987Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"Hovering over Accounts module","retry":0,"testTitle":"Verify Accounts module navigation","timestamp":"2026-11-10T04:21:26.337Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"All Accounts dropdown options are visible","options":["Create Account","Import Accounts","View Accounts"],"retry":0,"testTitle":"Verify Accounts module navigation","timestamp":"2026-11-10T04:21:31.995Z"}
+{"browser":"firefox","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"passed","testTitle":"Verify Accounts module navigation","timestamp":"2026-11-10T04:21:32.238Z"}

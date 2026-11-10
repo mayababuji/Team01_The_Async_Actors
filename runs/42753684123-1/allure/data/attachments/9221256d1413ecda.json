@@ -1,0 +1,4 @@
+{"browser":"chromium","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Verify Import Accounts page navigation","timestamp":"2026-11-10T04:37:51.259Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Verify Import Accounts page navigation","timestamp":"2026-11-10T04:37:52.090Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Import Accounts page displayed","retry":0,"testTitle":"Verify Import Accounts page navigation","timestamp":"2026-11-10T04:38:00.481Z"}
+{"browser":"chromium","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"passed","testTitle":"Verify Import Accounts page navigation","timestamp":"2026-11-10T04:38:00.847Z"}

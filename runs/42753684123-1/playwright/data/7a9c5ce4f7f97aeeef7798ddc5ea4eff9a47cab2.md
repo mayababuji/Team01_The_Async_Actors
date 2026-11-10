@@ -1,0 +1,378 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: features/accounts.feature.spec.js >> Accounts management >> Create an account with a primary email address
+- Location: tests/generated/features/accounts.feature.spec.js:48:3
+
+# Error details
+
+```
+TimeoutError: page.waitForURL: Timeout 45000ms exceeded.
+=========================== logs ===========================
+waiting for navigation until "load"
+============================================================
+```
+
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - navigation [ref=e5]:
+      - generic [ref=e6]:
+        - list [ref=e9]:
+          - listitem [ref=e10]:
+            - link [ref=e11] [cursor=pointer]:
+              - /url: "#/home"
+        - list [ref=e18]:
+          - listitem [ref=e19]:
+            - generic [ref=e20]: Accounts
+          - listitem [ref=e27]:
+            - generic [ref=e28]: Contacts
+          - listitem [ref=e35]:
+            - generic [ref=e36]: Opportunities
+          - listitem [ref=e43]:
+            - generic [ref=e44]: Leads
+          - listitem [ref=e51]:
+            - generic [ref=e52]: Quotes
+          - listitem [ref=e59]:
+            - generic [ref=e60]: Calendar
+          - listitem [ref=e67]:
+            - generic [ref=e68]: Documents
+        - list [ref=e77]:
+          - listitem [ref=e78]:
+            - generic [ref=e79]: More
+      - generic [ref=e81]:
+        - list [ref=e83]:
+          - listitem [ref=e84]:
+            - generic "Quick Create" [ref=e85] [cursor=pointer]
+        - list [ref=e92]:
+          - listitem [ref=e93]:
+            - generic "Recently Viewed" [ref=e94] [cursor=pointer]
+        - generic [ref=e104]:
+          - textbox "Search" [ref=e105]:
+            - /placeholder: Search...
+          - button "Search" [ref=e107] [cursor=pointer]
+        - list [ref=e117]:
+          - listitem [ref=e118]:
+            - generic [ref=e119] [cursor=pointer]
+      - list [ref=e127]:
+        - listitem [ref=e128]
+    - generic [ref=e139]:
+      - generic [ref=e143]:
+        - generic [ref=e144]: Create
+        - generic [ref=e153]:
+          - button "Save" [active] [ref=e155] [cursor=pointer]
+          - button "Cancel" [ref=e158] [cursor=pointer]
+      - separator [ref=e161]
+      - generic [ref=e170]:
+        - tablist [ref=e172]:
+          - tab "OVERVIEW" [selected] [ref=e173] [cursor=pointer]
+          - tab "MORE INFORMATION" [ref=e174] [cursor=pointer]
+          - tab "OTHER" [ref=e175] [cursor=pointer]
+        - tabpanel "OVERVIEW" [ref=e177]:
+          - generic [ref=e180]:
+            - generic [ref=e181]:
+              - generic [ref=e183]:
+                - strong [ref=e185]:
+                  - generic [ref=e186]: "*"
+                  - generic [ref=e187]: NAME
+                - generic [ref=e191]:
+                  - textbox [ref=e195]
+                  - generic [ref=e196]: "Missing required field: Name"
+              - generic [ref=e200]:
+                - strong [ref=e202]:
+                  - generic [ref=e203]: ASSIGNED TO
+                - generic [ref=e211]:
+                  - generic [ref=e214] [cursor=pointer]:
+                    - combobox "WillWestin" [ref=e215]
+                    - button "dropdown trigger" [ref=e220]
+                  - button [ref=e228] [cursor=pointer]
+            - generic [ref=e234]:
+              - generic [ref=e236]:
+                - strong [ref=e238]:
+                  - generic [ref=e239]: WEBSITE
+                - textbox [ref=e247]
+              - generic [ref=e249]:
+                - strong [ref=e251]:
+                  - generic [ref=e252]: OFFICE PHONE
+                - textbox [ref=e260]
+            - generic [ref=e263]:
+              - strong [ref=e265]:
+                - generic [ref=e266]: EMAIL ADDRESS
+              - generic [ref=e271]:
+                - generic [ref=e273]:
+                  - generic [ref=e280]:
+                    - generic [ref=e281]:
+                      - generic [ref=e282]: Email Address
+                      - textbox [ref=e290]: numpy.primary@example.com
+                    - generic [ref=e291]:
+                      - generic [ref=e292]: Primary
+                      - generic [ref=e301] [cursor=pointer]
+                    - generic [ref=e302]:
+                      - generic [ref=e303]: Opt Out
+                      - generic [ref=e312] [cursor=pointer]
+                    - generic [ref=e313]:
+                      - generic [ref=e314]: Invalid
+                      - generic [ref=e323] [cursor=pointer]
+                  - button [ref=e326] [cursor=pointer]
+                - button [ref=e334] [cursor=pointer]
+            - generic [ref=e341]:
+              - generic [ref=e343]:
+                - strong [ref=e345]:
+                  - generic [ref=e346]: BILLING ADDRESS
+                - generic [ref=e354]:
+                  - generic [ref=e355]:
+                    - generic [ref=e356]: Billing Street
+                    - textbox [ref=e364]
+                  - generic [ref=e365]:
+                    - generic [ref=e366]: Billing Postal Code
+                    - textbox [ref=e374]
+                  - generic [ref=e375]:
+                    - generic [ref=e376]: Billing City
+                    - textbox [ref=e384]
+                  - generic [ref=e385]:
+                    - generic [ref=e386]: Billing State
+                    - textbox [ref=e394]
+                  - generic [ref=e395]:
+                    - generic [ref=e396]: Billing Country
+                    - textbox [ref=e404]
+              - generic [ref=e406]:
+                - strong [ref=e408]:
+                  - generic [ref=e409]: SHIPPING ADDRESS
+                - generic [ref=e417]:
+                  - generic [ref=e418]:
+                    - generic [ref=e419]: Shipping Street
+                    - textbox [ref=e427]
+                  - generic [ref=e428]:
+                    - generic [ref=e429]: Shipping Postal Code
+                    - textbox [ref=e437]
+                  - generic [ref=e438]:
+                    - generic [ref=e439]: Shipping City
+                    - textbox [ref=e447]
+                  - generic [ref=e448]:
+                    - generic [ref=e449]: Shipping State
+                    - textbox [ref=e457]
+                  - generic [ref=e458]:
+                    - generic [ref=e459]: Shipping Country
+                    - textbox [ref=e467]
+            - generic [ref=e470]:
+              - strong [ref=e472]:
+                - generic [ref=e473]: DESCRIPTION
+              - textbox [ref=e481]
+  - generic [ref=e484]:
+    - generic [ref=e485]: © Supercharged by SuiteCRM © Powered By SugarCRM
+    - generic [ref=e486]: Back To Top
+```
+
+# Test source
+
+```ts
+  546 | 
+  547 |       billingStreet: this.billingStreetInput,
+  548 |       billingPostalCode: this.billingPostalCodeInput,
+  549 |       billingCity: this.billingCityInput,
+  550 |       billingState: this.billingStateInput,
+  551 |       billingCountry: this.billingCountryInput,
+  552 | 
+  553 | 
+  554 |       shippingStreet: this.shippingStreetInput,
+  555 |       shippingPostalCode: this.shippingPostalCodeInput,
+  556 |       shippingCity: this.shippingCityInput,
+  557 |       shippingState: this.shippingStateInput,
+  558 |       shippingCountry: this.shippingCountryInput
+  559 |     };
+  560 | 
+  561 | 
+  562 |     for (const [fieldName, input] of Object.entries(fields)) {
+  563 |       const value = account[fieldName];
+  564 | 
+  565 | 
+  566 |       if (value === undefined || value === null) {
+  567 |         throw new Error(
+  568 |           `Missing Excel value for overview field "${fieldName}".`
+  569 |         );
+  570 |       }
+  571 | 
+  572 | 
+  573 |       await input.fill(String(value));
+  574 |     }
+  575 |   }
+  576 | 
+  577 | 
+  578 |   async enterAccountWithPrimaryEmail(account) {
+  579 |     await this.enterAccountName(account.name);
+  580 |     await this.emailInput.fill(account.email);
+  581 |     await this.primaryEmailControl.setChecked(true);
+  582 |   }
+  583 | 
+  584 | 
+  585 |   async enterAccountWithInvalidEmail(account) {
+  586 |     await this.enterAccountName(account.name);
+  587 |     await this.emailInput.fill(account.email);
+  588 |   }
+  589 | 
+  590 | 
+  591 |   async enterUnsavedAccountData(account) {
+  592 |     await this.enterAccountName(account.name);
+  593 |     await this.emailInput.fill(account.email);
+  594 |   }
+  595 | 
+  596 | 
+  597 |   async waitForAccountDetailPage() {
+  598 |     await this.overviewPanel.waitFor({
+  599 |       state: 'visible'
+  600 |     });
+  601 | 
+  602 | 
+  603 |     await this.editAccountButton.waitFor({
+  604 |       state: 'visible'
+  605 |     });
+  606 |   }
+  607 | 
+  608 | 
+  609 |   async saveAccountChanges() {
+  610 |     await this.saveButton.click();
+  611 |     await this.waitForAccountDetailPage();
+  612 |   }
+  613 | 
+  614 | 
+  615 |   async reloadAccountDetailPage() {
+  616 |     await this.page.reload();
+  617 |     await this.waitForAccountDetailPage();
+  618 |   }
+  619 | 
+  620 | 
+  621 |   async cancelAccountEditing() {
+  622 |     await this.cancelCreateAccountButton.click();
+  623 | 
+  624 | 
+  625 |     await this.confirmLeaveAccountButton
+  626 |       .or(this.editAccountButton)
+  627 |       .first()
+  628 |       .waitFor({ state: 'visible' });
+  629 | 
+  630 | 
+  631 |     if (await this.confirmLeaveAccountButton.isVisible()) {
+  632 |       await this.confirmLeaveAccountButton.click();
+  633 |     }
+  634 | 
+  635 | 
+  636 |     await this.waitForAccountDetailPage();
+  637 |   }
+  638 | 
+  639 | 
+  640 |   // --------------------------------------------------
+  641 |   // Account creation helpers
+  642 |   // --------------------------------------------------
+  643 | 
+  644 | 
+  645 |   async waitForAccountRecordPage() {
+> 646 |     await this.page.waitForURL(ACCOUNT_RECORD_URL);
+      |                     ^ TimeoutError: page.waitForURL: Timeout 45000ms exceeded.
+  647 | 
+  648 | 
+  649 |     return this.page.url();
+  650 |   }
+  651 | 
+  652 | 
+  653 |   async createAccount(account) {
+  654 |     await this.openCreateAccountPage();
+  655 |     await this.enterAccountName(account.name);
+  656 |     await this.clickSaveOnCreateAccountPage();
+  657 | 
+  658 | 
+  659 |     return await this.waitForAccountRecordPage();
+  660 |   }
+  661 | 
+  662 | 
+  663 |   async createCompleteAccount(account) {
+  664 |     await this.openCreateAccountPage();
+  665 |     await this.enterCompleteOverviewInformation(account);
+  666 |     await this.clickSaveOnCreateAccountPage();
+  667 | 
+  668 | 
+  669 |     return await this.waitForAccountRecordPage();
+  670 |   }
+  671 | 
+  672 | 
+  673 |   async createAccountWithPrimaryEmail(account) {
+  674 |     await this.openCreateAccountPage();
+  675 |     await this.enterAccountWithPrimaryEmail(account);
+  676 |     await this.clickSaveOnCreateAccountPage();
+  677 | 
+  678 | 
+  679 |     return await this.waitForAccountRecordPage();
+  680 |   }
+  681 | 
+  682 | 
+  683 |   async openAccountEditing() {
+  684 |     await this.openAccountForEditing();
+  685 |   }
+  686 | 
+  687 | 
+  688 |   async getSelectedImportFileName() {
+  689 |     return await this.getSelectedAccountImportFileName();
+  690 |   }
+  691 | 
+  692 | 
+  693 |   // --------------------------------------------------
+  694 |   // Validation and unsaved-changes popup
+  695 |   // --------------------------------------------------
+  696 | 
+  697 | 
+  698 |   getEmailValidationMessage(expectedMessage) {
+  699 |     return this.page.getByText(expectedMessage, {
+  700 |       exact: true
+  701 |     });
+  702 |   }
+  703 | 
+  704 | 
+  705 |   getUnsavedChangesMessage(expectedMessage) {
+  706 |     return this.page.getByText(expectedMessage, {
+  707 |       exact: true
+  708 |     });
+  709 |   }
+  710 | 
+  711 | 
+  712 |   async confirmLeavingAccountCreation() {
+  713 |     await this.confirmLeaveAccountButton.click();
+  714 |   }
+  715 | 
+  716 | 
+  717 |   async dismissCancellationPopup() {
+  718 |     await this.dismissCancellationButton.click();
+  719 |   }
+  720 | 
+  721 | 
+  722 |   async openSavedAccountForVerification(recordUrl) {
+  723 |     await this.page.goto(recordUrl);
+  724 | 
+  725 | 
+  726 |     await this.waitForAccountDetailPage();
+  727 | 
+  728 | 
+  729 |     await this.openAccountForEditing();
+  730 | 
+  731 | 
+  732 |     await this.accountNameInput.waitFor({
+  733 |       state: 'visible'
+  734 |     });
+  735 | 
+  736 | 
+  737 |     await this.websiteInput.waitFor({
+  738 |       state: 'visible'
+  739 |     });
+  740 |   }
+  741 | 
+  742 | 
+  743 |   async createAccountWithWebsite(account) {
+  744 |     await this.openCreateAccountPage();
+  745 | 
+  746 | 
+```

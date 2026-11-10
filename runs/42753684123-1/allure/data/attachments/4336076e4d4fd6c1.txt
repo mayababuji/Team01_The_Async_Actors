@@ -1,0 +1,5 @@
+2026-11-10 04:22:30 info: Test started {"environment":"local","browser":"chromium","retry":0,"testTitle":"Delete an existing account"}
+2026-11-10 04:22:31 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"chromium","retry":0,"testTitle":"Delete an existing account"}
+2026-11-10 04:22:47 info: Created account for deletion {"environment":"local","browser":"chromium","retry":0,"testTitle":"Delete an existing account","scenario":"delete_account","accountName":"Numpy Delete Account","recordUrl":"https://suite8demo.suiteondemand.com/#/accounts/record/dd0b49e4-a22f-4d32-aa0e-3c7e711c4c8e"}
+2026-11-10 04:22:50 info: Deleted the test-created account {"environment":"local","browser":"chromium","retry":0,"testTitle":"Delete an existing account","scenario":"delete_account","accountName":"Numpy Delete Account","recordUrl":"https://suite8demo.suiteondemand.com/#/accounts/record/dd0b49e4-a22f-4d32-aa0e-3c7e711c4c8e"}
+2026-11-10 04:23:14 info: Test finished {"environment":"local","browser":"chromium","retry":0,"testTitle":"Delete an existing account","status":"failed","expectedStatus":"passed"}

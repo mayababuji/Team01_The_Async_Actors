@@ -1,0 +1,5 @@
+2026-11-10 04:33:31 info: Test started {"environment":"local","browser":"webkit","retry":0,"testTitle":"Verify Opportunities module navigation"}
+2026-11-10 04:33:33 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"webkit","retry":0,"testTitle":"Verify Opportunities module navigation"}
+2026-11-10 04:33:40 info: Hovered over Opportunities module {"environment":"local","browser":"webkit","retry":0,"testTitle":"Verify Opportunities module navigation"}
+2026-11-10 04:33:41 info: All Opportunities dropdown options are visible {"environment":"local","browser":"webkit","retry":0,"testTitle":"Verify Opportunities module navigation","options":["Create Opportunity","Import Opportunities","View Opportunities"]}
+2026-11-10 04:33:42 info: Test finished {"environment":"local","browser":"webkit","retry":0,"testTitle":"Verify Opportunities module navigation","status":"passed","expectedStatus":"passed"}
