@@ -1,0 +1,4 @@
+2026-11-10 21:08:12 info: Test started {"environment":"local","browser":"chromium","retry":1,"testTitle":"Proceed with a valid account import file"}
+2026-11-10 21:08:12 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"chromium","retry":1,"testTitle":"Proceed with a valid account import file"}
+2026-11-10 21:08:19 info: Opening Import Accounts page and selecting valid import file {"environment":"local","browser":"chromium","retry":1,"testTitle":"Proceed with a valid account import file"}
+2026-11-10 21:08:39 info: Test finished {"environment":"local","browser":"chromium","retry":1,"testTitle":"Proceed with a valid account import file","status":"failed","expectedStatus":"passed"}

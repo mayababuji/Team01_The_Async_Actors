@@ -1,0 +1,5 @@
+2026-11-10 20:47:43 info: Test started {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify View Opportunities page navigation"}
+2026-11-10 20:47:47 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify View Opportunities page navigation"}
+2026-11-10 20:47:59 info: Clicked View Opportunities {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify View Opportunities page navigation"}
+2026-11-10 20:48:07 info: View Opportunities page displayed {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify View Opportunities page navigation"}
+2026-11-10 20:48:08 info: Test finished {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify View Opportunities page navigation","status":"passed","expectedStatus":"passed"}

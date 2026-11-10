@@ -1,0 +1,4 @@
+2026-11-10 21:06:44 info: Test started {"environment":"local","browser":"chromium","retry":1,"testTitle":"Create an opportunity with lead source Partner"}
+2026-11-10 21:06:44 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"chromium","retry":1,"testTitle":"Create an opportunity with lead source Partner"}
+2026-11-10 21:06:52 info: Creating prerequisite account for opportunity {"environment":"local","browser":"chromium","retry":1,"testTitle":"Create an opportunity with lead source Partner","scenario":"create_opportunity_lead_source_partner","accountName":"Numpy Partner Account"}
+2026-11-10 21:07:13 info: Test finished {"environment":"local","browser":"chromium","retry":1,"testTitle":"Create an opportunity with lead source Partner","status":"failed","expectedStatus":"passed"}

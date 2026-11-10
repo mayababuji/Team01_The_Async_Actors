@@ -1,0 +1,5 @@
+2026-11-10 21:01:39 info: Test started {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Accounts module navigation"}
+2026-11-10 21:01:41 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Accounts module navigation"}
+2026-11-10 21:01:54 info: Hovering over Accounts module {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Accounts module navigation"}
+2026-11-10 21:02:06 info: All Accounts dropdown options are visible {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Accounts module navigation","options":["Create Account","Import Accounts","View Accounts"]}
+2026-11-10 21:02:06 info: Test finished {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Accounts module navigation","status":"passed","expectedStatus":"passed"}

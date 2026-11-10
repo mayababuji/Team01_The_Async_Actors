@@ -1,0 +1,4 @@
+2026-11-10 21:04:07 info: Test started {"environment":"local","browser":"chromium","retry":1,"testTitle":"Create an opportunity with lead source Existing Customer"}
+2026-11-10 21:04:08 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"chromium","retry":1,"testTitle":"Create an opportunity with lead source Existing Customer"}
+2026-11-10 21:04:19 info: Creating prerequisite account for opportunity {"environment":"local","browser":"chromium","retry":1,"testTitle":"Create an opportunity with lead source Existing Customer","scenario":"create_opportunity_lead_source_existing_customer","accountName":"Numpy Existing Customer Account"}
+2026-11-10 21:04:56 info: Test finished {"environment":"local","browser":"chromium","retry":1,"testTitle":"Create an opportunity with lead source Existing Customer","status":"failed","expectedStatus":"passed"}

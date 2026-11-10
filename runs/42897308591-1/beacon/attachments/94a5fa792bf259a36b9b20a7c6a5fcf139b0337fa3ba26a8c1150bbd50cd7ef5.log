@@ -1,0 +1,3 @@
+{"browser":"webkit","environment":"local","level":"info","message":"Test started","retry":1,"testTitle":"Import new accounts from a valid file","timestamp":"2026-11-10T21:06:18.577Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":1,"testTitle":"Import new accounts from a valid file","timestamp":"2026-11-10T21:06:19.112Z"}
+{"browser":"webkit","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":1,"status":"failed","testTitle":"Import new accounts from a valid file","timestamp":"2026-11-10T21:06:46.905Z"}

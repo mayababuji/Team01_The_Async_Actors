@@ -1,0 +1,3 @@
+2026-11-10 21:21:24 info: Test started {"environment":"local","browser":"firefox","retry":2,"testTitle":"Download the account import template"}
+2026-11-10 21:21:26 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"firefox","retry":2,"testTitle":"Download the account import template"}
+2026-11-10 21:21:55 info: Test finished {"environment":"local","browser":"firefox","retry":2,"testTitle":"Download the account import template","status":"failed","expectedStatus":"passed"}

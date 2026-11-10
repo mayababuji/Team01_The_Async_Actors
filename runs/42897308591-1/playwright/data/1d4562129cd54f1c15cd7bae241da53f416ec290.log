@@ -1,0 +1,4 @@
+{"browser":"chromium","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Verify Contacts module navigation","timestamp":"2026-11-10T21:18:09.337Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Verify Contacts module navigation","timestamp":"2026-11-10T21:18:09.700Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Hovering over Contacts module","retry":0,"testTitle":"Verify Contacts module navigation","timestamp":"2026-11-10T21:18:16.527Z"}
+{"browser":"chromium","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"failed","testTitle":"Verify Contacts module navigation","timestamp":"2026-11-10T21:18:36.907Z"}

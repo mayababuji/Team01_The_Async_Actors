@@ -1,0 +1,3 @@
+2026-11-10 21:04:00 info: Test started {"environment":"local","browser":"webkit","retry":0,"testTitle":"Verify required field validation on Create Opportunity page"}
+2026-11-10 21:04:01 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"webkit","retry":0,"testTitle":"Verify required field validation on Create Opportunity page"}
+2026-11-10 21:04:46 info: Test finished {"environment":"local","browser":"webkit","retry":0,"testTitle":"Verify required field validation on Create Opportunity page","status":"failed","expectedStatus":"passed"}

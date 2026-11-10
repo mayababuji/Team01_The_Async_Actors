@@ -1,0 +1,4 @@
+2026-11-10 21:11:09 info: Test started {"environment":"local","browser":"webkit","retry":1,"testTitle":"Create an opportunity with a description"}
+2026-11-10 21:11:10 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"webkit","retry":1,"testTitle":"Create an opportunity with a description"}
+2026-11-10 21:11:17 info: Creating prerequisite account for opportunity {"environment":"local","browser":"webkit","retry":1,"testTitle":"Create an opportunity with a description","scenario":"create_opportunity_with_description","accountName":"Numpy Description Account"}
+2026-11-10 21:11:38 info: Test finished {"environment":"local","browser":"webkit","retry":1,"testTitle":"Create an opportunity with a description","status":"failed","expectedStatus":"passed"}

@@ -1,0 +1,4 @@
+{"browser":"webkit","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Proceed with a valid account import file","timestamp":"2026-11-10T21:09:53.651Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Proceed with a valid account import file","timestamp":"2026-11-10T21:09:54.621Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"Opening Import Accounts page and selecting valid import file","retry":0,"testTitle":"Proceed with a valid account import file","timestamp":"2026-11-10T21:10:01.444Z"}
+{"browser":"webkit","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"failed","testTitle":"Proceed with a valid account import file","timestamp":"2026-11-10T21:10:22.206Z"}

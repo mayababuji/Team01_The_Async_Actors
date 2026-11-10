@@ -1,0 +1,4 @@
+2026-11-10 21:23:58 info: Test started {"environment":"local","browser":"webkit","retry":1,"testTitle":"Create an opportunity with lead source Public Relations"}
+2026-11-10 21:23:58 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"webkit","retry":1,"testTitle":"Create an opportunity with lead source Public Relations"}
+2026-11-10 21:24:05 info: Creating prerequisite account for opportunity {"environment":"local","browser":"webkit","retry":1,"testTitle":"Create an opportunity with lead source Public Relations","scenario":"create_opportunity_lead_source_public_relations","accountName":"Numpy Public Relations Account"}
+2026-11-10 21:24:26 info: Test finished {"environment":"local","browser":"webkit","retry":1,"testTitle":"Create an opportunity with lead source Public Relations","status":"failed","expectedStatus":"passed"}

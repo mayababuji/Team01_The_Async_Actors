@@ -1,0 +1,3 @@
+{"browser":"webkit","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Search for an account using partial account name","timestamp":"2026-11-10T21:07:18.397Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Search for an account using partial account name","timestamp":"2026-11-10T21:07:19.024Z"}
+{"browser":"webkit","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"failed","testTitle":"Search for an account using partial account name","timestamp":"2026-11-10T21:07:46.428Z"}

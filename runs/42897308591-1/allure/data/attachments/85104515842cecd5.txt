@@ -1,0 +1,9 @@
+2026-11-10 20:40:36 info: Test started {"environment":"local","browser":"firefox","retry":0,"testTitle":"Import new accounts from a valid file"}
+2026-11-10 20:40:40 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"firefox","retry":0,"testTitle":"Import new accounts from a valid file"}
+2026-11-10 20:41:05 info: Valid account import file is available {"environment":"local","browser":"firefox","retry":0,"testTitle":"Import new accounts from a valid file","importFile":"/home/runner/work/Team01_The_Async_Actors/Team01_The_Async_Actors/test-data/AccountsImportNew.csv","importedAccountCount":2}
+2026-11-10 20:41:05 info: Completing account import using Create new records only {"environment":"local","browser":"firefox","retry":0,"testTitle":"Import new accounts from a valid file"}
+2026-11-10 20:41:16 info: Account import completed using Create new records only {"environment":"local","browser":"firefox","retry":0,"testTitle":"Import new accounts from a valid file"}
+2026-11-10 20:41:17 info: Imported account names, phone numbers, and email addresses verified in Step 5 {"environment":"local","browser":"firefox","retry":0,"testTitle":"Import new accounts from a valid file"}
+2026-11-10 20:41:17 info: Undoing imported accounts {"environment":"local","browser":"firefox","retry":0,"testTitle":"Import new accounts from a valid file"}
+2026-11-10 20:41:17 error: Failed to undo imported accounts {"environment":"local","browser":"firefox","retry":0,"testTitle":"Import new accounts from a valid file","error":"TypeError: accountsPage.undoImportedAccounts is not a function"}
+2026-11-10 20:41:17 info: Test finished {"environment":"local","browser":"firefox","retry":0,"testTitle":"Import new accounts from a valid file","status":"passed","expectedStatus":"passed"}

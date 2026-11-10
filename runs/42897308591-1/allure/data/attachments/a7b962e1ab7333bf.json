@@ -1,0 +1,4 @@
+{"browser":"firefox","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Create an opportunity with lead source Email","timestamp":"2026-11-10T21:15:53.556Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Create an opportunity with lead source Email","timestamp":"2026-11-10T21:15:55.852Z"}
+{"accountName":"Numpy Email Account","browser":"firefox","environment":"local","level":"info","message":"Creating prerequisite account for opportunity","retry":0,"scenario":"create_opportunity_lead_source_email","testTitle":"Create an opportunity with lead source Email","timestamp":"2026-11-10T21:16:03.550Z"}
+{"browser":"firefox","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"failed","testTitle":"Create an opportunity with lead source Email","timestamp":"2026-11-10T21:16:24.184Z"}

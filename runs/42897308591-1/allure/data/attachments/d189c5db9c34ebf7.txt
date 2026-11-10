@@ -1,0 +1,4 @@
+2026-11-10 21:14:39 info: Test started {"environment":"local","browser":"firefox","retry":2,"testTitle":"Create an opportunity with valid mandatory data"}
+2026-11-10 21:14:42 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"firefox","retry":2,"testTitle":"Create an opportunity with valid mandatory data"}
+2026-11-10 21:14:51 info: Creating prerequisite account for opportunity {"environment":"local","browser":"firefox","retry":2,"testTitle":"Create an opportunity with valid mandatory data","scenario":"create_opportunity_valid_mandatory","accountName":"Numpy Test Oppurtunity Account"}
+2026-11-10 21:15:11 info: Test finished {"environment":"local","browser":"firefox","retry":2,"testTitle":"Create an opportunity with valid mandatory data","status":"failed","expectedStatus":"passed"}

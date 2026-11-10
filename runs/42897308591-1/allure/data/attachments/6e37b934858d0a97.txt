@@ -1,0 +1,4 @@
+2026-11-10 20:44:04 info: Test started {"environment":"local","browser":"chromium","retry":0,"testTitle":"Verify Create Account page navigation"}
+2026-11-10 20:44:04 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"chromium","retry":0,"testTitle":"Verify Create Account page navigation"}
+2026-11-10 20:44:15 info: Create Account page displayed {"environment":"local","browser":"chromium","retry":0,"testTitle":"Verify Create Account page navigation"}
+2026-11-10 20:44:15 info: Test finished {"environment":"local","browser":"chromium","retry":0,"testTitle":"Verify Create Account page navigation","status":"passed","expectedStatus":"passed"}

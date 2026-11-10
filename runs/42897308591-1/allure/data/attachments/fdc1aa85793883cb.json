@@ -1,0 +1,3 @@
+{"browser":"chromium","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Verify Cancel button on Create Account page without entered data","timestamp":"2026-11-10T21:20:45.889Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Verify Cancel button on Create Account page without entered data","timestamp":"2026-11-10T21:20:46.207Z"}
+{"browser":"chromium","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"failed","testTitle":"Verify Cancel button on Create Account page without entered data","timestamp":"2026-11-10T21:21:13.991Z"}

@@ -1,0 +1,4 @@
+{"browser":"chromium","environment":"local","level":"info","message":"Test started","retry":1,"testTitle":"Create an opportunity with New Business","timestamp":"2026-11-10T21:21:36.466Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":1,"testTitle":"Create an opportunity with New Business","timestamp":"2026-11-10T21:21:36.820Z"}
+{"accountName":"Numpy New Business Account","browser":"chromium","environment":"local","level":"info","message":"Creating prerequisite account for opportunity","retry":1,"scenario":"create_opportunity_new_business","testTitle":"Create an opportunity with New Business","timestamp":"2026-11-10T21:21:44.313Z"}
+{"browser":"chromium","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":1,"status":"failed","testTitle":"Create an opportunity with New Business","timestamp":"2026-11-10T21:22:04.909Z"}

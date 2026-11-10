@@ -1,0 +1,4 @@
+2026-11-10 21:19:03 info: Test started {"environment":"local","browser":"chromium","retry":0,"testTitle":"Create an opportunity with lead source Email"}
+2026-11-10 21:19:03 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"chromium","retry":0,"testTitle":"Create an opportunity with lead source Email"}
+2026-11-10 21:19:11 info: Creating prerequisite account for opportunity {"environment":"local","browser":"chromium","retry":0,"testTitle":"Create an opportunity with lead source Email","scenario":"create_opportunity_lead_source_email","accountName":"Numpy Email Account"}
+2026-11-10 21:19:31 info: Test finished {"environment":"local","browser":"chromium","retry":0,"testTitle":"Create an opportunity with lead source Email","status":"failed","expectedStatus":"passed"}

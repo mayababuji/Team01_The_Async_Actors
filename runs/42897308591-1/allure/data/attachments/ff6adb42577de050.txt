@@ -1,0 +1,7 @@
+2026-11-10 20:40:13 info: Test started {"environment":"local","browser":"login-webkit","retry":0,"testTitle":"User cannot log in with an empty login"}
+2026-11-10 20:40:14 info: Opening Suite8 login page {"environment":"local","browser":"login-webkit","retry":0,"testTitle":"User cannot log in with an empty login"}
+2026-11-10 20:40:17 info: Submitting negative login data from Excel {"environment":"local","browser":"login-webkit","retry":0,"testTitle":"User cannot log in with an empty login","scenario":"empty_login","username":""}
+2026-11-10 20:40:24 info: Negative login form submitted {"environment":"local","browser":"login-webkit","retry":0,"testTitle":"User cannot log in with an empty login","scenario":"empty_login"}
+2026-11-10 20:40:24 info: Verifying expected login error message {"environment":"local","browser":"login-webkit","retry":0,"testTitle":"User cannot log in with an empty login","scenario":"empty_login","expectedResult":"Missing required field","locatorUsed":"emptyCredentialErrorMessage"}
+2026-11-10 20:40:24 info: Expected login error message was verified {"environment":"local","browser":"login-webkit","retry":0,"testTitle":"User cannot log in with an empty login","scenario":"empty_login","locatorUsed":"emptyCredentialErrorMessage"}
+2026-11-10 20:40:25 info: Test finished {"environment":"local","browser":"login-webkit","retry":0,"testTitle":"User cannot log in with an empty login","status":"passed","expectedStatus":"passed"}
