@@ -4,7 +4,7 @@ import { LoginPage } from './pages/login.page.js';
 import { AccountsPage } from './pages/accounts.page.js';
 import { OpportunitiesPage } from './pages/opportunities.page.js';
 
-import { readLoginData } from './utils/excel-util.js';
+//import { readLoginData } from './utils/excel-util.js';
 import { createLogger } from './utils/logger.js';
 
 
@@ -198,39 +198,6 @@ export const test = base.extend({
     }
   },
 
-
-  // --------------------------------------------------
-  // Login data
-  // --------------------------------------------------
-
-  loginData: [
-    async ({}, use) => {
-      console.log(
-        'Loading Excel login data once for this worker...'
-      );
-
-      const data = readLoginData();
-
-      await use(data);
-    },
-    {
-      scope: 'worker'
-    }
-  ],
-
-  selectedLoginData: async ({}, use) => {
-    let currentRow;
-
-    await use({
-      set(row) {
-        currentRow = row;
-      },
-
-      get() {
-        return currentRow;
-      }
-    });
-  },
 
 
   // --------------------------------------------------
