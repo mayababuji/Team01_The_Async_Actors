@@ -1,0 +1,3 @@
+2026-11-12 02:42:23 info: Test started {"environment":"local","browser":"chromium","retry":1,"testTitle":"Verify existing account appears in Recently Viewed"}
+2026-11-12 02:42:23 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"chromium","retry":1,"testTitle":"Verify existing account appears in Recently Viewed"}
+2026-11-12 02:42:47 info: Test finished {"environment":"local","browser":"chromium","retry":1,"testTitle":"Verify existing account appears in Recently Viewed","status":"failed","expectedStatus":"passed"}

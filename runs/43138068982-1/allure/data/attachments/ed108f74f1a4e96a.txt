@@ -1,0 +1,4 @@
+2026-11-12 02:48:35 info: Test started {"environment":"local","browser":"webkit","retry":1,"testTitle":"Create an opportunity with lead source Trade Show"}
+2026-11-12 02:48:36 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"webkit","retry":1,"testTitle":"Create an opportunity with lead source Trade Show"}
+2026-11-12 02:48:39 info: Creating prerequisite account for opportunity {"environment":"local","browser":"webkit","retry":1,"testTitle":"Create an opportunity with lead source Trade Show","scenario":"create_opportunity_lead_source_trade_show","accountName":"Numpy Trade Show Account"}
+2026-11-12 02:49:00 info: Test finished {"environment":"local","browser":"webkit","retry":1,"testTitle":"Create an opportunity with lead source Trade Show","status":"failed","expectedStatus":"passed"}

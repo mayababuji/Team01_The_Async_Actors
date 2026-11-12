@@ -1,0 +1,3 @@
+2026-11-12 02:23:57 info: Test started {"environment":"local","browser":"firefox","retry":1,"testTitle":"Sort accounts by name"}
+2026-11-12 02:24:00 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"firefox","retry":1,"testTitle":"Sort accounts by name"}
+2026-11-12 02:24:24 info: Test finished {"environment":"local","browser":"firefox","retry":1,"testTitle":"Sort accounts by name","status":"failed","expectedStatus":"passed"}

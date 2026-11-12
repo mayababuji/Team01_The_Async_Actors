@@ -1,0 +1,3 @@
+2026-11-12 02:31:04 info: Test started {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Import Opportunities page navigation"}
+2026-11-12 02:31:06 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Import Opportunities page navigation"}
+2026-11-12 02:31:29 info: Test finished {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Import Opportunities page navigation","status":"failed","expectedStatus":"passed"}

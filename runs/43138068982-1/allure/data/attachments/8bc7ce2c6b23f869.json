@@ -1,0 +1,3 @@
+{"browser":"chromium","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Update account website","timestamp":"2026-11-12T02:32:46.538Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Update account website","timestamp":"2026-11-12T02:32:46.884Z"}
+{"browser":"chromium","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"failed","testTitle":"Update account website","timestamp":"2026-11-12T02:33:09.623Z"}

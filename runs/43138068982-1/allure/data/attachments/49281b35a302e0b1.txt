@@ -1,0 +1,4 @@
+2026-11-12 02:19:19 info: Test started {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Leads module navigation"}
+2026-11-12 02:19:21 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Leads module navigation"}
+2026-11-12 02:19:24 info: Hovering over Leads module {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Leads module navigation"}
+2026-11-12 02:19:40 info: Test finished {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Leads module navigation","status":"failed","expectedStatus":"passed"}

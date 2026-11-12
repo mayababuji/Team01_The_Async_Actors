@@ -1,0 +1,3 @@
+2026-11-12 02:47:34 info: Test started {"environment":"local","browser":"firefox","retry":1,"testTitle":"Update the description of an existing opportunity"}
+2026-11-12 02:47:36 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"firefox","retry":1,"testTitle":"Update the description of an existing opportunity"}
+2026-11-12 02:48:00 info: Test finished {"environment":"local","browser":"firefox","retry":1,"testTitle":"Update the description of an existing opportunity","status":"failed","expectedStatus":"passed"}

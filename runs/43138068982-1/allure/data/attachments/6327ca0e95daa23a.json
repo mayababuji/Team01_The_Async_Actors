@@ -1,0 +1,4 @@
+{"browser":"chromium","environment":"local","level":"info","message":"Test started","retry":1,"testTitle":"Create an opportunity with lead source Other","timestamp":"2026-11-12T02:13:02.877Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":1,"testTitle":"Create an opportunity with lead source Other","timestamp":"2026-11-12T02:13:03.237Z"}
+{"accountName":"Numpy Other Account","browser":"chromium","environment":"local","level":"info","message":"Creating prerequisite account for opportunity","retry":1,"scenario":"create_opportunity_lead_source_other","testTitle":"Create an opportunity with lead source Other","timestamp":"2026-11-12T02:13:05.175Z"}
+{"browser":"chromium","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":1,"status":"failed","testTitle":"Create an opportunity with lead source Other","timestamp":"2026-11-12T02:13:25.951Z"}

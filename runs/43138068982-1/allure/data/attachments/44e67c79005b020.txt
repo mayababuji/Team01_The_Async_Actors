@@ -1,0 +1,3 @@
+2026-11-12 02:22:06 info: Test started {"environment":"local","browser":"firefox","retry":1,"testTitle":"Verify required Name field validation on Create Account page"}
+2026-11-12 02:22:08 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"firefox","retry":1,"testTitle":"Verify required Name field validation on Create Account page"}
+2026-11-12 02:22:31 info: Test finished {"environment":"local","browser":"firefox","retry":1,"testTitle":"Verify required Name field validation on Create Account page","status":"failed","expectedStatus":"passed"}

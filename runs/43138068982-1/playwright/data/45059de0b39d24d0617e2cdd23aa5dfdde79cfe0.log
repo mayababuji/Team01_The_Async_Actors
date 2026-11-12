@@ -1,0 +1,3 @@
+{"browser":"webkit","environment":"local","level":"info","message":"Test started","retry":1,"testTitle":"Search for an existing account by name","timestamp":"2026-11-12T02:40:37.608Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":1,"testTitle":"Search for an existing account by name","timestamp":"2026-11-12T02:40:38.308Z"}
+{"browser":"webkit","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":1,"status":"failed","testTitle":"Search for an existing account by name","timestamp":"2026-11-12T02:41:01.875Z"}

@@ -1,0 +1,4 @@
+2026-11-12 02:31:07 info: Test started {"environment":"local","browser":"chromium","retry":2,"testTitle":"Create an opportunity with valid mandatory data"}
+2026-11-12 02:31:08 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"chromium","retry":2,"testTitle":"Create an opportunity with valid mandatory data"}
+2026-11-12 02:31:10 info: Creating prerequisite account for opportunity {"environment":"local","browser":"chromium","retry":2,"testTitle":"Create an opportunity with valid mandatory data","scenario":"create_opportunity_valid_mandatory","accountName":"Numpy Test Oppurtunity Account"}
+2026-11-12 02:31:31 info: Test finished {"environment":"local","browser":"chromium","retry":2,"testTitle":"Create an opportunity with valid mandatory data","status":"failed","expectedStatus":"passed"}

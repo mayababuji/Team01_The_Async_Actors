@@ -1,0 +1,3 @@
+{"browser":"firefox","environment":"local","level":"info","message":"Test started","retry":1,"testTitle":"Verify required field validation on Create Opportunity page","timestamp":"2026-11-12T02:54:16.106Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":1,"testTitle":"Verify required field validation on Create Opportunity page","timestamp":"2026-11-12T02:54:18.327Z"}
+{"browser":"firefox","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":1,"status":"failed","testTitle":"Verify required field validation on Create Opportunity page","timestamp":"2026-11-12T02:54:41.907Z"}

@@ -1,0 +1,5 @@
+{"browser":"webkit","environment":"local","level":"info","message":"Test started","retry":1,"testTitle":"Search for a non-existing account","timestamp":"2026-11-12T02:00:47.477Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":1,"testTitle":"Search for a non-existing account","timestamp":"2026-11-12T02:00:48.715Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"View Accounts page opened","retry":1,"testTitle":"Search for a non-existing account","timestamp":"2026-11-12T02:01:19.962Z"}
+{"accountName":"NoSuchAccount_NUmpy_938472","browser":"webkit","environment":"local","level":"info","message":"Searching for a non-existing account","retry":1,"scenario":"search_non_existing_account","testTitle":"Search for a non-existing account","timestamp":"2026-11-12T02:01:20.025Z"}
+{"browser":"webkit","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":1,"status":"failed","testTitle":"Search for a non-existing account","timestamp":"2026-11-12T02:01:42.222Z"}

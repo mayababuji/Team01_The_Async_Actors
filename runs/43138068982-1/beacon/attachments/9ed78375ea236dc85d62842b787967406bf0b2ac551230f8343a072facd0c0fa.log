@@ -1,0 +1,3 @@
+{"browser":"firefox","environment":"local","level":"info","message":"Test started","retry":2,"testTitle":"Create an account with a primary email address","timestamp":"2026-11-12T02:28:41.742Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":2,"testTitle":"Create an account with a primary email address","timestamp":"2026-11-12T02:28:43.743Z"}
+{"browser":"firefox","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":2,"status":"failed","testTitle":"Create an account with a primary email address","timestamp":"2026-11-12T02:29:07.674Z"}

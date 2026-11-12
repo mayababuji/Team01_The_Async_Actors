@@ -1,0 +1,4 @@
+2026-11-12 02:43:08 info: Test started {"environment":"local","browser":"webkit","retry":1,"testTitle":"Verify Contacts module navigation"}
+2026-11-12 02:43:08 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"webkit","retry":1,"testTitle":"Verify Contacts module navigation"}
+2026-11-12 02:43:11 info: Hovering over Contacts module {"environment":"local","browser":"webkit","retry":1,"testTitle":"Verify Contacts module navigation"}
+2026-11-12 02:43:31 info: Test finished {"environment":"local","browser":"webkit","retry":1,"testTitle":"Verify Contacts module navigation","status":"failed","expectedStatus":"passed"}

@@ -1,0 +1,3 @@
+{"browser":"firefox","environment":"local","level":"info","message":"Test started","retry":1,"testTitle":"Create an account with valid mandatory data","timestamp":"2026-11-12T02:19:58.960Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":1,"testTitle":"Create an account with valid mandatory data","timestamp":"2026-11-12T02:20:01.851Z"}
+{"browser":"firefox","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":1,"status":"failed","testTitle":"Create an account with valid mandatory data","timestamp":"2026-11-12T02:20:26.634Z"}

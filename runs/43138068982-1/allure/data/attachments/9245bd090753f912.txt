@@ -1,0 +1,5 @@
+2026-11-12 02:00:47 info: Test started {"environment":"local","browser":"webkit","retry":1,"testTitle":"Search for a non-existing account"}
+2026-11-12 02:00:48 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"webkit","retry":1,"testTitle":"Search for a non-existing account"}
+2026-11-12 02:01:19 info: View Accounts page opened {"environment":"local","browser":"webkit","retry":1,"testTitle":"Search for a non-existing account"}
+2026-11-12 02:01:20 info: Searching for a non-existing account {"environment":"local","browser":"webkit","retry":1,"testTitle":"Search for a non-existing account","scenario":"search_non_existing_account","accountName":"NoSuchAccount_NUmpy_938472"}
+2026-11-12 02:01:42 info: Test finished {"environment":"local","browser":"webkit","retry":1,"testTitle":"Search for a non-existing account","status":"failed","expectedStatus":"passed"}

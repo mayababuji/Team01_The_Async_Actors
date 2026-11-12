@@ -1,0 +1,4 @@
+{"browser":"firefox","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Prevent account import without selecting a file","timestamp":"2026-11-12T02:19:57.125Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Prevent account import without selecting a file","timestamp":"2026-11-12T02:19:59.800Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"Opening Import Accounts page without selecting a file","retry":0,"testTitle":"Prevent account import without selecting a file","timestamp":"2026-11-12T02:20:04.318Z"}
+{"browser":"firefox","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"failed","testTitle":"Prevent account import without selecting a file","timestamp":"2026-11-12T02:20:24.655Z"}

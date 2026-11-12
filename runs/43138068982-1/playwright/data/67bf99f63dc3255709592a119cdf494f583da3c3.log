@@ -1,0 +1,4 @@
+{"browser":"webkit","environment":"local","level":"info","message":"Test started","retry":1,"testTitle":"Verify Accounts module navigation","timestamp":"2026-11-12T02:53:49.892Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":1,"testTitle":"Verify Accounts module navigation","timestamp":"2026-11-12T02:53:50.837Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"Hovering over Accounts module","retry":1,"testTitle":"Verify Accounts module navigation","timestamp":"2026-11-12T02:53:52.758Z"}
+{"browser":"webkit","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":1,"status":"failed","testTitle":"Verify Accounts module navigation","timestamp":"2026-11-12T02:54:13.449Z"}

@@ -1,0 +1,4 @@
+2026-11-12 02:46:41 info: Test started {"environment":"local","browser":"webkit","retry":2,"testTitle":"Create an opportunity with lead source Self Generated"}
+2026-11-12 02:46:42 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"webkit","retry":2,"testTitle":"Create an opportunity with lead source Self Generated"}
+2026-11-12 02:46:45 info: Creating prerequisite account for opportunity {"environment":"local","browser":"webkit","retry":2,"testTitle":"Create an opportunity with lead source Self Generated","scenario":"create_opportunity_lead_source_self_generated","accountName":"Numpy Self Generated Account"}
+2026-11-12 02:47:05 info: Test finished {"environment":"local","browser":"webkit","retry":2,"testTitle":"Create an opportunity with lead source Self Generated","status":"failed","expectedStatus":"passed"}

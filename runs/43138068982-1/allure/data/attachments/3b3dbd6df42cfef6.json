@@ -1,0 +1,3 @@
+{"browser":"webkit","environment":"local","level":"info","message":"Test started","retry":1,"testTitle":"Update the amount of an existing opportunity","timestamp":"2026-11-12T02:28:10.190Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":1,"testTitle":"Update the amount of an existing opportunity","timestamp":"2026-11-12T02:28:10.814Z"}
+{"browser":"webkit","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":1,"status":"failed","testTitle":"Update the amount of an existing opportunity","timestamp":"2026-11-12T02:28:33.969Z"}

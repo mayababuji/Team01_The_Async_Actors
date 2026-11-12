@@ -1,0 +1,3 @@
+{"browser":"firefox","environment":"local","level":"info","message":"Test started","retry":1,"testTitle":"Verify existing account appears in Recently Viewed","timestamp":"2026-11-12T02:11:26.141Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":1,"testTitle":"Verify existing account appears in Recently Viewed","timestamp":"2026-11-12T02:11:28.809Z"}
+{"browser":"firefox","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":1,"status":"failed","testTitle":"Verify existing account appears in Recently Viewed","timestamp":"2026-11-12T02:11:53.300Z"}
