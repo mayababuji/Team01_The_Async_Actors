@@ -4,6 +4,7 @@ import { LoginPage } from './pages/login.page.js';
 import { AccountsPage } from './pages/accounts.page.js';
 import { OpportunitiesPage } from './pages/opportunities.page.js';
 import { ContactsPage } from './pages/contacts.page.js';
+import { LeadsPage } from './pages/leads.page.js';
 
 //import { readLoginData } from './utils/excel-util.js';
 import { createLogger } from './utils/logger.js';
@@ -28,6 +29,10 @@ export const test = base.extend({
 
   contactsPage: async ({ page }, use) => {
     await use(new ContactsPage(page));
+  },
+
+  leadsPage: async ({ page }, use) => {
+    await use(new LeadsPage(page));
   },
 
 
