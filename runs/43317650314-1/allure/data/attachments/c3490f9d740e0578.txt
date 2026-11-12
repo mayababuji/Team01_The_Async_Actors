@@ -1,0 +1,5 @@
+2026-11-12 22:21:20 info: Test started {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Leads module navigation"}
+2026-11-12 22:21:24 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Leads module navigation"}
+2026-11-12 22:21:32 info: Hovering over Leads module {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Leads module navigation"}
+2026-11-12 22:21:38 info: All Leads dropdown options are visible {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Leads module navigation","options":["Create Lead","View Leads","Import Leads","Create Lead From vCard"]}
+2026-11-12 22:21:38 info: Test finished {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Leads module navigation","status":"passed","expectedStatus":"passed"}

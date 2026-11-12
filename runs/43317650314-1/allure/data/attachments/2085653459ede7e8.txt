@@ -1,0 +1,3 @@
+2026-11-12 22:13:23 info: Test started {"environment":"local","browser":"login-chromium","retry":0,"testTitle":"Verify password is hidden when user enters password"}
+2026-11-12 22:13:23 info: Opening Suite8 login page {"environment":"local","browser":"login-chromium","retry":0,"testTitle":"Verify password is hidden when user enters password"}
+2026-11-12 22:13:29 info: Test finished {"environment":"local","browser":"login-chromium","retry":0,"testTitle":"Verify password is hidden when user enters password","status":"passed","expectedStatus":"passed"}

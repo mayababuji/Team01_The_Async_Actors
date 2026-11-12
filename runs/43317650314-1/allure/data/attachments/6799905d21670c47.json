@@ -1,0 +1,5 @@
+{"browser":"login-firefox","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"User logs in with valid credentials","timestamp":"2026-11-12T22:13:02.398Z"}
+{"browser":"login-firefox","environment":"local","level":"info","message":"Opening Suite8 login page","retry":0,"testTitle":"User logs in with valid credentials","timestamp":"2026-11-12T22:13:04.932Z"}
+{"browser":"login-firefox","environment":"local","level":"info","message":"Submitting valid login credentials","retry":0,"testTitle":"User logs in with valid credentials","timestamp":"2026-11-12T22:13:10.854Z"}
+{"browser":"login-firefox","environment":"local","level":"info","message":"Validating logged in successfully","retry":0,"testTitle":"User logs in with valid credentials","timestamp":"2026-11-12T22:13:13.255Z"}
+{"browser":"login-firefox","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"passed","testTitle":"User logs in with valid credentials","timestamp":"2026-11-12T22:13:21.740Z"}

@@ -1,0 +1,5 @@
+{"browser":"firefox","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Verify Leads module navigation","timestamp":"2026-11-12T22:21:20.053Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Verify Leads module navigation","timestamp":"2026-11-12T22:21:24.755Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"Hovering over Leads module","retry":0,"testTitle":"Verify Leads module navigation","timestamp":"2026-11-12T22:21:32.445Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"All Leads dropdown options are visible","options":["Create Lead","View Leads","Import Leads","Create Lead From vCard"],"retry":0,"testTitle":"Verify Leads module navigation","timestamp":"2026-11-12T22:21:38.842Z"}
+{"browser":"firefox","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"passed","testTitle":"Verify Leads module navigation","timestamp":"2026-11-12T22:21:38.949Z"}

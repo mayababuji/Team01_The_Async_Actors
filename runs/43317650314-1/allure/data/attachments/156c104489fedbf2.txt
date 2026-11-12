@@ -1,0 +1,6 @@
+2026-11-12 22:32:34 info: Test started {"environment":"local","browser":"webkit","retry":1,"testTitle":"Discard unsaved account data from cancellation popup"}
+2026-11-12 22:32:36 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"webkit","retry":1,"testTitle":"Discard unsaved account data from cancellation popup"}
+2026-11-12 22:33:03 info: Entered account data without saving {"environment":"local","browser":"webkit","retry":1,"testTitle":"Discard unsaved account data from cancellation popup","scenario":"cancel_create_account_with_data","accountName":"Numpy Unsaved Account","email":"numpy.unsaved@example.com"}
+2026-11-12 22:33:07 info: Unsaved account data discarded from confirmation popup {"environment":"local","browser":"webkit","retry":1,"testTitle":"Discard unsaved account data from cancellation popup"}
+2026-11-12 22:33:08 info: Returned to the Accounts page after cancelling {"environment":"local","browser":"webkit","retry":1,"testTitle":"Discard unsaved account data from cancellation popup"}
+2026-11-12 22:33:09 info: Test finished {"environment":"local","browser":"webkit","retry":1,"testTitle":"Discard unsaved account data from cancellation popup","status":"passed","expectedStatus":"passed"}

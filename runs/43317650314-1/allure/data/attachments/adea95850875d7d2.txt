@@ -1,0 +1,7 @@
+2026-11-12 22:35:45 info: Test started {"environment":"local","browser":"webkit","retry":0,"testTitle":"Prevent account import without selecting a file"}
+2026-11-12 22:35:46 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"webkit","retry":0,"testTitle":"Prevent account import without selecting a file"}
+2026-11-12 22:35:51 info: Opening Import Accounts page without selecting a file {"environment":"local","browser":"webkit","retry":0,"testTitle":"Prevent account import without selecting a file"}
+2026-11-12 22:36:01 info: Import Accounts page opened without a file selected {"environment":"local","browser":"webkit","retry":0,"testTitle":"Prevent account import without selecting a file"}
+2026-11-12 22:36:01 info: Attempting to proceed to the next import step without selecting a file {"environment":"local","browser":"webkit","retry":0,"testTitle":"Prevent account import without selecting a file"}
+2026-11-12 22:36:03 info: Missing-file validation displayed and import did not proceed {"environment":"local","browser":"webkit","retry":0,"testTitle":"Prevent account import without selecting a file"}
+2026-11-12 22:36:03 info: Test finished {"environment":"local","browser":"webkit","retry":0,"testTitle":"Prevent account import without selecting a file","status":"passed","expectedStatus":"passed"}

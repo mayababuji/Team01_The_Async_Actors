@@ -1,0 +1,558 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: features/opportunities.feature.spec.js >> Opportunities management >> Create an opportunity with lead source <leadSource> >> Create an opportunity with lead source Direct Mail
+- Location: tests/generated/features/opportunities.feature.spec.js:103:5
+
+# Error details
+
+```
+Error: locator.click: Error: strict mode violation: getByRole('listbox', { name: 'Option List', exact: true }).getByText('Numpy Direct Mail Account', { exact: true }) resolved to 2 elements:
+    1) <div class="related-item-label ng-star-inserted">Numpy Direct Mail Account</div> aka locator('#pn_id_3_0').getByText('Numpy Direct Mail Account')
+    2) <div class="related-item-label ng-star-inserted">Numpy Direct Mail Account</div> aka locator('#pn_id_3_2').getByText('Numpy Direct Mail Account')
+
+Call log:
+  - waiting for getByRole('listbox', { name: 'Option List', exact: true }).getByText('Numpy Direct Mail Account', { exact: true })
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - navigation [ref=e5]:
+      - generic [ref=e6]:
+        - list [ref=e9]:
+          - listitem [ref=e10]:
+            - link [ref=e11] [cursor=pointer]:
+              - /url: "#/home"
+        - list [ref=e18]:
+          - listitem [ref=e19]:
+            - generic [ref=e20]: Accounts
+          - listitem [ref=e27]:
+            - generic [ref=e28]: Contacts
+          - listitem [ref=e35]:
+            - generic [ref=e36]: Opportunities
+          - listitem [ref=e43]:
+            - generic [ref=e44]: Leads
+          - listitem [ref=e51]:
+            - generic [ref=e52]: Quotes
+          - listitem [ref=e59]:
+            - generic [ref=e60]: Calendar
+          - listitem [ref=e67]:
+            - generic [ref=e68]: Documents
+        - list [ref=e77]:
+          - listitem [ref=e78]:
+            - generic [ref=e79]: More
+      - generic [ref=e81]:
+        - list [ref=e83]:
+          - listitem [ref=e84]:
+            - generic "Quick Create" [ref=e85] [cursor=pointer]
+        - list [ref=e92]:
+          - listitem [ref=e93]:
+            - generic "Recently Viewed" [ref=e94] [cursor=pointer]
+        - generic [ref=e104]:
+          - textbox "Search" [ref=e105]:
+            - /placeholder: Search...
+          - button "Search" [ref=e107] [cursor=pointer]
+        - list [ref=e117]:
+          - listitem [ref=e118]:
+            - generic [ref=e119] [cursor=pointer]
+      - list [ref=e127]:
+        - listitem [ref=e128]
+    - generic [ref=e139]:
+      - generic [ref=e141]:
+        - generic [ref=e142]:
+          - generic [ref=e143]: ACCOUNTS
+          - generic [ref=e150]:
+            - group [ref=e152]:
+              - button "Filter" [ref=e154] [cursor=pointer]
+            - button "Insights" [ref=e156] [cursor=pointer]
+        - separator [ref=e163]
+      - generic [ref=e166]:
+        - generic [ref=e169]:
+          - generic [ref=e172]:
+            - generic [ref=e173]:
+              - generic [ref=e175]:
+                - button [aria-hidden] [ref=e177] [cursor=pointer]
+                - button "Bulk Action" [disabled] [ref=e182] [cursor=pointer]
+              - button "Columns" [ref=e189] [cursor=pointer]:
+                - generic "Columns" [ref=e191]
+            - generic [ref=e203]:
+              - button "Navigate to first page" [ref=e204] [cursor=pointer]
+              - button "Previous page" [ref=e210] [cursor=pointer]
+              - text: (0 - 0 of 0)
+              - button "Next page" [ref=e216] [cursor=pointer]
+              - button "Navigate to last page" [ref=e222] [cursor=pointer]
+          - table [ref=e231]:
+            - rowgroup [ref=e232]:
+              - row [ref=e233]:
+                - columnheader [ref=e234]
+                - columnheader [ref=e235]
+                - columnheader "Name" [ref=e236]:
+                  - generic [ref=e239] [cursor=pointer]
+                - columnheader "City" [ref=e246]:
+                  - generic [ref=e249] [cursor=pointer]
+                - columnheader "Billing Country" [ref=e256]:
+                  - generic [ref=e259] [cursor=pointer]
+                - columnheader "Phone" [ref=e266]:
+                  - generic [ref=e269] [cursor=pointer]
+                - columnheader "User" [ref=e276]:
+                  - generic [ref=e279] [cursor=pointer]
+                - columnheader "Email Address" [ref=e286]
+                - columnheader [ref=e288]
+            - rowgroup [ref=e289]:
+              - row [ref=e290]:
+                - cell [ref=e291]
+                - cell [ref=e293]:
+                  - button [disabled] [ref=e294]
+                - cell [ref=e299]
+                - cell [ref=e301]
+                - cell [ref=e303]
+                - cell [ref=e305]
+                - cell [ref=e307]
+                - cell [ref=e309]
+                - cell [ref=e311]
+              - row [ref=e313]:
+                - cell [ref=e314]
+                - cell [ref=e316]:
+                  - button [disabled] [ref=e317]
+                - cell [ref=e322]
+                - cell [ref=e324]
+                - cell [ref=e326]
+                - cell [ref=e328]
+                - cell [ref=e330]
+                - cell [ref=e332]
+                - cell [ref=e334]
+              - row [ref=e336]:
+                - cell [ref=e337]
+                - cell [ref=e339]:
+                  - button [disabled] [ref=e340]
+                - cell [ref=e345]
+                - cell [ref=e347]
+                - cell [ref=e349]
+                - cell [ref=e351]
+                - cell [ref=e353]
+                - cell [ref=e355]
+                - cell [ref=e357]
+              - row [ref=e359]:
+                - cell [ref=e360]
+                - cell [ref=e362]:
+                  - button [disabled] [ref=e363]
+                - cell [ref=e368]
+                - cell [ref=e370]
+                - cell [ref=e372]
+                - cell [ref=e374]
+                - cell [ref=e376]
+                - cell [ref=e378]
+                - cell [ref=e380]
+              - row [ref=e382]:
+                - cell [ref=e383]
+                - cell [ref=e385]:
+                  - button [disabled] [ref=e386]
+                - cell [ref=e391]
+                - cell [ref=e393]
+                - cell [ref=e395]
+                - cell [ref=e397]
+                - cell [ref=e399]
+                - cell [ref=e401]
+                - cell [ref=e403]
+              - row [ref=e405]:
+                - cell [ref=e406]
+                - cell [ref=e408]:
+                  - button [disabled] [ref=e409]
+                - cell [ref=e414]
+                - cell [ref=e416]
+                - cell [ref=e418]
+                - cell [ref=e420]
+                - cell [ref=e422]
+                - cell [ref=e424]
+                - cell [ref=e426]
+              - row [ref=e428]:
+                - cell [ref=e429]
+                - cell [ref=e431]:
+                  - button [disabled] [ref=e432]
+                - cell [ref=e437]
+                - cell [ref=e439]
+                - cell [ref=e441]
+                - cell [ref=e443]
+                - cell [ref=e445]
+                - cell [ref=e447]
+                - cell [ref=e449]
+              - row [ref=e451]:
+                - cell [ref=e452]
+                - cell [ref=e454]:
+                  - button [disabled] [ref=e455]
+                - cell [ref=e460]
+                - cell [ref=e462]
+                - cell [ref=e464]
+                - cell [ref=e466]
+                - cell [ref=e468]
+                - cell [ref=e470]
+                - cell [ref=e472]
+              - row [ref=e474]:
+                - cell [ref=e475]
+                - cell [ref=e477]:
+                  - button [disabled] [ref=e478]
+                - cell [ref=e483]
+                - cell [ref=e485]
+                - cell [ref=e487]
+                - cell [ref=e489]
+                - cell [ref=e491]
+                - cell [ref=e493]
+                - cell [ref=e495]
+              - row [ref=e497]:
+                - cell [ref=e498]
+                - cell [ref=e500]:
+                  - button [disabled] [ref=e501]
+                - cell [ref=e506]
+                - cell [ref=e508]
+                - cell [ref=e510]
+                - cell [ref=e512]
+                - cell [ref=e514]
+                - cell [ref=e516]
+                - cell [ref=e518]
+              - row [ref=e520]:
+                - cell [ref=e521]
+                - cell [ref=e523]:
+                  - button [disabled] [ref=e524]
+                - cell [ref=e529]
+                - cell [ref=e531]
+                - cell [ref=e533]
+                - cell [ref=e535]
+                - cell [ref=e537]
+                - cell [ref=e539]
+                - cell [ref=e541]
+              - row [ref=e543]:
+                - cell [ref=e544]
+                - cell [ref=e546]:
+                  - button [disabled] [ref=e547]
+                - cell [ref=e552]
+                - cell [ref=e554]
+                - cell [ref=e556]
+                - cell [ref=e558]
+                - cell [ref=e560]
+                - cell [ref=e562]
+                - cell [ref=e564]
+              - row [ref=e566]:
+                - cell [ref=e567]
+                - cell [ref=e569]:
+                  - button [disabled] [ref=e570]
+                - cell [ref=e575]
+                - cell [ref=e577]
+                - cell [ref=e579]
+                - cell [ref=e581]
+                - cell [ref=e583]
+                - cell [ref=e585]
+                - cell [ref=e587]
+              - row [ref=e589]:
+                - cell [ref=e590]
+                - cell [ref=e592]:
+                  - button [disabled] [ref=e593]
+                - cell [ref=e598]
+                - cell [ref=e600]
+                - cell [ref=e602]
+                - cell [ref=e604]
+                - cell [ref=e606]
+                - cell [ref=e608]
+                - cell [ref=e610]
+              - row [ref=e612]:
+                - cell [ref=e613]
+                - cell [ref=e615]:
+                  - button [disabled] [ref=e616]
+                - cell [ref=e621]
+                - cell [ref=e623]
+                - cell [ref=e625]
+                - cell [ref=e627]
+                - cell [ref=e629]
+                - cell [ref=e631]
+                - cell [ref=e633]
+              - row [ref=e635]:
+                - cell [ref=e636]
+                - cell [ref=e638]:
+                  - button [disabled] [ref=e639]
+                - cell [ref=e644]
+                - cell [ref=e646]
+                - cell [ref=e648]
+                - cell [ref=e650]
+                - cell [ref=e652]
+                - cell [ref=e654]
+                - cell [ref=e656]
+              - row [ref=e658]:
+                - cell [ref=e659]
+                - cell [ref=e661]:
+                  - button [disabled] [ref=e662]
+                - cell [ref=e667]
+                - cell [ref=e669]
+                - cell [ref=e671]
+                - cell [ref=e673]
+                - cell [ref=e675]
+                - cell [ref=e677]
+                - cell [ref=e679]
+              - row [ref=e681]:
+                - cell [ref=e682]
+                - cell [ref=e684]:
+                  - button [disabled] [ref=e685]
+                - cell [ref=e690]
+                - cell [ref=e692]
+                - cell [ref=e694]
+                - cell [ref=e696]
+                - cell [ref=e698]
+                - cell [ref=e700]
+                - cell [ref=e702]
+              - row [ref=e704]:
+                - cell [ref=e705]
+                - cell [ref=e707]:
+                  - button [disabled] [ref=e708]
+                - cell [ref=e713]
+                - cell [ref=e715]
+                - cell [ref=e717]
+                - cell [ref=e719]
+                - cell [ref=e721]
+                - cell [ref=e723]
+                - cell [ref=e725]
+              - row [ref=e727]:
+                - cell [ref=e728]
+                - cell [ref=e730]:
+                  - button [disabled] [ref=e731]
+                - cell [ref=e736]
+                - cell [ref=e738]
+                - cell [ref=e740]
+                - cell [ref=e742]
+                - cell [ref=e744]
+                - cell [ref=e746]
+                - cell [ref=e748]
+          - generic [ref=e752]:
+            - generic [ref=e753]:
+              - generic [ref=e755]:
+                - button [aria-hidden] [ref=e757] [cursor=pointer]
+                - button "Bulk Action" [disabled] [ref=e762] [cursor=pointer]
+              - button "Columns" [ref=e769] [cursor=pointer]:
+                - generic "Columns" [ref=e771]
+            - generic [ref=e783]:
+              - button "Navigate to first page" [ref=e784] [cursor=pointer]
+              - button "Previous page" [ref=e790] [cursor=pointer]
+              - text: (0 - 0 of 0)
+              - button "Next page" [ref=e796] [cursor=pointer]
+              - button "Navigate to last page" [ref=e802] [cursor=pointer]
+        - generic [ref=e815]:
+          - generic [ref=e816]: Quick Charts
+          - combobox [ref=e830]:
+            - option "New Accounts by Month" [selected]
+  - generic [ref=e855]:
+    - generic [ref=e856]: © Supercharged by SuiteCRM © Powered By SugarCRM
+    - generic [ref=e857]: Back To Top
+```
+
+# Test source
+
+```ts
+  280 |   }
+  281 | 
+  282 | 
+  283 |   // --------------------------------------------------
+  284 |   // Navigation actions
+  285 |   // --------------------------------------------------
+  286 | 
+  287 | 
+  288 |   async hoverOpportunitiesModule() {
+  289 |     await this.opportunitiesModule.hover();
+  290 |   }
+  291 | 
+  292 | 
+  293 |   async openViewOpportunitiesPage() {
+  294 |     await this.hoverOpportunitiesModule();
+  295 |     await this.viewOpportunitiesOption.click();
+  296 |   }
+  297 | 
+  298 | 
+  299 |   async openImportOpportunitiesPage() {
+  300 |     await this.hoverOpportunitiesModule();
+  301 |     await this.importOpportunitiesOption.click();
+  302 |   }
+  303 | 
+  304 | 
+  305 |   async openCreateOpportunityPage() {
+  306 |     await this.hoverOpportunitiesModule();
+  307 |     await this.createOpportunityOption.click();
+  308 | 
+  309 | 
+  310 |     await this.expectedCloseDateInput.waitFor({
+  311 |       state: 'visible'
+  312 |     });
+  313 |   }
+  314 | 
+  315 | 
+  316 |   // --------------------------------------------------
+  317 |   // Create Opportunity actions
+  318 |   // --------------------------------------------------
+  319 | 
+  320 | 
+  321 |   async enterMandatoryOpportunityDetails(opportunity) {
+  322 |     await this.enterOpportunityName(opportunity.name);
+  323 | 
+  324 | 
+  325 |     // Fill Amount before opening the account search dropdown.
+  326 |     await this.enterOpportunityAmount(opportunity.amount);
+  327 | 
+  328 | 
+  329 |     await this.selectSalesStage(opportunity.salesStage);
+  330 | 
+  331 | 
+  332 |     await this.enterExpectedCloseDate(
+  333 |       opportunity.expectedCloseDate
+  334 |     );
+  335 | 
+  336 | 
+  337 |     await this.enterOpportunityAccountName(
+  338 |       opportunity.accountName
+  339 |     );
+  340 |   }
+  341 | 
+  342 | 
+  343 |   async enterOpportunityName(name) {
+  344 |     await this.basicPanel.waitFor({
+  345 |       state: 'visible'
+  346 |     });
+  347 | 
+  348 | 
+  349 |     await this.opportunityNameInput.fill(String(name));
+  350 |   }
+  351 | 
+  352 | 
+  353 |   async enterOpportunityAmount(amount) {
+  354 |     await this.opportunityAmountInput.fill(
+  355 |       String(amount ?? '').trim()
+  356 |     );
+  357 | 
+  358 | 
+  359 |     await this.opportunityAmountInput.press('Tab');
+  360 |   }
+  361 | 
+  362 | 
+  363 |   async enterOpportunityAccountName(accountName) {
+  364 |     const accountSuggestion = this.getAccountSuggestion(
+  365 |       accountName
+  366 |     );
+  367 | 
+  368 | 
+  369 |     await this.accountNameDropdown.click();
+  370 |     await this.accountSearchInput.fill('');
+  371 | 
+  372 | 
+  373 |     await this.accountSearchInput.pressSequentially(
+  374 |       accountName.trim().slice(0, 4),
+  375 |       { delay: 100 }
+  376 |     );
+  377 | 
+  378 | 
+  379 |     // Select the suggestion without submitting the form with Enter.
+> 380 |     await accountSuggestion.click();
+      |                             ^ Error: locator.click: Error: strict mode violation: getByRole('listbox', { name: 'Option List', exact: true }).getByText('Numpy Direct Mail Account', { exact: true }) resolved to 2 elements:
+  381 |   }
+  382 | 
+  383 | 
+  384 |   async selectSalesStage(salesStage) {
+  385 |     await this.salesStageSelect.selectOption({
+  386 |       label: salesStage
+  387 |     });
+  388 |   }
+  389 | 
+  390 | 
+  391 |   async selectOpportunityType(opportunityType) {
+  392 |     await this.opportunityTypeSelect.selectOption({
+  393 |       label: opportunityType
+  394 |     });
+  395 |   }
+  396 | 
+  397 | 
+  398 |   async selectOpportunityLeadSource(leadSource) {
+  399 |     await this.opportunityLeadSourceSelect.selectOption({
+  400 |       label: leadSource
+  401 |     });
+  402 |   }
+  403 | 
+  404 | 
+  405 |   async enterExpectedCloseDate(expectedCloseDate) {
+  406 |     await this.expectedCloseDateInput.fill(
+  407 |       expectedCloseDate
+  408 |     );
+  409 |   }
+  410 | 
+  411 | 
+  412 |   async enterOpportunityDescription(description) {
+  413 |     await this.opportunityDescriptionInput.fill(
+  414 |       description
+  415 |     );
+  416 |   }
+  417 | 
+  418 | 
+  419 |   async saveOpportunity() {
+  420 |     await this.saveOpportunityButton.click();
+  421 |   }
+  422 | 
+  423 | 
+  424 |   // --------------------------------------------------
+  425 |   // Opportunity test-data cleanup
+  426 |   // --------------------------------------------------
+  427 | 
+  428 | 
+  429 |   async deleteOpportunityByUrl(recordUrl) {
+  430 |     const target = new URL(recordUrl);
+  431 |     const current = new URL(this.page.url());
+  432 | 
+  433 | 
+  434 |     // Refuse cleanup on a different origin.
+  435 |     if (target.origin !== current.origin) {
+  436 |       throw new Error(
+  437 |         `Refusing cleanup on a different origin: ${target.origin}`
+  438 |       );
+  439 |     }
+  440 | 
+  441 | 
+  442 |     const recordPattern =
+  443 |       /^#\/opportunities\/record\/([^/?#]+)(?:[/?#]|$)/;
+  444 | 
+  445 | 
+  446 |     const targetMatch = target.hash.match(recordPattern);
+  447 | 
+  448 | 
+  449 |     if (!targetMatch) {
+  450 |       throw new Error(
+  451 |         `Cleanup requires an opportunity detail URL: ${recordUrl}`
+  452 |       );
+  453 |     }
+  454 | 
+  455 | 
+  456 |     const recordId = targetMatch[1];
+  457 |     const currentMatch = current.hash.match(recordPattern);
+  458 | 
+  459 | 
+  460 |     const isTargetRecord =
+  461 |       current.origin === target.origin &&
+  462 |       currentMatch?.[1] === recordId;
+  463 | 
+  464 | 
+  465 |     if (!isTargetRecord) {
+  466 |       await this.page.goto(recordUrl);
+  467 |     }
+  468 | 
+  469 | 
+  470 |     await this.page.waitForURL(url => {
+  471 |       const match = url.hash.match(recordPattern);
+  472 | 
+  473 | 
+  474 |       return (
+  475 |         url.origin === target.origin &&
+  476 |         match?.[1] === recordId
+  477 |       );
+  478 |     });
+  479 | 
+  480 | 
+```

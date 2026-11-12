@@ -1,0 +1,5 @@
+{"browser":"webkit","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Verify View Opportunities page navigation","timestamp":"2026-11-12T22:54:41.132Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Verify View Opportunities page navigation","timestamp":"2026-11-12T22:54:42.728Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"Clicked View Opportunities","retry":0,"testTitle":"Verify View Opportunities page navigation","timestamp":"2026-11-12T22:55:01.443Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"View Opportunities page displayed","retry":0,"testTitle":"Verify View Opportunities page navigation","timestamp":"2026-11-12T22:55:09.861Z"}
+{"browser":"webkit","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"passed","testTitle":"Verify View Opportunities page navigation","timestamp":"2026-11-12T22:55:10.662Z"}

@@ -1,0 +1,4 @@
+{"browser":"firefox","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Verify Contacts dropdown menu expands on hover","timestamp":"2026-11-12T22:50:00.447Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Verify Contacts dropdown menu expands on hover","timestamp":"2026-11-12T22:50:01.206Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"Hovering over Contacts module","retry":0,"testTitle":"Verify Contacts dropdown menu expands on hover","timestamp":"2026-11-12T22:50:10.790Z"}
+{"browser":"firefox","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"passed","testTitle":"Verify Contacts dropdown menu expands on hover","timestamp":"2026-11-12T22:50:28.814Z"}

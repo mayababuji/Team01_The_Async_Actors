@@ -1,0 +1,4 @@
+{"browser":"webkit","environment":"local","level":"info","message":"Test started","retry":1,"testTitle":"Verify View Accounts page navigation","timestamp":"2026-11-12T22:52:32.909Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":1,"testTitle":"Verify View Accounts page navigation","timestamp":"2026-11-12T22:52:34.323Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"View Accounts page displayed","retry":1,"testTitle":"Verify View Accounts page navigation","timestamp":"2026-11-12T22:52:59.470Z"}
+{"browser":"webkit","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":1,"status":"passed","testTitle":"Verify View Accounts page navigation","timestamp":"2026-11-12T22:53:00.296Z"}

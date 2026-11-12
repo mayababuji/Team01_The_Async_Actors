@@ -1,0 +1,5 @@
+2026-11-12 22:13:02 info: Test started {"environment":"local","browser":"login-firefox","retry":0,"testTitle":"User logs in with valid credentials"}
+2026-11-12 22:13:04 info: Opening Suite8 login page {"environment":"local","browser":"login-firefox","retry":0,"testTitle":"User logs in with valid credentials"}
+2026-11-12 22:13:10 info: Submitting valid login credentials {"environment":"local","browser":"login-firefox","retry":0,"testTitle":"User logs in with valid credentials"}
+2026-11-12 22:13:13 info: Validating logged in successfully {"environment":"local","browser":"login-firefox","retry":0,"testTitle":"User logs in with valid credentials"}
+2026-11-12 22:13:21 info: Test finished {"environment":"local","browser":"login-firefox","retry":0,"testTitle":"User logs in with valid credentials","status":"passed","expectedStatus":"passed"}

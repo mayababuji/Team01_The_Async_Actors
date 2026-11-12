@@ -1,0 +1,3 @@
+{"browser":"webkit","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Validate an invalid email address during account creation","timestamp":"2026-11-12T23:01:59.630Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Validate an invalid email address during account creation","timestamp":"2026-11-12T23:02:00.849Z"}
+{"browser":"webkit","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"failed","testTitle":"Validate an invalid email address during account creation","timestamp":"2026-11-12T23:02:27.040Z"}

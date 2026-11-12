@@ -1,0 +1,4 @@
+{"browser":"webkit","environment":"local","level":"info","message":"Test started","retry":1,"testTitle":"Verify Leads module navigation","timestamp":"2026-11-12T22:28:16.211Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":1,"testTitle":"Verify Leads module navigation","timestamp":"2026-11-12T22:28:17.602Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"Hovering over Leads module","retry":1,"testTitle":"Verify Leads module navigation","timestamp":"2026-11-12T22:28:50.970Z"}
+{"browser":"webkit","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":1,"status":"failed","testTitle":"Verify Leads module navigation","timestamp":"2026-11-12T22:29:12.038Z"}
