@@ -3,8 +3,10 @@ import { test as base, createBdd } from 'playwright-bdd';
 import { LoginPage } from './pages/login.page.js';
 import { AccountsPage } from './pages/accounts.page.js';
 import { OpportunitiesPage } from './pages/opportunities.page.js';
+import { ContactsPage } from './pages/contacts.page.js';
+import { LeadsPage } from './pages/leads.page.js';
 
-import { readLoginData } from './utils/excel-util.js';
+//import { readLoginData } from './utils/excel-util.js';
 import { createLogger } from './utils/logger.js';
 
 
@@ -25,13 +27,21 @@ export const test = base.extend({
     await use(new OpportunitiesPage(page));
   },
 
+  contactsPage: async ({ page }, use) => {
+    await use(new ContactsPage(page));
+  },
+
+  leadsPage: async ({ page }, use) => {
+    await use(new LeadsPage(page));
+  },
+
 
   // --------------------------------------------------
   // Account scenario data
   // One object shared by Given, When, and Then
   // --------------------------------------------------
 
-  accountListTestData: async ({}, use) => {
+  accountListTestData: async ({ }, use) => {
     await use({
       account: null,
       recordUrl: null
@@ -44,7 +54,7 @@ export const test = base.extend({
   // One object shared by Given, When, and Then
   // --------------------------------------------------
 
-  opportunityTestData: async ({}, use) => {
+  opportunityTestData: async ({ }, use) => {
     await use({
       opportunity: null,
       accountRecordUrl: null,
@@ -199,46 +209,13 @@ export const test = base.extend({
   },
 
 
-  // --------------------------------------------------
-  // Login data
-  // --------------------------------------------------
-
-  loginData: [
-    async ({}, use) => {
-      console.log(
-        'Loading Excel login data once for this worker...'
-      );
-
-      const data = readLoginData();
-
-      await use(data);
-    },
-    {
-      scope: 'worker'
-    }
-  ],
-
-  selectedLoginData: async ({}, use) => {
-    let currentRow;
-
-    await use({
-      set(row) {
-        currentRow = row;
-      },
-
-      get() {
-        return currentRow;
-      }
-    });
-  },
-
 
   // --------------------------------------------------
   // Logger
   // --------------------------------------------------
 
   logger: [
-    async ({}, use, testInfo) => {
+    async ({ }, use, testInfo) => {
       const { logger, logPath } = createLogger(testInfo);
 
       logger.info(
