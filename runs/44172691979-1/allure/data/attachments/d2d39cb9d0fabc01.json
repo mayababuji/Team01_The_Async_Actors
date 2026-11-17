@@ -1,0 +1,3 @@
+{"browser":"webkit","environment":"local","level":"info","message":"Test started","retry":1,"testTitle":"Discard unsaved account data from cancellation popup","timestamp":"2026-11-17T21:08:34.955Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":1,"testTitle":"Discard unsaved account data from cancellation popup","timestamp":"2026-11-17T21:08:36.105Z"}
+{"browser":"webkit","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":1,"status":"failed","testTitle":"Discard unsaved account data from cancellation popup","timestamp":"2026-11-17T21:09:36.118Z"}

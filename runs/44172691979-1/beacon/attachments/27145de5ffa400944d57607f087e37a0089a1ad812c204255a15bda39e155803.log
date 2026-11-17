@@ -1,0 +1,3 @@
+{"browser":"webkit","environment":"local","level":"info","message":"Test started","retry":1,"testTitle":"Verify the Leads navigation menu options","timestamp":"2026-11-17T22:15:56.015Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":1,"testTitle":"Verify the Leads navigation menu options","timestamp":"2026-11-17T22:15:56.635Z"}
+{"browser":"webkit","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":1,"status":"failed","testTitle":"Verify the Leads navigation menu options","timestamp":"2026-11-17T22:16:19.981Z"}

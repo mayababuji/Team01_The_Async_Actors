@@ -1,0 +1,3 @@
+2026-11-17 21:14:50 info: Test started {"environment":"local","browser":"firefox","retry":2,"testTitle":"Verify the Create Lead page controls and sections"}
+2026-11-17 21:14:53 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"firefox","retry":2,"testTitle":"Verify the Create Lead page controls and sections"}
+2026-11-17 21:15:37 info: Test finished {"environment":"local","browser":"firefox","retry":2,"testTitle":"Verify the Create Lead page controls and sections","status":"passed","expectedStatus":"passed"}

@@ -1,0 +1,3 @@
+{"browser":"firefox","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"View the change log for a lead record","timestamp":"2026-11-17T20:51:19.961Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"View the change log for a lead record","timestamp":"2026-11-17T20:51:20.966Z"}
+{"browser":"firefox","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"passed","testTitle":"View the change log for a lead record","timestamp":"2026-11-17T20:52:29.782Z"}

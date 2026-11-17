@@ -1,0 +1,4 @@
+2026-11-17 20:51:37 info: Test started {"environment":"local","browser":"chromium","retry":0,"testTitle":"Create an account with valid mandatory data"}
+2026-11-17 20:51:37 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"chromium","retry":0,"testTitle":"Create an account with valid mandatory data"}
+2026-11-17 20:52:03 info: Creating account with mandatory data {"environment":"local","browser":"chromium","retry":0,"testTitle":"Create an account with valid mandatory data","scenario":"create_account_valid_name","accountName":"Numpy Test Account"}
+2026-11-17 20:52:24 info: Test finished {"environment":"local","browser":"chromium","retry":0,"testTitle":"Create an account with valid mandatory data","status":"failed","expectedStatus":"passed"}

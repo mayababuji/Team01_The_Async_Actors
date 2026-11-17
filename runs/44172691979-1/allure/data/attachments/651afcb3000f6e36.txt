@@ -1,0 +1,4 @@
+2026-11-17 21:30:47 info: Test started {"environment":"local","browser":"webkit","retry":1,"testTitle":"Verify that the user is redirected to the selected Contacts page"}
+2026-11-17 21:30:49 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"webkit","retry":1,"testTitle":"Verify that the user is redirected to the selected Contacts page"}
+2026-11-17 21:30:59 info: All Contacts dropdown menu options are visible {"environment":"local","browser":"webkit","retry":1,"testTitle":"Verify that the user is redirected to the selected Contacts page"}
+2026-11-17 21:31:23 info: Test finished {"environment":"local","browser":"webkit","retry":1,"testTitle":"Verify that the user is redirected to the selected Contacts page","status":"passed","expectedStatus":"passed"}

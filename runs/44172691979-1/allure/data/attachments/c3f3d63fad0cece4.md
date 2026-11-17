@@ -1,0 +1,235 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: features/contacts.feature.spec.js >> Contacts Management Module >> Verify Contacts dropdown menu expands on hover
+- Location: tests/generated/features/contacts.feature.spec.js:10:3
+
+# Error details
+
+```
+TimeoutError: locator.hover: Timeout 20000ms exceeded.
+Call log:
+  - waiting for locator('a.top-nav-link').filter({ hasText: /^Contacts$/ })
+    - locator resolved to <a class="top-nav-link nav-link-nongrouped dropdown-toggle hover-enabled ng-star-inserted">…</a>
+  - attempting hover action
+    2 × waiting for element to be visible and stable
+      - element is visible and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div class="app-overlay" _ngcontent-ng-c1512349663="">…</div> from <app-full-page-spinner class="ng-star-inserted" _nghost-ng-c1512349663="">…</app-full-page-spinner> subtree intercepts pointer events
+    - retrying hover action
+    - waiting 20ms
+    - waiting for element to be visible and stable
+    - element is visible and stable
+    - scrolling into view if needed
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - navigation [ref=e25]:
+    - generic [ref=e26]:
+      - list [ref=e29]:
+        - listitem [ref=e30]:
+          - link [ref=e31]:
+            - /url: "#/home"
+      - list [ref=e38]:
+        - listitem [ref=e39]:
+          - generic [ref=e40]: Accounts
+        - listitem [ref=e47]:
+          - generic [ref=e48]: Contacts
+        - listitem [ref=e55]:
+          - generic [ref=e56]: Opportunities
+      - list [ref=e65]:
+        - listitem [ref=e66]:
+          - generic [ref=e67]: More
+    - generic [ref=e69]:
+      - list [ref=e71]:
+        - listitem [ref=e72]:
+          - generic "Quick Create" [ref=e73] [cursor=pointer]
+      - list [ref=e80]:
+        - listitem [ref=e81]:
+          - generic "Recently Viewed" [ref=e82] [cursor=pointer]
+      - generic [ref=e92]:
+        - textbox "Search" [ref=e93]:
+          - /placeholder: Search...
+        - button "Search" [ref=e95] [cursor=pointer]
+    - list [ref=e105]:
+      - listitem [ref=e106]
+  - generic [ref=e117]:
+    - generic [ref=e118]: © Supercharged by SuiteCRM © Powered By SugarCRM
+    - generic [ref=e119]: Back To Top
+```
+
+# Test source
+
+```ts
+  1   | 
+  2   | import { expect } from '@playwright/test';
+  3   | import path from 'node:path';
+  4   | 
+  5   | export class ContactsPage {
+  6   |     constructor(page) {
+  7   |         this.page = page;
+  8   | 
+  9   |         //Dropdown for Contacts
+  10  |         this.contactsDropdown = page.locator('a.top-nav-link').filter({ hasText: /^Contacts$/ });
+  11  |         //this.contactsDropdown = page.getByRole('link', { name: 'Contacts', exact: true });
+  12  | 
+  13  |         //Navigation links for Contacts
+  14  |         this.createContact = page.getByRole('link', { name: 'Create Contact', exact: true });
+  15  |         this.createContactVCard = page.locator('a[href="#/contacts/importvcard"]');
+  16  |         this.viewContacts = page.getByRole('link', { name: 'View Contacts', exact: true });
+  17  |         this.importContacts = page.getByRole('link', { name: 'Import Contacts', exact: true });
+  18  |         this.createContactpage = page.getByText('Create', { exact: true });
+  19  |         this.overviewTab = page.getByRole('tab', { name: 'OVERVIEW' });
+  20  |         this.firstName = page.getByRole('textbox').nth(1);
+  21  |         this.lastName = page.getByRole('textbox').nth(2);
+  22  |         this.officePhone = page.getByRole('textbox').nth(3);
+  23  |         this.saveContactErrorMessage = page.getByText('There are validation errors,');
+  24  |         this.importVCard = page.locator('iframe').contentFrame().getByText('Automatically create a new contact by importing a vCard from your file system.');
+  25  |         this.vCardChooseFile = page.frameLocator('iframe').locator('#vcard_file');
+  26  |         this.importVCardButton = page.locator('iframe').contentFrame().getByRole('button', { name: 'Import vCard' });
+  27  |         this.viewContactsCheckbox = page.locator('scrm-table-header').getByLabel('Select Action Menu')
+  28  |         this.selectAll = page.locator('a').filter({ hasText: 'Select All' }).first();
+  29  |         this.selectThisPage = page.locator('scrm-table-header a').filter({ hasText: 'Select This Page' });
+  30  |         this.deselectAll = page.locator('scrm-table-header a').filter({ hasText: 'Deselect All' });
+  31  |         this.bulkActionDropdownButton = page.locator('scrm-table-header').getByRole('button', { name: 'Bulk Action' });
+  32  |         this.exportContacts = page.locator('a').filter({ hasText: 'Export' }).nth(1);
+  33  |         this.contactsImportFile = page.locator('iframe').contentFrame().getByRole('link', { name: 'Download Import File Template' });
+  34  |         this.importFilePage = page.locator('iframe').contentFrame().getByText('Select a file on your computer that contains the data that you would like to import, or download the template to get a head start on creating the import file.');
+  35  |         this.contactsSelectFile = page.locator('iframe').contentFrame().getByRole('button', { name: 'Select file:' });
+  36  |         this.nextButton = page.locator('iframe').contentFrame().getByRole('button', { name: 'Next >' });
+  37  |         this.mobile = page.getByRole('textbox').nth(4);
+  38  |         this.jobTitle = page.getByRole('textbox').nth(5);
+  39  |         this.department = page.locator('.dynamic-field.dynamic-field-mode-edit.dynamic-field-name-department > div > .d-flex > .flex-grow-1 > .form-control');
+  40  |         this.emailAddress = page.locator('.dynamic-field.dynamic-field-mode-edit.dynamic-field-name-email_address > div > .d-flex > .flex-grow-1 > .form-control');
+  41  |         this.primaryStreet = page.locator('scrm-group-field').filter({ hasText: 'Primary Address Street' }).locator('textarea');
+  42  |         this.primaryPostalCode = page.locator('.dynamic-field.dynamic-field-mode-edit.dynamic-field-name-primary_address_postalcode > div > .d-flex > .flex-grow-1 > .form-control');
+  43  |         this.primaryCity = page.locator('.dynamic-field.dynamic-field-mode-edit.dynamic-field-name-primary_address_city > div > .d-flex > .flex-grow-1 > .form-control');
+  44  |         this.primaryState = page.locator('.dynamic-field.dynamic-field-mode-edit.dynamic-field-name-primary_address_state > div > .d-flex > .flex-grow-1 > .form-control');
+  45  |         this.primaryCountry = page.locator('.dynamic-field.dynamic-field-mode-edit.dynamic-field-name-primary_address_country > div > .d-flex > .flex-grow-1 > .form-control');
+  46  |         this.saveButton = page.getByRole('button', { name: 'Save' });
+  47  |         this.cancelButton = page.getByText('Cancel', { exact: true });
+  48  |         this.missinglastName = page.getByText('Missing required field: Last Name', { exact: true });
+  49  |         this.unSavedRecordPopup = page.getByText('You are about to leave this record without saving any changes you may have made to the record. Are you sure you want to navigate away from this record?');
+  50  |         this.popupCancelButton = page.getByRole('button', { name: 'Cancel', exact: true });
+  51  |         this.popupOkButton = page.getByRole('button', { name: 'Ok', exact: true });
+  52  |         this.confirmImportFileProp = page.locator('iframe').contentFrame().getByRole('heading', { name: 'Step 2: Confirm Import File' });
+  53  |     }
+  54  | 
+  55  |     async verifyHomePage() {
+  56  |         await expect(this.contactsDropdown).toBeVisible();
+  57  |     }
+  58  | 
+  59  |     async revealContactsOnHover() {
+> 60  |         await this.contactsDropdown.hover();
+      |                                     ^ TimeoutError: locator.hover: Timeout 20000ms exceeded.
+  61  | 
+  62  |     }
+  63  | 
+  64  |     async isDropdownOpen() {
+  65  |         await expect(this.createContact).toBeVisible();
+  66  |         await expect(this.createContactVCard).toBeVisible();
+  67  |         await expect(this.viewContacts).toBeVisible();
+  68  |         await expect(this.importContacts).toBeVisible();
+  69  |     }
+  70  | 
+  71  |     getContactsDropdownmenu(optionName) {
+  72  | 
+  73  |         const options = {
+  74  |             'Create Contact': this.createContact,
+  75  |             'View Contacts': this.viewContacts,
+  76  |             'Import Contacts': this.importContacts,
+  77  |             'Create Contact From Vcard': this.createContactVCard
+  78  |         };
+  79  |         const option = options[optionName];
+  80  |         if (!option) {
+  81  |             throw new Error(`Unknown Contacts dropdown menu: "${optionName}"`);
+  82  |         }
+  83  | 
+  84  |         return option;
+  85  |     }
+  86  | 
+  87  |     async verifyCreateContactPage() {
+  88  |         await this.revealContactsOnHover();
+  89  |         await this.isDropdownOpen();
+  90  |         await expect(this.createContact).toBeVisible();
+  91  |         await this.createContact.waitFor({ state: 'visible' });
+  92  |         await this.createContact.click();
+  93  |         await expect(this.page).toHaveURL(/#\/contacts\/edit/);
+  94  | 
+  95  |     }
+  96  | 
+  97  |     async verifyCreateContactfromvCard() {
+  98  |         await expect(this.createContactVCard).toBeVisible();
+  99  |         await this.createContactVCard.click();
+  100 |         await expect(this.page).toHaveURL(/#\/contacts\/importVcard/);
+  101 |         await expect(this.importVCard).toBeVisible();
+  102 |         await this.page.waitForTimeout(2000);
+  103 |     }
+  104 | 
+  105 |     async verifyViewContactspage() {
+  106 |         await this.revealContactsOnHover();
+  107 |         await expect(this.viewContacts).toBeVisible();
+  108 |         await this.viewContacts.click();
+  109 |         await expect(this.page).toHaveURL(/#\/contacts\/index/, { timeout: 10000 });
+  110 |     }
+  111 | 
+  112 |     async importContactsPage() {
+  113 |         await this.importContacts.click();
+  114 |         await expect(this.page).toHaveURL(/#\/import\/step1\?import_module=Contacts&return_module=Contacts&return_action=index/);
+  115 | 
+  116 |     }
+  117 | 
+  118 | 
+  119 | 
+  120 |     async inputContactDetails(contact) {
+  121 |         //await expect(this.createcontactpage).toBeVisible();
+  122 |         await this.verifyCreateContactPage();
+  123 |         //await expect(this.overviewTab).toBeVisible();
+  124 |         await this.firstName.fill(contact['First Name']);
+  125 |         await this.lastName.fill(contact['Last Name']);
+  126 |         await this.officePhone.fill(contact['OFFICE PHONE']);
+  127 |         await this.mobile.fill(contact['MOBILE']);
+  128 |         await this.jobTitle.fill(contact['JOB TITLE']);
+  129 |         await this.department.fill(contact['DEPARTMENT']);
+  130 |         await this.emailAddress.fill(contact['EMAIL ADDRESS']);
+  131 |         await this.primaryStreet.fill(contact['Primary Address Street']);
+  132 |         await this.primaryPostalCode.fill(contact['Primary Address Postal Code']);
+  133 |         await this.primaryCity.fill(contact['Primary Address City']);
+  134 |         await this.primaryState.fill(contact['Primary Address State']);
+  135 |         await this.primaryCountry.fill(contact['Primary Address Country']);
+  136 | 
+  137 |     }
+  138 | 
+  139 |     async saveContact() {
+  140 | 
+  141 |         await this.saveButton.click();
+  142 |     }
+  143 | 
+  144 |     async validateContactDetails() {
+  145 |         await expect(this.page).toHaveURL(/#\/contacts\/(record|edit)/);
+  146 | 
+  147 |     }
+  148 | 
+  149 |     async validateMandatoryFieldCheck() {
+  150 |         const lastNameValue = await this.lastName.inputValue();
+  151 | 
+  152 |         if (lastNameValue.trim() == '') {
+  153 |             await this.saveButton.click();
+  154 |             await expect(this.missinglastName).toBeVisible();
+  155 |         }
+  156 |     }
+  157 | 
+  158 |     async validateEmptyFieldCheck() {
+  159 |         const lastNameValue = await this.lastName.inputValue();
+  160 | 
+```

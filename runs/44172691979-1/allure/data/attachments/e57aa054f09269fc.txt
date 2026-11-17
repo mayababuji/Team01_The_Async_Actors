@@ -1,0 +1,3 @@
+2026-11-17 21:18:59 info: Test started {"environment":"local","browser":"webkit","retry":2,"testTitle":"Filter lead records by last name"}
+2026-11-17 21:19:00 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"webkit","retry":2,"testTitle":"Filter lead records by last name"}
+2026-11-17 21:19:30 info: Test finished {"environment":"local","browser":"webkit","retry":2,"testTitle":"Filter lead records by last name","status":"failed","expectedStatus":"passed"}

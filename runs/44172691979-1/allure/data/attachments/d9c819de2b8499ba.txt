@@ -1,0 +1,5 @@
+2026-11-17 21:17:25 info: Test started {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Contacts module navigation"}
+2026-11-17 21:17:27 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Contacts module navigation"}
+2026-11-17 21:17:41 info: Hovering over Contacts module {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Contacts module navigation"}
+2026-11-17 21:17:56 info: All Contacts dropdown options are visible {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Contacts module navigation","options":["Create Contact","View Contacts","Import Contacts","Create Contact From Vcard"]}
+2026-11-17 21:17:56 info: Test finished {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Contacts module navigation","status":"passed","expectedStatus":"passed"}

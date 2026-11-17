@@ -1,0 +1,4 @@
+{"browser":"chromium","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Create an account with valid mandatory data","timestamp":"2026-11-17T20:51:37.150Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Create an account with valid mandatory data","timestamp":"2026-11-17T20:51:37.407Z"}
+{"accountName":"Numpy Test Account","browser":"chromium","environment":"local","level":"info","message":"Creating account with mandatory data","retry":0,"scenario":"create_account_valid_name","testTitle":"Create an account with valid mandatory data","timestamp":"2026-11-17T20:52:03.675Z"}
+{"browser":"chromium","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"failed","testTitle":"Create an account with valid mandatory data","timestamp":"2026-11-17T20:52:24.412Z"}

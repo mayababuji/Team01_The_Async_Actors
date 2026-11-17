@@ -1,0 +1,3 @@
+2026-11-17 21:49:37 info: Test started {"environment":"local","browser":"chromium","retry":2,"testTitle":"Update account website"}
+2026-11-17 21:49:38 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"chromium","retry":2,"testTitle":"Update account website"}
+2026-11-17 21:50:02 info: Test finished {"environment":"local","browser":"chromium","retry":2,"testTitle":"Update account website","status":"failed","expectedStatus":"passed"}

@@ -1,0 +1,3 @@
+{"browser":"webkit","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Sort accounts by name","timestamp":"2026-11-17T21:47:12.241Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Sort accounts by name","timestamp":"2026-11-17T21:47:13.551Z"}
+{"browser":"webkit","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"failed","testTitle":"Sort accounts by name","timestamp":"2026-11-17T21:47:42.099Z"}

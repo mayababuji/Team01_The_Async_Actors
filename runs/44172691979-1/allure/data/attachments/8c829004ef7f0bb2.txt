@@ -1,0 +1,4 @@
+2026-11-17 21:29:05 info: Test started {"environment":"local","browser":"chromium","retry":1,"testTitle":"Verify Accounts module navigation"}
+2026-11-17 21:29:06 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"chromium","retry":1,"testTitle":"Verify Accounts module navigation"}
+2026-11-17 21:29:12 info: Hovering over Accounts module {"environment":"local","browser":"chromium","retry":1,"testTitle":"Verify Accounts module navigation"}
+2026-11-17 21:29:33 info: Test finished {"environment":"local","browser":"chromium","retry":1,"testTitle":"Verify Accounts module navigation","status":"failed","expectedStatus":"passed"}
