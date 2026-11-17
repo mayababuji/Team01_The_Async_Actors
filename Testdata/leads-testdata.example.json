@@ -1,0 +1,28 @@
+{
+  "validLead": {
+    "firstName": "Automation",
+    "lastName": "Lead",
+    "title": "QA Automation Engineer",
+    "email": "automation.lead@example.org",
+    "mobile": "7135550142",
+    "officePhone": "7135550188"
+  },
+  "invalidEmail": {
+    "email": "invalid-email"
+  },
+  "invalidMobile": {
+    "mobile": "abc"
+  },
+  "invalidOfficePhone": {
+    "officePhone": "phone-number"
+  },
+  "updatedJobTitle": {
+    "JobTitle": "Senior QA Automation Engineer"
+  },
+  "urls": {
+    "Create Lead": "REPLACE_WITH_YOUR_EXISTING_CREATE_LEAD_URL",
+    "Create Lead From vCard": "REPLACE_WITH_YOUR_EXISTING_VCARD_URL",
+    "View Leads": "REPLACE_WITH_YOUR_EXISTING_VIEW_LEADS_URL",
+    "Import Leads": "REPLACE_WITH_YOUR_EXISTING_IMPORT_LEADS_URL"
+  }
+}
