@@ -1,0 +1,3 @@
+{"browser":"chromium","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Verify the Create Lead page controls and sections","timestamp":"2026-11-17T21:31:21.288Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Verify the Create Lead page controls and sections","timestamp":"2026-11-17T21:31:21.920Z"}
+{"browser":"chromium","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"failed","testTitle":"Verify the Create Lead page controls and sections","timestamp":"2026-11-17T21:31:49.314Z"}

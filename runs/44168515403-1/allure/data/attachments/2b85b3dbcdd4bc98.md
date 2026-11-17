@@ -1,0 +1,427 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: features/opportunities.feature.spec.js >> Opportunities management >> Create an opportunity with valid mandatory data
+- Location: tests/generated/features/opportunities.feature.spec.js:31:3
+
+# Error details
+
+```
+TimeoutError: locator.waitFor: Timeout 20000ms exceeded.
+Call log:
+  - waiting for getByRole('tabpanel', { name: 'BASIC', exact: true }).getByPlaceholder('yyyy-mm-dd', { exact: true }) to be visible
+
+```
+
+```
+AggregateError: Failed to delete one or more test-created accounts.
+```
+
+```
+TimeoutError: locator.click: Timeout 20000ms exceeded.
+Call log:
+  - waiting for locator('scrm-base-record-header').locator(getByRole('button', { name: /^actions$/i }))
+    - locator resolved to <button title="" type="button" ngbdropdowntoggle="" aria-expanded="false" class="dropdown-toggle button-group-button settings-button">…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div class="app-overlay" _ngcontent-ng-c1512349663="">…</div> from <app-full-page-spinner class="ng-star-inserted" _nghost-ng-c1512349663="">…</app-full-page-spinner> subtree intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div class="app-overlay" _ngcontent-ng-c1512349663="">…</div> from <app-full-page-spinner class="ng-star-inserted" _nghost-ng-c1512349663="">…</app-full-page-spinner> subtree intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    19 × waiting for element to be visible, enabled and stable
+       - element is visible, enabled and stable
+       - scrolling into view if needed
+       - done scrolling
+       - <div class="app-overlay" _ngcontent-ng-c1512349663="">…</div> from <app-full-page-spinner class="ng-star-inserted" _nghost-ng-c1512349663="">…</app-full-page-spinner> subtree intercepts pointer events
+     - retrying click action
+       - waiting 500ms
+    - waiting for element to be visible, enabled and stable
+  - element was detached from the DOM, retrying
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - navigation [ref=e5]:
+      - generic [ref=e6]:
+        - list [ref=e9]:
+          - listitem [ref=e10]:
+            - link [ref=e11] [cursor=pointer]:
+              - /url: "#/home"
+        - list [ref=e18]:
+          - listitem [ref=e19]:
+            - generic [ref=e20]: Opportunities
+          - listitem [ref=e27]:
+            - generic [ref=e28]: Accounts
+          - listitem [ref=e35]:
+            - generic [ref=e36]: Contacts
+          - listitem [ref=e43]:
+            - generic [ref=e44]: Leads
+          - listitem [ref=e51]:
+            - generic [ref=e52]: Quotes
+          - listitem [ref=e59]:
+            - generic [ref=e60]: Calendar
+          - listitem [ref=e67]:
+            - generic [ref=e68]: Documents
+        - list [ref=e77]:
+          - listitem [ref=e78]:
+            - generic [ref=e79]: More
+      - generic [ref=e81]:
+        - list [ref=e83]:
+          - listitem [ref=e84]:
+            - generic "Quick Create" [ref=e85] [cursor=pointer]
+        - list [ref=e92]:
+          - listitem [ref=e93]:
+            - generic "Recently Viewed" [ref=e94] [cursor=pointer]
+        - generic [ref=e104]:
+          - textbox "Search" [ref=e105]:
+            - /placeholder: Search...
+          - button "Search" [ref=e107] [cursor=pointer]
+        - list [ref=e117]:
+          - listitem [ref=e118]:
+            - generic [ref=e119] [cursor=pointer]
+      - list [ref=e127]:
+        - listitem [ref=e128]
+    - generic [ref=e139]:
+      - generic [ref=e143]:
+        - generic [ref=e144]: Create
+        - generic [ref=e153]:
+          - button "Save" [ref=e155] [cursor=pointer]
+          - button "Cancel" [ref=e158] [cursor=pointer]
+      - separator [ref=e161]
+      - generic [ref=e170]:
+        - tablist [ref=e172]:
+          - tab "BASIC" [selected] [ref=e173] [cursor=pointer]
+          - tab "OTHER" [ref=e174] [cursor=pointer]
+        - tabpanel "BASIC" [ref=e176]:
+          - generic [ref=e179]:
+            - generic [ref=e180]:
+              - generic [ref=e182]:
+                - strong [ref=e184]:
+                  - generic [ref=e185]: "*"
+                  - generic [ref=e186]: OPPORTUNITY NAME
+                - textbox [ref=e194]
+              - generic [ref=e196]:
+                - strong [ref=e198]:
+                  - generic [ref=e199]: "*"
+                  - generic [ref=e200]: ACCOUNT NAME
+                - generic [ref=e208]:
+                  - generic [ref=e211] [cursor=pointer]:
+                    - combobox "Select an item" [ref=e212]
+                    - button "dropdown trigger" [ref=e215]
+                  - button [ref=e223] [cursor=pointer]
+            - generic [ref=e229]:
+              - generic [ref=e231]:
+                - strong [ref=e233]:
+                  - generic [ref=e234]: OPPORTUNITY AMOUNT
+                - generic [ref=e242]:
+                  - combobox [ref=e250]:
+                    - option "$ (USD)" [selected]
+                  - textbox [ref=e257]
+              - generic [ref=e259]:
+                - strong [ref=e261]:
+                  - generic [ref=e262]: "*"
+                  - generic [ref=e263]: EXPECTED CLOSE DATE
+                - generic [ref=e271]:
+                  - textbox "yyyy-mm-dd" [ref=e272]
+                  - button [ref=e275] [cursor=pointer]
+            - generic [ref=e295]:
+              - generic [ref=e297]:
+                - strong [ref=e299]:
+                  - generic [ref=e300]: "*"
+                  - generic [ref=e301]: SALES STAGE
+                - combobox [ref=e310]:
+                  - option "Prospecting"
+                  - option "Qualification"
+                  - option "Needs Analysis"
+                  - option "Value Proposition"
+                  - option "Identifying Decision Makers"
+                  - option "Perception Analysis"
+                  - option "Proposal/Price Quote"
+                  - option "Negotiation/Review"
+                  - option "Closed Won"
+                  - option "Closed Lost"
+              - generic [ref=e312]:
+                - strong [ref=e314]:
+                  - generic [ref=e315]: TYPE
+                - combobox [ref=e324]:
+                  - option [selected]
+                  - option "Existing Business"
+                  - option "New Business"
+            - generic [ref=e325]:
+              - generic [ref=e327]:
+                - strong [ref=e329]:
+                  - generic [ref=e330]: PROBABILITY (%)
+                - textbox [ref=e338]
+              - generic [ref=e340]:
+                - strong [ref=e342]:
+                  - generic [ref=e343]: LEAD SOURCE
+                - combobox [ref=e352]:
+                  - option [selected]
+                  - option "Cold Call"
+                  - option "Existing Customer"
+                  - option "Self Generated"
+                  - option "Employee"
+                  - option "Partner"
+                  - option "Public Relations"
+                  - option "Direct Mail"
+                  - option "Conference"
+                  - option "Trade Show"
+                  - option "Web Site"
+                  - option "Word of mouth"
+                  - option "Email"
+                  - option "Campaign"
+                  - option "Other"
+            - generic [ref=e353]:
+              - generic [ref=e355]:
+                - strong [ref=e357]:
+                  - generic [ref=e358]: NEXT STEP
+                - textbox [ref=e366]
+              - generic [ref=e368]:
+                - strong [ref=e370]:
+                  - generic [ref=e371]: CAMPAIGN
+                - generic [ref=e379]:
+                  - generic [ref=e382] [cursor=pointer]:
+                    - combobox "Select an item" [ref=e383]
+                    - button "dropdown trigger" [ref=e386]
+                  - button [ref=e394] [cursor=pointer]
+            - generic [ref=e402]:
+              - strong [ref=e404]:
+                - generic [ref=e405]: DESCRIPTION
+              - textbox [ref=e413]
+            - generic [ref=e417]:
+              - strong [ref=e419]:
+                - generic [ref=e420]: ASSIGNED TO
+              - generic [ref=e428]:
+                - generic [ref=e431] [cursor=pointer]:
+                  - combobox "WillWestin" [ref=e432]
+                  - button "dropdown trigger" [ref=e437]
+                - button [ref=e445] [cursor=pointer]
+  - generic [ref=e453]:
+    - generic [ref=e454]: © Supercharged by SuiteCRM © Powered By SugarCRM
+    - generic [ref=e455]: Back To Top
+```
+
+# Test source
+
+```ts
+  796 |   }
+  797 | 
+  798 | 
+  799 |   async openAccountFromList(accountName) {
+  800 |     await this.getAccountListLink(accountName).click();
+  801 |   }
+  802 | 
+  803 | 
+  804 |   // --------------------------------------------------
+  805 |   // Recently Viewed
+  806 |   // --------------------------------------------------
+  807 | 
+  808 | 
+  809 |   async openAccountsRecentlyViewed() {
+  810 |     await this.hoverAccountsModule();
+  811 |     await this.accountsRecentlyViewedTrigger.click();
+  812 |   }
+  813 | 
+  814 | 
+  815 |   getRecentlyViewedAccount(accountName) {
+  816 |     return this.accountsRecentlyViewedPanel.getByText(
+  817 |       accountName,
+  818 |       { exact: true }
+  819 |     );
+  820 |   }
+  821 | 
+  822 | 
+  823 |   // --------------------------------------------------
+  824 |   // Test-data cleanup
+  825 |   // --------------------------------------------------
+  826 | 
+  827 | 
+  828 |   async deleteAccountByUrl(recordUrl) {
+  829 |     const target = new URL(recordUrl);
+  830 |     const current = new URL(this.page.url());
+  831 | 
+  832 | 
+  833 |     if (target.origin !== current.origin) {
+  834 |       throw new Error(
+  835 |         `Refusing cleanup on a different origin: ${target.origin}`
+  836 |       );
+  837 |     }
+  838 | 
+  839 | 
+  840 |     const recordPattern =
+  841 |       /^#\/accounts\/record\/([^/?#]+)(?:[/?#]|$)/;
+  842 | 
+  843 | 
+  844 |     const targetMatch = target.hash.match(recordPattern);
+  845 | 
+  846 | 
+  847 |     if (!targetMatch) {
+  848 |       throw new Error(
+  849 |         `Cleanup requires an account detail URL: ${recordUrl}`
+  850 |       );
+  851 |     }
+  852 | 
+  853 | 
+  854 |     const recordId = targetMatch[1];
+  855 |     const currentMatch = current.hash.match(recordPattern);
+  856 | 
+  857 | 
+  858 |     const isTargetRecord =
+  859 |       current.origin === target.origin &&
+  860 |       currentMatch?.[1] === recordId;
+  861 | 
+  862 | 
+  863 |     if (!isTargetRecord) {
+  864 |       await this.page.goto(recordUrl);
+  865 |     }
+  866 | 
+  867 | 
+  868 |     await this.page.waitForURL(url => {
+  869 |       const match = url.hash.match(recordPattern);
+  870 | 
+  871 | 
+  872 |       return (
+  873 |         url.origin === target.origin &&
+  874 |         match?.[1] === recordId
+  875 |       );
+  876 |     });
+  877 | 
+  878 | 
+  879 |     await this.overviewPanel.waitFor({
+  880 |       state: 'visible'
+  881 |     });
+  882 | 
+  883 | 
+  884 |     await this.recordActionsButton.waitFor({
+  885 |       state: 'visible'
+  886 |     });
+  887 | 
+  888 | 
+  889 |     const expanded =
+  890 |       await this.recordActionsButton.getAttribute(
+  891 |         'aria-expanded'
+  892 |       );
+  893 | 
+  894 | 
+  895 |     if (expanded !== 'true') {
+> 896 |       await this.recordActionsButton.click();
+      |                                      ^ TimeoutError: locator.click: Timeout 20000ms exceeded.
+  897 |     }
+  898 | 
+  899 | 
+  900 |     await this.recordActionsMenu.waitFor({
+  901 |       state: 'visible'
+  902 |     });
+  903 | 
+  904 | 
+  905 |     await this.deleteAccountAction.click();
+  906 | 
+  907 | 
+  908 |     await this.deleteAccountConfirmationMessage.waitFor({
+  909 |       state: 'visible'
+  910 |     });
+  911 | 
+  912 | 
+  913 |     await this.confirmDeleteAccountButton.click();
+  914 | 
+  915 | 
+  916 |     await this.deleteAccountConfirmationMessage.waitFor({
+  917 |       state: 'hidden'
+  918 |     });
+  919 | 
+  920 | 
+  921 |     await this.page.waitForURL(
+  922 |       /#\/accounts\/?(?:\?.*)?$/
+  923 |     );
+  924 | 
+  925 | 
+  926 |     await this.viewAccountPageHeading.waitFor({
+  927 |       state: 'visible'
+  928 |     });
+  929 |   }
+  930 | 
+  931 | 
+  932 |   // --------------------------------------------------
+  933 |   // Sorting
+  934 |   // --------------------------------------------------
+  935 | 
+  936 | 
+  937 |   async clickAccountNameSortButton() {
+  938 |     await this.accountNameSortButton.click();
+  939 |   }
+  940 | 
+  941 | 
+  942 |   async getDisplayedAccountNames() {
+  943 |     const names =
+  944 |       await this.accountNameListLinks.allTextContents();
+  945 | 
+  946 | 
+  947 |     return names.map(name => name.trim());
+  948 |   }
+  949 | 
+  950 | 
+  951 |   async getNameSortIconClass() {
+  952 |     return await this.accountNameSortIcon.getAttribute(
+  953 |       'class'
+  954 |     );
+  955 |   }
+  956 | 
+  957 | 
+  958 |   async isNameSortedDescending() {
+  959 |     const iconClass =
+  960 |       await this.getNameSortIconClass();
+  961 | 
+  962 | 
+  963 |     return /(?:^|\s)image-sort_descend(?:\s|$)/.test(
+  964 |       iconClass ?? ''
+  965 |     );
+  966 |   }
+  967 | 
+  968 | 
+  969 |   async waitForNameSortDescending() {
+  970 |     await this.page.waitForFunction(() => {
+  971 |       const icon = document.querySelector(
+  972 |         'th.cdk-column-name scrm-sort-button a.sort-button svg-icon'
+  973 |       );
+  974 | 
+  975 | 
+  976 |       return icon?.classList.contains(
+  977 |         'image-sort_descend'
+  978 |       );
+  979 |     });
+  980 |   }
+  981 | 
+  982 | 
+  983 |   async waitForNameSortNotDescending() {
+  984 |     await this.page.waitForFunction(() => {
+  985 |       const icon = document.querySelector(
+  986 |         'th.cdk-column-name scrm-sort-button a.sort-button svg-icon'
+  987 |       );
+  988 | 
+  989 | 
+  990 |       return (
+  991 |         icon !== null &&
+  992 |         !icon.classList.contains('image-sort_descend')
+  993 |       );
+  994 |     });
+  995 |   }
+  996 | 
+```

@@ -1,0 +1,3 @@
+{"browser":"firefox","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Cancel changes while editing an account","timestamp":"2026-11-17T21:13:24.293Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Cancel changes while editing an account","timestamp":"2026-11-17T21:13:26.947Z"}
+{"browser":"firefox","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"failed","testTitle":"Cancel changes while editing an account","timestamp":"2026-11-17T21:14:01.580Z"}

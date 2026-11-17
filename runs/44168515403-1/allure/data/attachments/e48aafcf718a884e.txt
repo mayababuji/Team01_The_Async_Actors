@@ -1,0 +1,3 @@
+2026-11-17 21:58:50 info: Test started {"environment":"local","browser":"firefox","retry":2,"testTitle":"Discard unsaved account data from cancellation popup"}
+2026-11-17 21:58:52 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"firefox","retry":2,"testTitle":"Discard unsaved account data from cancellation popup"}
+2026-11-17 21:59:16 info: Test finished {"environment":"local","browser":"firefox","retry":2,"testTitle":"Discard unsaved account data from cancellation popup","status":"failed","expectedStatus":"passed"}

@@ -1,0 +1,8 @@
+2026-11-17 20:33:10 info: Test started {"environment":"local","browser":"webkit","retry":0,"testTitle":"Delete an opportunity"}
+2026-11-17 20:33:12 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"webkit","retry":0,"testTitle":"Delete an opportunity"}
+2026-11-17 20:33:17 info: Creating prerequisite account for opportunity {"environment":"local","browser":"webkit","retry":0,"testTitle":"Delete an opportunity","scenario":"delete_opportunity","accountName":"Numpy Delete Opportunity Account"}
+2026-11-17 20:33:46 info: Prerequisite account created {"environment":"local","browser":"webkit","retry":0,"testTitle":"Delete an opportunity","scenario":"delete_opportunity","accountName":"Numpy Delete Opportunity Account","accountRecordUrl":"https://suite8demo.suiteondemand.com/#/accounts/record/f5788d48-a73c-4278-913f-849b099d3973"}
+2026-11-17 20:33:54 info: Opened Create Opportunity page {"environment":"local","browser":"webkit","retry":0,"testTitle":"Delete an opportunity","scenario":"delete_opportunity","opportunityName":"Numpy Delete Opportunity"}
+2026-11-17 20:34:02 info: Deleting test-created account {"environment":"local","browser":"webkit","retry":0,"testTitle":"Delete an opportunity","recordUrl":"https://suite8demo.suiteondemand.com/#/accounts/record/f5788d48-a73c-4278-913f-849b099d3973"}
+2026-11-17 20:34:20 info: Test-created account deleted {"environment":"local","browser":"webkit","retry":0,"testTitle":"Delete an opportunity","recordUrl":"https://suite8demo.suiteondemand.com/#/accounts/record/f5788d48-a73c-4278-913f-849b099d3973"}
+2026-11-17 20:34:22 info: Test finished {"environment":"local","browser":"webkit","retry":0,"testTitle":"Delete an opportunity","status":"failed","expectedStatus":"passed"}

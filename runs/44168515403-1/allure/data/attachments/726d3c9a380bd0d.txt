@@ -1,0 +1,4 @@
+2026-11-17 20:39:42 info: Test started {"environment":"local","browser":"webkit","retry":0,"testTitle":"Verify Import Accounts page navigation"}
+2026-11-17 20:39:43 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"webkit","retry":0,"testTitle":"Verify Import Accounts page navigation"}
+2026-11-17 20:40:07 info: Import Accounts page displayed {"environment":"local","browser":"webkit","retry":0,"testTitle":"Verify Import Accounts page navigation"}
+2026-11-17 20:40:07 info: Test finished {"environment":"local","browser":"webkit","retry":0,"testTitle":"Verify Import Accounts page navigation","status":"passed","expectedStatus":"passed"}

@@ -1,0 +1,4 @@
+2026-11-17 21:15:03 info: Test started {"environment":"local","browser":"webkit","retry":1,"testTitle":"Validate an invalid email address during account creation"}
+2026-11-17 21:15:04 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"webkit","retry":1,"testTitle":"Validate an invalid email address during account creation"}
+2026-11-17 21:15:28 info: Entering account data with an invalid email {"environment":"local","browser":"webkit","retry":1,"testTitle":"Validate an invalid email address during account creation","scenario":"create_account_invalid_email","accountName":"Numpy Invalid Email Account","email":"numpy.invalid"}
+2026-11-17 21:15:50 info: Test finished {"environment":"local","browser":"webkit","retry":1,"testTitle":"Validate an invalid email address during account creation","status":"failed","expectedStatus":"passed"}

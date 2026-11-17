@@ -1,0 +1,3 @@
+{"browser":"webkit","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Verify the View Leads list columns and controls","timestamp":"2026-11-17T21:57:54.640Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Verify the View Leads list columns and controls","timestamp":"2026-11-17T21:57:55.440Z"}
+{"browser":"webkit","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"failed","testTitle":"Verify the View Leads list columns and controls","timestamp":"2026-11-17T21:58:18.812Z"}

@@ -1,0 +1,166 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: features/opportunities.feature.spec.js >> Opportunities management >> Delete an opportunity
+- Location: tests/generated/features/opportunities.feature.spec.js:159:3
+
+# Error details
+
+```
+TimeoutError: page.goto: Timeout 45000ms exceeded.
+Call log:
+  - navigating to "https://suite8demo.suiteondemand.com/#/home", waiting until "load"
+
+```
+
+# Test source
+
+```ts
+  1   | import { expect } from '@playwright/test';
+  2   | import { Given, When, Then } from '../fixtures.js';
+  3   | import path from 'node:path';
+  4   | import { stat } from 'node:fs/promises';
+  5   | import { readAccountImportCsv } from '../utils/csv-util.js';
+  6   | import { getAccountDataByScenario } from '../utils/excel-util.js';
+  7   | 
+  8   | 
+  9   | 
+  10  | const ACCOUNT_RECORD_URL =
+  11  |   /#\/accounts\/record\/[^/?#]+(?:[/?#]|$)/;
+  12  | 
+  13  | 
+  14  | const ACCOUNTS_LIST_URL =
+  15  |   /#\/accounts\/edit(?:\?.*)?$/;
+  16  | 
+  17  | 
+  18  | const ACCOUNT_IMPORT_FILE = path.resolve(
+  19  |   'test-data',
+  20  |   'AccountsImportNew.csv'
+  21  | );
+  22  | 
+  23  | 
+  24  | const ACCOUNT_SAVED_URL =
+  25  |   /#\/accounts\/edit\?.*return_action=DetailView/;
+  26  | 
+  27  | 
+  28  | // --------------------------------------------------
+  29  | // Background
+  30  | // --------------------------------------------------
+  31  | 
+  32  | 
+  33  | Given(
+  34  |   'the authenticated user is on the Suite8Demo home page',
+  35  |   async ({ page, logger }) => {
+  36  |     logger.info(
+  37  |       'Opening Suite8Demo home page with saved authentication'
+  38  |     );
+  39  | 
+  40  | 
+> 41  |     await page.goto(`${process.env.BASE_URL}/#/home`);
+      |                ^ TimeoutError: page.goto: Timeout 45000ms exceeded.
+  42  |     await page.waitForURL(/#\/home(?:[/?#]|$)/i);
+  43  |   }
+  44  | );
+  45  | 
+  46  | 
+  47  | // --------------------------------------------------
+  48  | // Accounts navigation
+  49  | // --------------------------------------------------
+  50  | 
+  51  | 
+  52  | When(
+  53  |   'the user hovers over the Accounts module in the top navigation',
+  54  |   async ({ accountsPage, logger }) => {
+  55  |     logger.info('Hovering over Accounts module');
+  56  | 
+  57  | 
+  58  |     await accountsPage.hoverAccountsModule();
+  59  |   }
+  60  | );
+  61  | 
+  62  | 
+  63  | Then(
+  64  |   'the user should see the Accounts dropdown options',
+  65  |   async ({ accountsPage, logger }, dataTable) => {
+  66  |     const options = dataTable.raw().flat();
+  67  | 
+  68  | 
+  69  |     for (const optionName of options) {
+  70  |       await expect(
+  71  |         accountsPage.getDropdownOption(optionName)
+  72  |       ).toBeVisible();
+  73  |     }
+  74  | 
+  75  | 
+  76  |     logger.info('All Accounts dropdown options are visible', {
+  77  |       options
+  78  |     });
+  79  |   }
+  80  | );
+  81  | 
+  82  | 
+  83  | When(
+  84  |   'the user clicks on the Accounts module from the top navigation',
+  85  |   async ({ accountsPage }) => {
+  86  |     await accountsPage.openCreateAccountPage();
+  87  |   }
+  88  | );
+  89  | 
+  90  | 
+  91  | Then(
+  92  |   'the user should be navigated to the Create Account page',
+  93  |   async ({ accountsPage, logger }) => {
+  94  |     await expect(
+  95  |       accountsPage.createAccountPageHeading
+  96  |     ).toBeVisible();
+  97  | 
+  98  | 
+  99  |     logger.info('Create Account page displayed');
+  100 |   }
+  101 | );
+  102 | 
+  103 | 
+  104 | When(
+  105 |   'the user clicks on the Import module from the top navigation',
+  106 |   async ({ accountsPage }) => {
+  107 |     await accountsPage.openImportAccountPage();
+  108 |   }
+  109 | );
+  110 | 
+  111 | 
+  112 | Then(
+  113 |   'the user should be navigated to the Import module page',
+  114 |   async ({ accountsPage, logger }) => {
+  115 |     await expect(
+  116 |       accountsPage.importAccountPageHeading
+  117 |     ).toBeVisible();
+  118 | 
+  119 | 
+  120 |     logger.info('Import Accounts page displayed');
+  121 |   }
+  122 | );
+  123 | 
+  124 | 
+  125 | When(
+  126 |   'the user clicks on the View Accounts module from the top navigation',
+  127 |   async ({ accountsPage }) => {
+  128 |     await accountsPage.openViewAccountPage();
+  129 |   }
+  130 | );
+  131 | 
+  132 | 
+  133 | Then(
+  134 |   'the user should be navigated to the View Accounts module page',
+  135 |   async ({ accountsPage, logger }) => {
+  136 |     await expect(
+  137 |       accountsPage.viewAccountPageHeading
+  138 |     ).toBeVisible();
+  139 | 
+  140 | 
+  141 |     logger.info('View Accounts page displayed');
+```
