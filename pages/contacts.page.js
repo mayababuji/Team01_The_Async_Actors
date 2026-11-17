@@ -52,10 +52,6 @@ export class ContactsPage {
         this.confirmImportFileProp = page.locator('iframe').contentFrame().getByRole('heading', { name: 'Step 2: Confirm Import File' });
     }
 
-    // async hoverContactsModule() {
-    //     await this.contactsDropdown.hover();
-    // }
-
     async verifyHomePage() {
         await expect(this.contactsDropdown).toBeVisible();
     }
@@ -146,7 +142,6 @@ export class ContactsPage {
     }
 
     async validateContactDetails() {
-        //await expect(this.page).toHaveURL(/#\/contacts\/record\/[^/?]+/);
         await expect(this.page).toHaveURL(/#\/contacts\/(record|edit)/);
 
     }
@@ -175,7 +170,6 @@ export class ContactsPage {
 
     async handleOverviewContactCancellation(contact) {
         await this.firstName.fill(contact['First Name']);
-        //await this.page.waitForTimeout(2000);
         await this.cancelButton.click();
     }
 
@@ -197,13 +191,8 @@ export class ContactsPage {
 
     async uploadVCardFile() {
         await expect(this.page).toHaveURL(/#\/contacts\/importvcard/);
-
-        //const filePath = path.resolve('Testdata/contactstest.vcf');
-
-        //await this.vCardChooseFile.setInputFiles(filePath);
         await this.vCardChooseFile.setInputFiles('Testdata/contactstest.vcf')
 
-        //await this.page.waitForTimeout(1000);
         console.log('VCF file selected');
     }
 

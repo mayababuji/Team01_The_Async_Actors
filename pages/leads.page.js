@@ -1,6 +1,5 @@
 import { expect } from '@playwright/test';
 import path from 'node:path';
-//import log from '../utils/logger.js';
 import testData from '../Testdata/leads-testdata.example.json' with { type: 'json' };
 
 
