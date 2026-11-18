@@ -1,0 +1,3 @@
+{"browser":"chromium","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Validate lead import when no file is selected","timestamp":"2026-11-17T23:32:57.136Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Validate lead import when no file is selected","timestamp":"2026-11-17T23:32:57.391Z"}
+{"browser":"chromium","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"failed","testTitle":"Validate lead import when no file is selected","timestamp":"2026-11-17T23:33:19.701Z"}

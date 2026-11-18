@@ -1,0 +1,4 @@
+2026-11-17 23:10:14 info: Test started {"environment":"local","browser":"chromium","retry":2,"testTitle":"Create an opportunity with Existing Business"}
+2026-11-17 23:10:14 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"chromium","retry":2,"testTitle":"Create an opportunity with Existing Business"}
+2026-11-17 23:10:21 info: Creating prerequisite account for opportunity {"environment":"local","browser":"chromium","retry":2,"testTitle":"Create an opportunity with Existing Business","scenario":"create_opportunity_existing_business","accountName":"Numpy Existing Business Account"}
+2026-11-17 23:10:41 info: Test finished {"environment":"local","browser":"chromium","retry":2,"testTitle":"Create an opportunity with Existing Business","status":"failed","expectedStatus":"passed"}

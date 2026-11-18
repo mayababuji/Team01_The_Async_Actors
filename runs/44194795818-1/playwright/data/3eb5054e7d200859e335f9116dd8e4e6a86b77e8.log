@@ -1,0 +1,4 @@
+{"browser":"firefox","environment":"local","level":"info","message":"Test started","retry":2,"testTitle":"Verify that the user is redirected to the selected Contacts page","timestamp":"2026-11-17T23:28:44.187Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":2,"testTitle":"Verify that the user is redirected to the selected Contacts page","timestamp":"2026-11-17T23:28:46.008Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"All Contacts dropdown menu options are visible","retry":2,"testTitle":"Verify that the user is redirected to the selected Contacts page","timestamp":"2026-11-17T23:28:48.861Z"}
+{"browser":"firefox","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":2,"status":"failed","testTitle":"Verify that the user is redirected to the selected Contacts page","timestamp":"2026-11-17T23:29:09.121Z"}

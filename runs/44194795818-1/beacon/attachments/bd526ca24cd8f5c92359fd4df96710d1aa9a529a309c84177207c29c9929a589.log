@@ -1,0 +1,5 @@
+{"browser":"chromium","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Verify Contacts module navigation","timestamp":"2026-11-17T23:04:47.764Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Verify Contacts module navigation","timestamp":"2026-11-17T23:04:48.199Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Hovering over Contacts module","retry":0,"testTitle":"Verify Contacts module navigation","timestamp":"2026-11-17T23:04:58.111Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"All Contacts dropdown options are visible","options":["Create Contact","View Contacts","Import Contacts","Create Contact From Vcard"],"retry":0,"testTitle":"Verify Contacts module navigation","timestamp":"2026-11-17T23:05:06.249Z"}
+{"browser":"chromium","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"passed","testTitle":"Verify Contacts module navigation","timestamp":"2026-11-17T23:05:06.344Z"}

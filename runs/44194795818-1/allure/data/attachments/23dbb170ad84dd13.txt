@@ -1,0 +1,4 @@
+2026-11-17 23:25:59 info: Test started {"environment":"local","browser":"chromium","retry":1,"testTitle":"Create an opportunity with lead source Direct Mail"}
+2026-11-17 23:25:59 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"chromium","retry":1,"testTitle":"Create an opportunity with lead source Direct Mail"}
+2026-11-17 23:26:01 info: Creating prerequisite account for opportunity {"environment":"local","browser":"chromium","retry":1,"testTitle":"Create an opportunity with lead source Direct Mail","scenario":"create_opportunity_lead_source_direct_mail","accountName":"Numpy Direct Mail Account"}
+2026-11-17 23:26:21 info: Test finished {"environment":"local","browser":"chromium","retry":1,"testTitle":"Create an opportunity with lead source Direct Mail","status":"failed","expectedStatus":"passed"}

@@ -1,0 +1,4 @@
+2026-11-17 23:15:35 info: Test started {"environment":"local","browser":"chromium","retry":2,"testTitle":"Delete an opportunity"}
+2026-11-17 23:15:35 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"chromium","retry":2,"testTitle":"Delete an opportunity"}
+2026-11-17 23:15:38 info: Creating prerequisite account for opportunity {"environment":"local","browser":"chromium","retry":2,"testTitle":"Delete an opportunity","scenario":"delete_opportunity","accountName":"Numpy Delete Opportunity Account"}
+2026-11-17 23:15:59 info: Test finished {"environment":"local","browser":"chromium","retry":2,"testTitle":"Delete an opportunity","status":"failed","expectedStatus":"passed"}
