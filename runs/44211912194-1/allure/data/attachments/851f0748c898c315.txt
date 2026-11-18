@@ -1,0 +1,3 @@
+2026-11-18 00:59:15 info: Test started {"environment":"local","browser":"webkit","retry":0,"testTitle":"Select a valid CSV file for lead import"}
+2026-11-18 00:59:15 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"webkit","retry":0,"testTitle":"Select a valid CSV file for lead import"}
+2026-11-18 00:59:40 info: Test finished {"environment":"local","browser":"webkit","retry":0,"testTitle":"Select a valid CSV file for lead import","status":"failed","expectedStatus":"passed"}

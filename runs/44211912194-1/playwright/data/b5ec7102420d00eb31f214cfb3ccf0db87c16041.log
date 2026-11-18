@@ -1,0 +1,3 @@
+{"browser":"firefox","environment":"local","level":"info","message":"Test started","retry":1,"testTitle":"Verify Import Accounts page navigation","timestamp":"2026-11-18T01:31:38.634Z"}
+{"browser":"firefox","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":1,"testTitle":"Verify Import Accounts page navigation","timestamp":"2026-11-18T01:31:39.892Z"}
+{"browser":"firefox","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":1,"status":"failed","testTitle":"Verify Import Accounts page navigation","timestamp":"2026-11-18T01:32:02.713Z"}

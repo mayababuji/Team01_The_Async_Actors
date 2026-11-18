@@ -1,0 +1,4 @@
+{"browser":"chromium","environment":"local","level":"info","message":"Test started","retry":2,"testTitle":"Delete an opportunity","timestamp":"2026-11-18T01:00:00.643Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":2,"testTitle":"Delete an opportunity","timestamp":"2026-11-18T01:00:00.898Z"}
+{"accountName":"Numpy Delete Opportunity Account","browser":"chromium","environment":"local","level":"info","message":"Creating prerequisite account for opportunity","retry":2,"scenario":"delete_opportunity","testTitle":"Delete an opportunity","timestamp":"2026-11-18T01:00:06.964Z"}
+{"browser":"chromium","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":2,"status":"failed","testTitle":"Delete an opportunity","timestamp":"2026-11-18T01:00:27.422Z"}

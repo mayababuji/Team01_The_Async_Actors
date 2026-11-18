@@ -1,0 +1,4 @@
+2026-11-18 01:47:23 info: Test started {"environment":"local","browser":"firefox","retry":1,"testTitle":"Verify Contacts dropdown menu expands on hover"}
+2026-11-18 01:47:25 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"firefox","retry":1,"testTitle":"Verify Contacts dropdown menu expands on hover"}
+2026-11-18 01:47:27 info: Hovering over Contacts module {"environment":"local","browser":"firefox","retry":1,"testTitle":"Verify Contacts dropdown menu expands on hover"}
+2026-11-18 01:47:47 info: Test finished {"environment":"local","browser":"firefox","retry":1,"testTitle":"Verify Contacts dropdown menu expands on hover","status":"failed","expectedStatus":"passed"}

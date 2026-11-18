@@ -1,0 +1,4 @@
+2026-11-18 01:46:03 info: Test started {"environment":"local","browser":"firefox","retry":0,"testTitle":"Prevent account import without selecting a file"}
+2026-11-18 01:46:04 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"firefox","retry":0,"testTitle":"Prevent account import without selecting a file"}
+2026-11-18 01:46:07 info: Opening Import Accounts page without selecting a file {"environment":"local","browser":"firefox","retry":0,"testTitle":"Prevent account import without selecting a file"}
+2026-11-18 01:46:27 info: Test finished {"environment":"local","browser":"firefox","retry":0,"testTitle":"Prevent account import without selecting a file","status":"failed","expectedStatus":"passed"}

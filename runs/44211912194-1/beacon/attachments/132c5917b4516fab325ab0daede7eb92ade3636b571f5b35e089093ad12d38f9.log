@@ -1,0 +1,3 @@
+{"browser":"chromium","environment":"local","level":"info","message":"Test started","retry":1,"testTitle":"Delete an existing account","timestamp":"2026-11-18T01:32:51.977Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":1,"testTitle":"Delete an existing account","timestamp":"2026-11-18T01:32:52.244Z"}
+{"browser":"chromium","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":1,"status":"failed","testTitle":"Delete an existing account","timestamp":"2026-11-18T01:33:14.784Z"}

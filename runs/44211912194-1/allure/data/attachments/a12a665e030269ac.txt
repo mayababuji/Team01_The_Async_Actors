@@ -1,0 +1,4 @@
+2026-11-18 01:49:06 info: Test started {"environment":"local","browser":"webkit","retry":2,"testTitle":"Create an opportunity with an amount"}
+2026-11-18 01:49:07 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"webkit","retry":2,"testTitle":"Create an opportunity with an amount"}
+2026-11-18 01:49:09 info: Creating prerequisite account for opportunity {"environment":"local","browser":"webkit","retry":2,"testTitle":"Create an opportunity with an amount","scenario":"create_opportunity_with_amount","accountName":"Numpy Amount Account"}
+2026-11-18 01:49:30 info: Test finished {"environment":"local","browser":"webkit","retry":2,"testTitle":"Create an opportunity with an amount","status":"failed","expectedStatus":"passed"}

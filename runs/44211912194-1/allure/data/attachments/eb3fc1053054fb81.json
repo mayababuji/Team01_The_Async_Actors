@@ -1,0 +1,3 @@
+{"browser":"webkit","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Create an account with complete overview information","timestamp":"2026-11-18T01:16:43.014Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Create an account with complete overview information","timestamp":"2026-11-18T01:16:43.464Z"}
+{"browser":"webkit","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"failed","testTitle":"Create an account with complete overview information","timestamp":"2026-11-18T01:17:06.193Z"}

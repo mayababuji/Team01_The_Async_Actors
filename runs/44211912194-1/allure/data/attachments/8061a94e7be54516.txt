@@ -1,0 +1,4 @@
+2026-11-18 01:07:09 info: Test started {"environment":"local","browser":"firefox","retry":1,"testTitle":"Create an opportunity with lead source Word of mouth"}
+2026-11-18 01:07:10 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"firefox","retry":1,"testTitle":"Create an opportunity with lead source Word of mouth"}
+2026-11-18 01:07:13 info: Creating prerequisite account for opportunity {"environment":"local","browser":"firefox","retry":1,"testTitle":"Create an opportunity with lead source Word of mouth","scenario":"create_opportunity_lead_source_word_of_mouth","accountName":"Numpy Word of Mouth Account"}
+2026-11-18 01:07:33 info: Test finished {"environment":"local","browser":"firefox","retry":1,"testTitle":"Create an opportunity with lead source Word of mouth","status":"failed","expectedStatus":"passed"}
