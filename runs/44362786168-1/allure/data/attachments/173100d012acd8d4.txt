@@ -1,0 +1,5 @@
+2026-11-18 18:00:55 info: Test started {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Cancel button on Create Account page without entered data"}
+2026-11-18 18:00:58 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Cancel button on Create Account page without entered data"}
+2026-11-18 18:01:27 info: Cancelling empty Create Account form {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Cancel button on Create Account page without entered data"}
+2026-11-18 18:01:28 info: Returned to the Accounts page after cancelling {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Cancel button on Create Account page without entered data"}
+2026-11-18 18:01:28 info: Test finished {"environment":"local","browser":"firefox","retry":0,"testTitle":"Verify Cancel button on Create Account page without entered data","status":"passed","expectedStatus":"passed"}

@@ -1,0 +1,5 @@
+{"browser":"login-chromium","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"User logs in with valid credentials","timestamp":"2026-11-18T17:50:41.830Z"}
+{"browser":"login-chromium","environment":"local","level":"info","message":"Opening Suite8 login page","retry":0,"testTitle":"User logs in with valid credentials","timestamp":"2026-11-18T17:50:42.368Z"}
+{"browser":"login-chromium","environment":"local","level":"info","message":"Submitting valid login credentials","retry":0,"testTitle":"User logs in with valid credentials","timestamp":"2026-11-18T17:50:45.743Z"}
+{"browser":"login-chromium","environment":"local","level":"info","message":"Validating logged in successfully","retry":0,"testTitle":"User logs in with valid credentials","timestamp":"2026-11-18T17:50:50.951Z"}
+{"browser":"login-chromium","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"passed","testTitle":"User logs in with valid credentials","timestamp":"2026-11-18T17:51:00.849Z"}

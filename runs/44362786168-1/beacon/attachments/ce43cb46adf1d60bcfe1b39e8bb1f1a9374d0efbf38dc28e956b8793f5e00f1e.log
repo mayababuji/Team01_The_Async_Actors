@@ -1,0 +1,3 @@
+{"browser":"login-chromium","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Verify password is hidden when user enters password","timestamp":"2026-11-18T17:49:45.498Z"}
+{"browser":"login-chromium","environment":"local","level":"info","message":"Opening Suite8 login page","retry":0,"testTitle":"Verify password is hidden when user enters password","timestamp":"2026-11-18T17:49:47.656Z"}
+{"browser":"login-chromium","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"passed","testTitle":"Verify password is hidden when user enters password","timestamp":"2026-11-18T17:49:55.380Z"}

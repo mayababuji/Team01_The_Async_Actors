@@ -1,0 +1,3 @@
+2026-11-18 18:11:08 info: Test started {"environment":"local","browser":"chromium","retry":2,"testTitle":"Create an account with complete overview information"}
+2026-11-18 18:11:09 info: Opening Suite8Demo home page with saved authentication {"environment":"local","browser":"chromium","retry":2,"testTitle":"Create an account with complete overview information"}
+2026-11-18 18:11:31 info: Test finished {"environment":"local","browser":"chromium","retry":2,"testTitle":"Create an account with complete overview information","status":"failed","expectedStatus":"passed"}

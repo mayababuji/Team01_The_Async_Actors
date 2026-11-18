@@ -1,0 +1,4 @@
+{"browser":"chromium","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Prevent account import without selecting a file","timestamp":"2026-11-18T18:19:26.541Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Prevent account import without selecting a file","timestamp":"2026-11-18T18:19:26.936Z"}
+{"browser":"chromium","environment":"local","level":"info","message":"Opening Import Accounts page without selecting a file","retry":0,"testTitle":"Prevent account import without selecting a file","timestamp":"2026-11-18T18:19:29.297Z"}
+{"browser":"chromium","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"failed","testTitle":"Prevent account import without selecting a file","timestamp":"2026-11-18T18:19:49.911Z"}

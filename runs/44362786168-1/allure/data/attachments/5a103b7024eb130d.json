@@ -1,0 +1,3 @@
+{"browser":"webkit","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"View insights for a lead record","timestamp":"2026-11-18T18:43:49.195Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"View insights for a lead record","timestamp":"2026-11-18T18:43:49.937Z"}
+{"browser":"webkit","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"failed","testTitle":"View insights for a lead record","timestamp":"2026-11-18T18:44:12.975Z"}

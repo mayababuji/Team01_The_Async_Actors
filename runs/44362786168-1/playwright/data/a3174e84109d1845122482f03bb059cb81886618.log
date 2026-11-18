@@ -1,0 +1,3 @@
+{"browser":"webkit","environment":"local","level":"info","message":"Test started","retry":0,"testTitle":"Verify View Opportunities page navigation","timestamp":"2026-11-18T18:36:09.209Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":0,"testTitle":"Verify View Opportunities page navigation","timestamp":"2026-11-18T18:36:09.892Z"}
+{"browser":"webkit","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":0,"status":"failed","testTitle":"Verify View Opportunities page navigation","timestamp":"2026-11-18T18:36:32.906Z"}

@@ -1,0 +1,7 @@
+2026-11-18 17:50:21 info: Test started {"environment":"local","browser":"login-chromium","retry":0,"testTitle":"User cannot log in with an empty login"}
+2026-11-18 17:50:22 info: Opening Suite8 login page {"environment":"local","browser":"login-chromium","retry":0,"testTitle":"User cannot log in with an empty login"}
+2026-11-18 17:50:26 info: Submitting negative login data from Excel {"environment":"local","browser":"login-chromium","retry":0,"testTitle":"User cannot log in with an empty login","scenario":"empty_login","username":""}
+2026-11-18 17:50:31 info: Negative login form submitted {"environment":"local","browser":"login-chromium","retry":0,"testTitle":"User cannot log in with an empty login","scenario":"empty_login"}
+2026-11-18 17:50:31 info: Verifying expected login error message {"environment":"local","browser":"login-chromium","retry":0,"testTitle":"User cannot log in with an empty login","scenario":"empty_login","expectedResult":"Missing required field","locatorUsed":"emptyCredentialErrorMessage"}
+2026-11-18 17:50:31 info: Expected login error message was verified {"environment":"local","browser":"login-chromium","retry":0,"testTitle":"User cannot log in with an empty login","scenario":"empty_login","locatorUsed":"emptyCredentialErrorMessage"}
+2026-11-18 17:50:31 info: Test finished {"environment":"local","browser":"login-chromium","retry":0,"testTitle":"User cannot log in with an empty login","status":"passed","expectedStatus":"passed"}

@@ -1,0 +1,3 @@
+{"browser":"webkit","environment":"local","level":"info","message":"Test started","retry":1,"testTitle":"Select a valid CSV file for lead import","timestamp":"2026-11-18T18:10:10.160Z"}
+{"browser":"webkit","environment":"local","level":"info","message":"Opening Suite8Demo home page with saved authentication","retry":1,"testTitle":"Select a valid CSV file for lead import","timestamp":"2026-11-18T18:10:11.300Z"}
+{"browser":"webkit","environment":"local","expectedStatus":"passed","level":"info","message":"Test finished","retry":1,"status":"failed","testTitle":"Select a valid CSV file for lead import","timestamp":"2026-11-18T18:10:33.993Z"}
