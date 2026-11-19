@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Lead;Test Data;;;
+FN:Test Data Lead
+ORG:Automation Test
+TITLE:QA Automation Engineer
+TEL;TYPE=CELL:7135550142
+TEL;TYPE=WORK,VOICE:7135550188
+EMAIL:automation.lead@example.org
+END:VCARD

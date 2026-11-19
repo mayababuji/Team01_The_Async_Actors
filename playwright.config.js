@@ -89,69 +89,69 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
- workers: process.env.CI ? 4 : 4,
+  workers: process.env.CI ? 4 : 4,
 
-reporter: [
-  [
-    'beacon-reporter',
-    {
-      outputFolder: 'beacon-report',
-      title: 'SuiteCRM Automation Suite',
-      history: true,
-      dashboard: {
-        cards: [
-          'outcomes',
-          'trend',
-          'slowest',
-          'failing',
-          'categories',
-          'suites',
-          'tags',
-          'files'
-        ]
-      },
-      environment: {
-        app: 'SuiteCRM Demo',
-        env: environment
-      },
-      links: {
-        issue: 'https://github.com/mayababuji/Team01_The_Async_Actors/issues/{}'
-      },
-      categories: [
-        {
-          name: 'Application unavailable',
-          messageRegex: 'ECONNREFUSED.*'
+  reporter: [
+    [
+      'beacon-reporter',
+      {
+        outputFolder: 'beacon-report',
+        title: 'SuiteCRM Automation Suite',
+        history: true,
+        dashboard: {
+          cards: [
+            'outcomes',
+            'trend',
+            'slowest',
+            'failing',
+            'categories',
+            'suites',
+            'tags',
+            'files'
+          ]
         },
-        {
-          name: 'Authentication failure',
-          messageRegex: 'Storage state|Unauthorized|login'
-        }
-      ]
-    }
+        environment: {
+          app: 'SuiteCRM Demo',
+          env: environment
+        },
+        links: {
+          issue: 'https://github.com/mayababuji/Team01_The_Async_Actors/issues/{}'
+        },
+        categories: [
+          {
+            name: 'Application unavailable',
+            messageRegex: 'ECONNREFUSED.*'
+          },
+          {
+            name: 'Authentication failure',
+            messageRegex: 'Storage state|Unauthorized|login'
+          }
+        ]
+      }
+    ],
+    ['failures'],
+    [
+      'html',
+      {
+        outputFolder: 'playwright-report',
+        open: 'never',
+        onlyFailures: true
+      }
+    ],
+    [
+      'allure-playwright',
+      {
+        resultsDir: 'allure-results'
+      }
+    ],
+    [
+      'perfetto',
+      {
+        outputFile: 'test-results/perfetto.json.gz'
+      }
+    ]
   ],
-  ['failures'],
-  [
-    'html',
-    {
-      outputFolder: 'playwright-report',
-      open: 'never',
-      onlyFailures: true
-    }
-  ],
-  [
-    'allure-playwright',
-    {
-      resultsDir: 'allure-results'
-    }
-  ],
-  [
-    'perfetto',
-    {
-      outputFile: 'test-results/perfetto.json.gz'
-    }
-  ]
-],
-  
+
 
   use: {
     baseURL: BASE_URL,
@@ -163,98 +163,98 @@ reporter: [
     navigationTimeout: process.env.CI ? 45_000 : 30_000
   },
 
-projects: [
-  {
-    name: 'setup',
-    default: false,
-    testDir: 'session',
-    testMatch: /auth\.setup\.js/,
+  projects: [
+    {
+      name: 'setup',
+      default: false,
+      testDir: 'session',
+      testMatch: /auth\.setup\.js/,
 
-    use: {
-      ...devices['Desktop Chrome'],
-      storageState: {
-        cookies: [],
-        origins: []
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: {
+          cookies: [],
+          origins: []
+        }
+      }
+    },
+
+    // Login tests: logged out, no setup dependency.
+    {
+      name: 'login-chromium',
+      testMatch: /login\.feature\.spec\.js/,
+
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: {
+          cookies: [],
+          origins: []
+        }
+      }
+    },
+
+    {
+      name: 'login-firefox',
+      default: false,
+      testMatch: /login\.feature\.spec\.js/,
+
+      use: {
+        ...devices['Desktop Firefox'],
+        storageState: {
+          cookies: [],
+          origins: []
+        }
+      }
+    },
+
+    {
+      name: 'login-webkit',
+      default: false,
+      testMatch: /login\.feature\.spec\.js/,
+
+      use: {
+        ...devices['Desktop Safari'],
+        storageState: {
+          cookies: [],
+          origins: []
+        }
+      }
+    },
+
+    // Non-login tests: use saved authentication.
+    {
+      name: 'chromium',
+      testIgnore: /login\.feature\.spec\.js/,
+      dependencies: ['setup'],
+
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'playwright/.auth/user.json'
+      }
+    },
+
+    {
+      name: 'firefox',
+      default: false,
+      testIgnore: /login\.feature\.spec\.js/,
+      dependencies: ['setup'],
+
+      use: {
+        ...devices['Desktop Firefox'],
+        storageState: 'playwright/.auth/user.json'
+      }
+    },
+
+    {
+      name: 'webkit',
+      default: false,
+      testIgnore: /login\.feature\.spec\.js/,
+      dependencies: ['setup'],
+
+      use: {
+        ...devices['Desktop Safari'],
+        storageState: 'playwright/.auth/user.json'
       }
     }
-  },
-
-  // Login tests: logged out, no setup dependency.
-  {
-    name: 'login-chromium',
-    testMatch: /login\.feature\.spec\.js/,
-
-    use: {
-      ...devices['Desktop Chrome'],
-      storageState: {
-        cookies: [],
-        origins: []
-      }
-    }
-  },
-
-  {
-    name: 'login-firefox',
-    default: false,
-    testMatch: /login\.feature\.spec\.js/,
-
-    use: {
-      ...devices['Desktop Firefox'],
-      storageState: {
-        cookies: [],
-        origins: []
-      }
-    }
-  },
-
-  {
-    name: 'login-webkit',
-    default: false,
-    testMatch: /login\.feature\.spec\.js/,
-
-    use: {
-      ...devices['Desktop Safari'],
-      storageState: {
-        cookies: [],
-        origins: []
-      }
-    }
-  },
-
-  // Non-login tests: use saved authentication.
-  {
-    name: 'chromium',
-    testIgnore: /login\.feature\.spec\.js/,
-    dependencies: ['setup'],
-
-    use: {
-      ...devices['Desktop Chrome'],
-      storageState: 'playwright/.auth/user.json'
-    }
-  },
-
-  {
-    name: 'firefox',
-    default: false,
-    testIgnore: /login\.feature\.spec\.js/,
-    dependencies: ['setup'],
-
-    use: {
-      ...devices['Desktop Firefox'],
-      storageState: 'playwright/.auth/user.json'
-    }
-  },
-
-  {
-    name: 'webkit',
-    default: false,
-    testIgnore: /login\.feature\.spec\.js/,
-    dependencies: ['setup'],
-
-    use: {
-      ...devices['Desktop Safari'],
-      storageState: 'playwright/.auth/user.json'
-    }
-  }
-]
+  ]
 });
