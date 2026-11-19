@@ -302,3 +302,27 @@ jobs:
       - name: Deploy Allure report to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Show online Allure link in Actions summary
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        shell: bash
+        run: |
+          {
+            echo "## Online Allure report"
+            echo ""
+            echo "Published from run #${GITHUB_RUN_NUMBER}, attempt ${GITHUB_RUN_ATTEMPT}."
+            echo ""
+            echo "[Open the Allure report](${PAGE_URL})"
+            echo ""
+            echo "This URL displays the latest successfully published report."
+            echo "A later successful deployment replaces the report at this URL."
+            echo ""
+            echo "### Other reports"
+            echo ""
+            echo "Download these from this run's Artifacts section:"
+            echo ""
+            echo "- beacon-report"
+            echo "- playwright-report"
+            echo "- allure-report"
+          } >> "$GITHUB_STEP_SUMMARY"
