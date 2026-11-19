@@ -96,6 +96,17 @@ jobs:
       - name: Generate BDD tests
         run: npx bddgen
 
+      - name: List discovered tests
+        run: |
+          npx playwright test \
+            --list \
+            --project=login-chromium \
+            --project=login-firefox \
+            --project=login-webkit \
+            --project=chromium \
+            --project=firefox \
+            --project=webkit
+
       - name: Run Playwright tests on all three browsers
         id: playwright_tests
         continue-on-error: true
@@ -171,76 +182,36 @@ jobs:
           retention-days: 30
           if-no-files-found: warn
 
-      - name: Prepare current run reports
+      - name: Add test outcome and artifact information to summary
         if: always()
-        shell: bash
         env:
           TEST_OUTCOME: ${{ steps.playwright_tests.outcome }}
+        shell: bash
         run: |
-          mkdir -p github-pages-report
-
-          for report in allure beacon playwright; do
-            case "$report" in
-              allure) source="allure-report" ;;
-              beacon) source="beacon-report" ;;
-              playwright) source="playwright-report" ;;
-            esac
-
-            mkdir -p "github-pages-report/$report"
-
-            if [ -f "$source/index.html" ]; then
-              cp -R "$source/." "github-pages-report/$report/"
-            else
-              cat > "github-pages-report/$report/index.html" <<EOF
-          <!doctype html>
-          <html lang="en">
-            <head>
-              <meta charset="utf-8">
-              <title>Report unavailable</title>
-            </head>
-            <body>
-              <h1>$report report was not generated</h1>
-              <p>Check the workflow logs and artifacts.</p>
-            </body>
-          </html>
-          EOF
-            fi
-          done
-
-          python3 <<'PY'
-          import json
-          import os
-          from datetime import datetime, timezone
-          from pathlib import Path
-
-          metadata = {
-              "run_id": os.environ["GITHUB_RUN_ID"],
-              "run_number": os.environ["GITHUB_RUN_NUMBER"],
-              "attempt": os.environ["GITHUB_RUN_ATTEMPT"],
-              "test_outcome": os.environ.get("TEST_OUTCOME", "unknown"),
-              "environment": os.environ["TEST_ENV"],
-              "commit": os.environ["GITHUB_SHA"],
-              "created_at": datetime.now(timezone.utc).isoformat(),
-              "workflow_url": (
-                  f'{os.environ["GITHUB_SERVER_URL"]}/'
-                  f'{os.environ["GITHUB_REPOSITORY"]}/actions/runs/'
-                  f'{os.environ["GITHUB_RUN_ID"]}'
-              )
-          }
-
-          Path("github-pages-report/metadata.json").write_text(
-              json.dumps(metadata, indent=2)
-          )
-          PY
-
-      - name: Upload current run report bundle
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: pages-report-bundle
-          path: github-pages-report/
-          retention-days: 30
-          if-no-files-found: error
+          {
+            echo "## Playwright BDD Tests"
+            echo ""
+            echo "- Run: #${GITHUB_RUN_NUMBER}"
+            echo "- Attempt: ${GITHUB_RUN_ATTEMPT}"
+            echo "- Environment: ${TEST_ENV}"
+            echo "- Playwright outcome: ${TEST_OUTCOME:-unknown}"
+            echo ""
+            echo "### Downloadable reports"
+            echo ""
+            echo "Available reports are in this run's Artifacts section:"
+            echo ""
+            echo "- allure-report"
+            echo "- beacon-report"
+            echo "- playwright-report"
+            echo "- allure-results"
+            echo "- test-results"
+            echo "- perfetto-timeline"
+            echo ""
+            echo "Artifacts are uploaded with a 30-day retention setting."
+            echo ""
+            echo "For main/master runs, the Publish Allure Report job"
+            echo "adds an online Allure link after successful deployment."
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Fail workflow if Playwright tests failed
         if: steps.playwright_tests.outcome == 'failure'
@@ -250,7 +221,7 @@ jobs:
           exit 1
 
   deploy:
-    name: Publish Report History
+    name: Publish Allure Report
     needs: test
 
     if: >
@@ -265,7 +236,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write
+      contents: read
       pages: write
       id-token: write
 
@@ -278,179 +249,80 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Download current run report bundle
+      - name: Download Allure HTML report
         uses: actions/download-artifact@v4
         with:
-          name: pages-report-bundle
-          path: current-report
+          name: allure-report
+          path: published-site
 
-      - name: Restore saved report history
+      - name: Validate Allure report and check size
         shell: bash
         run: |
-          mkdir -p published-site
-          git init --initial-branch=gh-pages published-site
-
-          if git ls-remote --exit-code --heads origin gh-pages > /dev/null; then
-            git fetch origin \
-              refs/heads/gh-pages:refs/remotes/origin/gh-pages
-
-            git -C published-site fetch \
-              "$GITHUB_WORKSPACE" \
-              refs/remotes/origin/gh-pages
-
-            git -C published-site checkout -B gh-pages FETCH_HEAD
+          if [ ! -f published-site/index.html ]; then
+            echo "::error::Allure index.html was not found."
+            exit 1
           fi
 
-      - name: Add current run and rebuild report homepage
-        shell: bash
-        env:
-          JOB_RESULT: ${{ needs.test.result }}
-        run: |
-          RUN_KEY="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
-
-          mkdir -p "published-site/runs/$RUN_KEY"
-          cp -R current-report/. "published-site/runs/$RUN_KEY/"
           touch published-site/.nojekyll
 
+          echo "Allure report folder sizes:"
+          du -h --max-depth=2 published-site | sort -h | tail -20
+
           python3 <<'PY'
-          import html
-          import json
-          import os
           from pathlib import Path
 
           site = Path("published-site")
-          key = (
-              f'{os.environ["GITHUB_RUN_ID"]}-'
-              f'{os.environ["GITHUB_RUN_ATTEMPT"]}'
+          budget = 900_000_000
+
+          total = sum(
+              file.stat().st_size
+              for file in site.rglob("*")
+              if file.is_file()
           )
 
-          current_metadata = site / "runs" / key / "metadata.json"
-          current = json.loads(current_metadata.read_text())
-          current["job_result"] = os.environ["JOB_RESULT"]
-          current_metadata.write_text(json.dumps(current, indent=2))
+          print(f"Extracted Allure report: {total / 1_000_000:.1f} MB")
+          print(f"Safety budget: {budget / 1_000_000:.0f} MB")
 
-          runs = []
-
-          for metadata_file in (site / "runs").glob("*/metadata.json"):
-              try:
-                  data = json.loads(metadata_file.read_text())
-                  data["folder"] = metadata_file.parent.name
-                  runs.append(data)
-              except (ValueError, OSError):
-                  continue
-
-          runs.sort(
-              key=lambda run: (
-                  int(run["run_number"]),
-                  int(run["attempt"])
-              ),
-              reverse=True
-          )
-
-          rows = []
-
-          for run in runs:
-              folder = html.escape(run["folder"], quote=True)
-              number = html.escape(str(run["run_number"]))
-              attempt = html.escape(str(run["attempt"]))
-              outcome = html.escape(run.get("test_outcome", "unknown"))
-              job_result = html.escape(run.get("job_result", "unknown"))
-              environment = html.escape(run.get("environment", "unknown"))
-              timestamp = html.escape(run.get("created_at", ""))
-              workflow_url = html.escape(run["workflow_url"], quote=True)
-
-              rows.append(
-                  "<tr>"
-                  f"<td>#{number}, attempt {attempt}</td>"
-                  f"<td>{outcome}</td>"
-                  f"<td>{job_result}</td>"
-                  f"<td>{environment}</td>"
-                  f"<td>{timestamp}</td>"
-                  f'<td><a href="./runs/{folder}/allure/">Allure</a> | '
-                  f'<a href="./runs/{folder}/beacon/">Beacon</a> | '
-                  f'<a href="./runs/{folder}/playwright/">Playwright</a></td>'
-                  f'<td><a href="{workflow_url}">Workflow</a></td>'
-                  "</tr>"
+          if total > budget:
+              raise SystemExit(
+                  "The Allure report exceeds the 900 MB safety budget. "
+                  "Reduce generated attachments before publishing. "
+                  "The full report remains available as a workflow artifact."
               )
-
-          page = """<!doctype html>
-          <html lang="en">
-          <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <title>SuiteCRM Test Report History</title>
-            <style>
-              body { font-family: sans-serif; padding: 2rem; }
-              table { border-collapse: collapse; width: 100%; }
-              th, td {
-                border: 1px solid #ddd;
-                padding: 0.75rem;
-                text-align: left;
-              }
-              th { background: #f2f2f2; }
-              a { color: #2457c5; }
-              .table-wrapper { overflow-x: auto; }
-            </style>
-          </head>
-          <body>
-            <h1>SuiteCRM Test Report History</h1>
-            <p>Reports from passing and failing runs, newest first.</p>
-            <div class="table-wrapper">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Run</th>
-                    <th>Playwright outcome</th>
-                    <th>Test job result</th>
-                    <th>Environment</th>
-                    <th>Published at (UTC)</th>
-                    <th>Reports</th>
-                    <th>Logs</th>
-                  </tr>
-                </thead>
-                <tbody>
-          """ + "\n".join(rows) + """
-                </tbody>
-              </table>
-            </div>
-          </body>
-          </html>
-          """
-
-          (site / "index.html").write_text(page)
           PY
-
-      - name: Save report history to gh-pages branch
-        shell: bash
-        run: |
-          git -C published-site config user.name "github-actions[bot]"
-          git -C published-site config user.email \
-            "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git -C published-site add --all
-
-          if ! git -C published-site diff --cached --quiet; then
-            git -C published-site commit \
-              -m "Add reports for run ${GITHUB_RUN_NUMBER}, attempt ${GITHUB_RUN_ATTEMPT}"
-          fi
-
-          # Push through the checkout repository, which has authentication.
-          COMMIT=$(git -C published-site rev-parse HEAD)
-
-          git fetch ./published-site gh-pages
-          git push origin FETCH_HEAD:refs/heads/gh-pages
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload complete report history
+      - name: Upload Allure website
         uses: actions/upload-pages-artifact@v4
         with:
           path: published-site
 
-      - name: Deploy report history to GitHub Pages
+      - name: Deploy Allure report to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Show online Allure link in Actions summary
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        shell: bash
+        run: |
+          {
+            echo "## Online Allure report"
+            echo ""
+            echo "Published from run #${GITHUB_RUN_NUMBER}, attempt ${GITHUB_RUN_ATTEMPT}."
+            echo ""
+            echo "[Open the Allure report](${PAGE_URL})"
+            echo ""
+            echo "This URL displays the latest successfully published report."
+            echo "A later successful deployment replaces the report at this URL."
+            echo ""
+            echo "### Other reports"
+            echo ""
+            echo "Download these from this run's Artifacts section:"
+            echo ""
+            echo "- beacon-report"
+            echo "- playwright-report"
+            echo "- allure-report"
+          } >> "$GITHUB_STEP_SUMMARY"
