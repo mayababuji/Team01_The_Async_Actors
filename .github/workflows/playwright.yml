@@ -60,6 +60,7 @@ jobs:
         with:
           node-version: 26
           cache: npm
+
       - name: Set up Java for Allure
         uses: actions/setup-java@v4
         with:
@@ -181,77 +182,36 @@ jobs:
           retention-days: 30
           if-no-files-found: warn
 
-      - name: Prepare current run reports
+      - name: Add test outcome and artifact information to summary
         if: always()
-        shell: bash
         env:
           TEST_OUTCOME: ${{ steps.playwright_tests.outcome }}
+        shell: bash
         run: |
-          mkdir -p github-pages-report
-
-          for report in allure beacon playwright; do
-            case "$report" in
-              allure) source="allure-report" ;;
-              beacon) source="beacon-report" ;;
-              playwright) source="playwright-report" ;;
-            esac
-
-            mkdir -p "github-pages-report/$report"
-
-            if [ -f "$source/index.html" ]; then
-              cp -R "$source/." "github-pages-report/$report/"
-            else
-              cat > "github-pages-report/$report/index.html" <<EOF
-          <!doctype html>
-          <html lang="en">
-            <head>
-              <meta charset="utf-8">
-              <title>Report unavailable</title>
-            </head>
-            <body>
-              <h1>$report report was not generated</h1>
-              <p>Check the workflow logs and artifacts.</p>
-            </body>
-          </html>
-          EOF
-            fi
-          done
-
-          python3 <<'PY'
-          import json
-          import os
-          from datetime import datetime, timezone
-          from pathlib import Path
-
-          metadata = {
-              "run_id": os.environ["GITHUB_RUN_ID"],
-              "run_number": os.environ["GITHUB_RUN_NUMBER"],
-              "attempt": os.environ["GITHUB_RUN_ATTEMPT"],
-              "test_outcome": os.environ.get("TEST_OUTCOME") or "unknown",
-              "environment": os.environ["TEST_ENV"],
-              "commit": os.environ["GITHUB_SHA"],
-              "created_at": datetime.now(timezone.utc).isoformat(),
-              "workflow_url": (
-                  f'{os.environ["GITHUB_SERVER_URL"]}/'
-                  f'{os.environ["GITHUB_REPOSITORY"]}/actions/runs/'
-                  f'{os.environ["GITHUB_RUN_ID"]}'
-              )
-          }
-
-          Path("github-pages-report/metadata.json").write_text(
-              json.dumps(metadata, indent=2),
-              encoding="utf-8"
-          )
-          PY
-
-      - name: Upload current run report bundle
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: pages-report-bundle
-          path: github-pages-report/
-          retention-days: 30
-          if-no-files-found: error
+          {
+            echo "## Playwright BDD Tests"
+            echo ""
+            echo "- Run: #${GITHUB_RUN_NUMBER}"
+            echo "- Attempt: ${GITHUB_RUN_ATTEMPT}"
+            echo "- Environment: ${TEST_ENV}"
+            echo "- Playwright outcome: ${TEST_OUTCOME:-unknown}"
+            echo ""
+            echo "### Downloadable reports"
+            echo ""
+            echo "Available reports are in this run's Artifacts section:"
+            echo ""
+            echo "- allure-report"
+            echo "- beacon-report"
+            echo "- playwright-report"
+            echo "- allure-results"
+            echo "- test-results"
+            echo "- perfetto-timeline"
+            echo ""
+            echo "Artifacts are uploaded with a 30-day retention setting."
+            echo ""
+            echo "For main/master runs, the Publish Allure Report job"
+            echo "adds an online Allure link after successful deployment."
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Fail workflow if Playwright tests failed
         if: steps.playwright_tests.outcome == 'failure'
@@ -261,7 +221,7 @@ jobs:
           exit 1
 
   deploy:
-    name: Publish Latest Reports
+    name: Publish Allure Report
     needs: test
 
     if: >
@@ -289,165 +249,24 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Download current run report bundle
+      - name: Download Allure HTML report
         uses: actions/download-artifact@v4
         with:
-          name: pages-report-bundle
-          path: current-report
+          name: allure-report
+          path: published-site
 
-      - name: Prepare latest-run website
-        shell: bash
-        env:
-          JOB_RESULT: ${{ needs.test.result }}
-        run: |
-          python3 <<'PY'
-          import html
-          import json
-          import os
-          import shutil
-          from pathlib import Path
-
-          site = Path("published-site")
-          source = Path("current-report")
-
-          if site.exists():
-              shutil.rmtree(site)
-
-          run_key = (
-              f'{os.environ["GITHUB_RUN_ID"]}-'
-              f'{os.environ["GITHUB_RUN_ATTEMPT"]}'
-          )
-
-          destination = site / "runs" / run_key
-          destination.parent.mkdir(parents=True, exist_ok=True)
-          shutil.copytree(source, destination)
-
-          metadata_file = destination / "metadata.json"
-          metadata = json.loads(
-              metadata_file.read_text(encoding="utf-8")
-          )
-
-          metadata["job_result"] = os.environ["JOB_RESULT"]
-
-          metadata_file.write_text(
-              json.dumps(metadata, indent=2),
-              encoding="utf-8"
-          )
-
-          def escape(value):
-              return html.escape(str(value), quote=True)
-
-          folder = escape(run_key)
-          number = escape(metadata["run_number"])
-          attempt = escape(metadata["attempt"])
-          outcome = escape(metadata.get("test_outcome", "unknown"))
-          job_result = escape(metadata["job_result"])
-          environment = escape(metadata.get("environment", "unknown"))
-          timestamp = escape(metadata.get("created_at", ""))
-          commit = escape(metadata.get("commit", ""))
-          workflow_url = escape(metadata["workflow_url"])
-
-          row = (
-              "<tr>"
-              f"<td>#{number}, attempt {attempt}</td>"
-              f"<td>{outcome}</td>"
-              f"<td>{job_result}</td>"
-              f"<td>{environment}</td>"
-              f"<td>{timestamp}</td>"
-              f'<td><a href="./runs/{folder}/allure/">Allure</a> | '
-              f'<a href="./runs/{folder}/beacon/">Beacon</a> | '
-              f'<a href="./runs/{folder}/playwright/">Playwright</a></td>'
-              f'<td><a href="{workflow_url}">Workflow and artifacts</a></td>'
-              "</tr>"
-          )
-
-          page = """<!doctype html>
-          <html lang="en">
-          <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <title>SuiteCRM Latest Test Reports</title>
-            <style>
-              body {
-                font-family: sans-serif;
-                padding: 2rem;
-                color: #222;
-              }
-              table {
-                border-collapse: collapse;
-                width: 100%;
-              }
-              th, td {
-                border: 1px solid #ddd;
-                padding: 0.75rem;
-                text-align: left;
-              }
-              th {
-                background: #f2f2f2;
-              }
-              a {
-                color: #2457c5;
-              }
-              .table-wrapper {
-                overflow-x: auto;
-              }
-              .note {
-                color: #555;
-              }
-              code {
-                overflow-wrap: anywhere;
-              }
-            </style>
-          </head>
-          <body>
-            <h1>SuiteCRM Latest Test Reports</h1>
-            <p>
-              Only the latest successfully published run is hosted here.
-              Its tests may have passed or failed.
-            </p>
-            <p class="note">
-              Full reports and debugging files are also uploaded to
-              the workflow as artifacts with a 30-day retention setting.
-              Older report pages are not retained on this site.
-            </p>
-            <div class="table-wrapper">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Run</th>
-                    <th>Playwright outcome</th>
-                    <th>Test job result</th>
-                    <th>Environment</th>
-                    <th>Report prepared at (UTC)</th>
-                    <th>Reports</th>
-                    <th>Logs and artifacts</th>
-                  </tr>
-                </thead>
-                <tbody>
-          """ + row + """
-                </tbody>
-              </table>
-            </div>
-          """ + f"<p>Commit: <code>{commit}</code></p>" + """
-          </body>
-          </html>
-          """
-
-          (site / "index.html").write_text(
-              page,
-              encoding="utf-8"
-          )
-
-          (site / ".nojekyll").touch()
-
-          print(f"Prepared website for run #{number}, attempt {attempt}.")
-          PY
-
-      - name: Check report size before publishing
+      - name: Validate Allure report and check size
         shell: bash
         run: |
-          echo "Report folder sizes:"
-          du -h --max-depth=3 published-site | sort -h | tail -25
+          if [ ! -f published-site/index.html ]; then
+            echo "::error::Allure index.html was not found."
+            exit 1
+          fi
+
+          touch published-site/.nojekyll
+
+          echo "Allure report folder sizes:"
+          du -h --max-depth=2 published-site | sort -h | tail -20
 
           python3 <<'PY'
           from pathlib import Path
@@ -461,25 +280,25 @@ jobs:
               if file.is_file()
           )
 
-          print(f"Published report content: {total / 1_000_000:.1f} MB")
+          print(f"Extracted Allure report: {total / 1_000_000:.1f} MB")
           print(f"Safety budget: {budget / 1_000_000:.0f} MB")
 
           if total > budget:
               raise SystemExit(
-                  "The latest run alone exceeds the 900 MB safety budget. "
-                  "Reduce report attachments or publish fewer report formats. "
-                  "Full reports are available in the workflow artifacts."
+                  "The Allure report exceeds the 900 MB safety budget. "
+                  "Reduce generated attachments before publishing. "
+                  "The full report remains available as a workflow artifact."
               )
           PY
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload latest reports to GitHub Pages
+      - name: Upload Allure website
         uses: actions/upload-pages-artifact@v4
         with:
           path: published-site
 
-      - name: Deploy latest reports to GitHub Pages
+      - name: Deploy Allure report to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
